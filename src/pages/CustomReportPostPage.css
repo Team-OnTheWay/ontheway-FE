@@ -8,8 +8,7 @@
     overflow: hidden;
     background-color: #ffffff;
 }
- 
-/* 가운데: 스크롤 영역 */
+
 .report__body {
     flex: 1;
     overflow-y: auto;
@@ -19,56 +18,50 @@
     padding: 16px;
     box-sizing: border-box;
 }
- 
-/* 고정폭 컴포넌트를 반응형(100%)으로 — 세로 스크롤바가 폭을 먹어도 가로로 안 넘침 */
-.report .custom-product,
-.report .text-area {
-    width: 100%;
-    box-sizing: border-box;
+
+/* 물품번호 카드 배경색 */
+.report .custom-product {
+    background-color: #F3F6F9;
+    border : none;
 }
- 
-/* 긴 체크박스 라벨이 넘치지 않게 (박스 고정, 라벨은 남는 폭에서 줄바꿈) */
-.report__checks .checkbox {
-    display: flex;
-    width: 100%;
-    align-items: flex-start;
+.report .product-box-section {
+    background-color: #FFFFFF;
 }
- 
-.report__checks .checkbox__label {
-    flex: 1;
-    min-width: 0;
-}
- 
-/* 신고 사유 제목 (list03) — 페이지 제목이라 카드 padding 제거 */
+
 .report__section .list--list03 {
     padding: 0;
 }
- 
+
 .report__hint {
     margin: 8px 0 0;
     font-size: 14px;
     font-weight: 400;
     line-height: 20px;
-    color: #6b7280;
+    color: #6B7280;
 }
- 
-/* 체크박스 목록 */
+
 .report__checks {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
- 
-/* 신고 사유 입력 */
-.report__area-label {
-    margin: 0 0 12px;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 24px;
-    color: #14191f;
+
+.report__checks .checkbox {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
 }
 
-/* 하단 고정 버튼  */
+.report__checks .checkbox__label {
+    flex: 1;
+    min-width: 0;
+}
+
+.report .text-area {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .report__footer {
     flex-shrink: 0;
     padding: 16px;

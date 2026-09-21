@@ -20,17 +20,20 @@
  
 .login-page__id {
     width: 100%;
+    display: flex;
+    justify-content: center;
 }
- 
 
 .login-page__pw {
     width: 100%;
+    display: flex;
+    justify-content: center;
     margin-top: 20px;
 }
  
 
 .login-page__auto {
-    width: 100%;
+    width: 337px;
     height: 24px;
     margin-top: 8px;
 

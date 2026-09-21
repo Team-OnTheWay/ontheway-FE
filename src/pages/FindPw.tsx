@@ -19,10 +19,10 @@ function FindPw(){
             
 
                 <div className="email-input">
-                    <TextField label="아이디" height={48} borderColor="lightGray" backgroundColor="white" leftLocationIcon={false} placeholder="Label" timer={false} rightButton="none" />
+                    <TextField label="아이디" height={48} borderColor="lightGray" backgroundColor="white" leftLocationIcon={false} placeholder="아이디를 입력해주세요." timer={false} rightButton="none" />
                 </div>
                 <div className="email-input">
-                    <TextField label="이메일" height={48} borderColor="lightGray" backgroundColor="white" leftLocationIcon={false} placeholder="Label" timer={false} rightButton="none" />
+                    <TextField label="이메일" height={48} borderColor="lightGray" backgroundColor="white" leftLocationIcon={false} placeholder="이메일을 입력해주세요." timer={false} rightButton="none" />
                 </div>
                 <div className="find-pw-button">
                     <CustomButton name="비밀번호 찾기"color="#fd5d35"fontColor="#ffffff"size="lg"/>

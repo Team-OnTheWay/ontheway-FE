@@ -1,4 +1,3 @@
-
 .find-pw-page {
     width: 393px;
     height: 852px;
@@ -17,19 +16,21 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: 20px;
+}
+
+.find-pw-page .text-field-container {
+    width: 100%;
+}
+
+.find-pw-page .text-field {
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .find-pw-page .email-input {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
     margin: 0;
-}
-
-.find-pw-page .email-input + .email-input {
-    margin-top: 16px;
 }
 
 .find-pw-button {

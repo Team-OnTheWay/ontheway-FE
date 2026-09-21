@@ -21,8 +21,24 @@
   outline: none;
   background: transparent;
   width: 100%;
-  font : 22px;
   resize: none;
   margin-top: 16px;
-  padding: 16px 16px 36px 16px;
+  padding: 0 16px 36px 16px;
+  box-sizing: border-box;
+
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.text-area textarea::placeholder {
+  color: #9CA3AF;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  opacity: 1;
 }

@@ -49,24 +49,30 @@
     transform: scale(0.8);
 }
  
-.label-button{
+.label-button {
   display: flex;
-  flex-shrink: 0;
   padding: 10px;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  background: var(--Neutral-Border4, #F2F2F2);
   border-radius: 8px;
+  background: var(--Neutral-Border4, #F2F2F2);
 }
- 
+
 .label-button button {
   all: unset;
   cursor: pointer;
   white-space: nowrap;
+  color: var(--Font-T900, #14191F);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
 }
- 
-.label-button button:active{
+
+.label-button button:active {
   transform: scale(0.9);
 }
  

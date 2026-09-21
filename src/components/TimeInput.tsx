@@ -15,30 +15,35 @@ const colors = {
 }
 
 function TimeInput(props: TimeInputProps) {
+  const times = []
+
+  for(let hour = 0; hour < 24; hour++) {
+    for(let minute = 0; minute < 60; minute += 5) {
+      const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
+      times.push(<option key={time} value={time}>{time}</option>)
+    }
+  }
+
   return (
     <div className='time-input'>
       <div className='time-input-block'>
-
         <div className='time-select-wrapper'>
           <select style={{ border: props.borderColor === 'none' ? 'none' : `1px solid ${colors[props.borderColor]}`, backgroundColor: colors[props.backgroundColor] }}>
-            <option>00:00</option>
+            {times}
           </select>
           <div className='time-dropdown-arrow'>
             <Arrow width={24} height={24} strokeWidth={2}/>
           </div>
         </div>
-
         <p>~</p>
-
         <div className='time-select-wrapper'>
           <select style={{ border: props.borderColor === 'none' ? 'none' : `1px solid ${colors[props.borderColor]}`, backgroundColor: colors[props.backgroundColor] }}>
-            <option>00:00</option>
+            {times}
           </select>
           <div className='time-dropdown-arrow'>
             <Arrow width={24} height={24} strokeWidth={2}/>
           </div>
         </div>
-
       </div>
     </div>
   )

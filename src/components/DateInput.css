@@ -1,41 +1,46 @@
 .date-input {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  width: 361px;
 }
- 
+
 .date-input__label {
-  margin: 0;
+  margin-bottom: 8px;
 }
- 
+
 .date-input-box {
   width: 100%;
-  height: 56px;
+  height: 48px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  padding: 0 14px;
   border: 1px solid;
-  border-radius: 12px;
+  border-radius: 10px;
   background-color: white;
+  position: relative;
 }
- 
-.date-input-box input {
+
+.date-input-box input[type="text"] {
   flex: 1;
   border: none;
   outline: none;
   background: transparent;
-  font-size: 16px;
-  padding-left: 4px;
+  font-size: 14px;
 }
- 
+
 .calendar-icon {
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-left: auto;
-  padding: 2px;
+  justify-content: center;
+  padding: 0;
   border: none;
   background: none;
+  cursor: pointer;
+}
+
+.date-picker {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
 }

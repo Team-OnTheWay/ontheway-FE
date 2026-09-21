@@ -89,3 +89,12 @@
     color: #4b5663;
     cursor: pointer;
 }
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+    transform: translateY(3px);
+}
