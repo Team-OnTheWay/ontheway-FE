@@ -4,7 +4,7 @@ interface Profile {
     stroke: string;
     strokeWidth: number;
 }
-
+ 
 export const Profile = ({width, height, stroke, strokeWidth} : Profile) => {
     return (
         <svg width={width} height={height} viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -12,13 +12,13 @@ export const Profile = ({width, height, stroke, strokeWidth} : Profile) => {
         </svg>
     );
 };
-
+ 
 interface Arrow {
     width: number;
     height: number;
     strokeWidth: number;
 }
-
+ 
 export const Arrow = ({width, height, strokeWidth} : Arrow) => {
     return (
         <svg width={width} height={height} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -26,7 +26,7 @@ export const Arrow = ({width, height, strokeWidth} : Arrow) => {
         </svg>
     );
 };
-
+ 
 interface Star {
     width: number;
     height: number;
@@ -36,11 +36,11 @@ interface Star {
     emptyColor?: string;
     isHalf?: boolean;
 }
-
+ 
 export const Star = ({width, height, stroke, strokeWidth, fill, emptyColor = 'transparent', isHalf = false} : Star) => {
     const gradientId = `half-fill-${Math.random().toString(36.25).substr(2, 9)}`;
     const resolvedEmptyColor = emptyColor === 'none' ? 'transparent' : emptyColor;
-
+ 
     return (
         <svg width={width} height={height} viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
             {isHalf && fill && (
@@ -63,27 +63,28 @@ export const Star = ({width, height, stroke, strokeWidth, fill, emptyColor = 'tr
         </svg>
     );
 };
-
+ 
 interface Box {
     width: number;
     height: number;
     strokeWidth: number;
+    stroke?: string;
 }
-
-export const Box = ({width, height, strokeWidth} : Box) => {
+ 
+export const Box = ({width, height, strokeWidth, stroke = '#33363D'} : Box) => {
     return (
         <svg width={width} height={height} viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 20.9979V10.9979M10 10.9979L1.29 5.99795M10 10.9979L18.71 5.99795M5.5 3.26795L14.5 8.41795M9 20.7279C9.30404 20.9035 9.64893 20.9959 10 20.9959C10.3511 20.9959 10.696 20.9035 11 20.7279L18 16.7279C18.3037 16.5526 18.556 16.3004 18.7315 15.9968C18.9071 15.6931 18.9996 15.3487 19 14.9979V6.99795C18.9996 6.64722 18.9071 6.30276 18.7315 5.99911C18.556 5.69546 18.3037 5.44331 18 5.26795L11 1.26795C10.696 1.09241 10.3511 1 10 1C9.64893 1 9.30404 1.09241 9 1.26795L2 5.26795C1.69626 5.44331 1.44398 5.69546 1.26846 5.99911C1.09294 6.30276 1.00036 6.64722 1 6.99795V14.9979C1.00036 15.3487 1.09294 15.6931 1.26846 15.9968C1.44398 16.3004 1.69626 16.5526 2 16.7279L9 20.7279Z" stroke="#33363D" stroke-width={strokeWidth} stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 20.9979V10.9979M10 10.9979L1.29 5.99795M10 10.9979L18.71 5.99795M5.5 3.26795L14.5 8.41795M9 20.7279C9.30404 20.9035 9.64893 20.9959 10 20.9959C10.3511 20.9959 10.696 20.9035 11 20.7279L18 16.7279C18.3037 16.5526 18.556 16.3004 18.7315 15.9968C18.9071 15.6931 18.9996 15.3487 19 14.9979V6.99795C18.9996 6.64722 18.9071 6.30276 18.7315 5.99911C18.556 5.69546 18.3037 5.44331 18 5.26795L11 1.26795C10.696 1.09241 10.3511 1 10 1C9.64893 1 9.30404 1.09241 9 1.26795L2 5.26795C1.69626 5.44331 1.44398 5.69546 1.26846 5.99911C1.09294 6.30276 1.00036 6.64722 1 6.99795V14.9979C1.00036 15.3487 1.09294 15.6931 1.26846 15.9968C1.44398 16.3004 1.69626 16.5526 2 16.7279L9 20.7279Z" stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
     );
 };
-
+ 
 interface Camera {
     width: number;
     height: number;
     strokeWidth: number;
 }
-
+ 
 export const Camera = ({width, height, strokeWidth} : Camera) => {
     return(
         <svg width={width} height={height} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -92,14 +93,14 @@ export const Camera = ({width, height, strokeWidth} : Camera) => {
         </svg>
     );
 };
-
+ 
 interface Users {
     width: number;
     height: number;
     stroke: string;
     strokeWidth: number;
 }
-
+ 
 export const Users = ({width, height, stroke, strokeWidth} : Users) => {
     return (
         <svg width={width} height={height} viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -107,7 +108,7 @@ export const Users = ({width, height, stroke, strokeWidth} : Users) => {
         </svg>
     );
 };
-
+ 
 interface MapPinIcon {
     width?: number;
     height?: number;
@@ -115,7 +116,7 @@ interface MapPinIcon {
     strokeWidth?: number;
     innerRadius?: number;
 }
-
+ 
 export const MapPin = ({ width = 18, height = 22, stroke = '#4576F7', strokeWidth = 2, innerRadius = 3 }: MapPinIcon) => {
     return (
         <svg width={width} height={height} viewBox={`0 0 18 22`} fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -127,14 +128,14 @@ export const MapPin = ({ width = 18, height = 22, stroke = '#4576F7', strokeWidt
         </svg>
     );
 };
-
+ 
 interface Calendar {
     width?: number;
     height?: number;
     stroke?: string;
     strokeWidth?: number;
 }
-
+ 
 export const Calendar = ({ width = 14, height = 15, stroke = '#6B7280', strokeWidth = 1.2 }: Calendar) => {
     return (
         <svg width={width} height={height} viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -142,14 +143,14 @@ export const Calendar = ({ width = 14, height = 15, stroke = '#6B7280', strokeWi
         </svg>
     );
 };
-
+ 
 interface Clock {
     width?: number;
     height?: number;
     stroke?: string;
     strokeWidth?: number;
 }
-
+ 
 export const Clock = ({ width = 14, height = 15, stroke = '#6B7280', strokeWidth = 1.2 }: Clock) => {
     return (
         <svg width={width} height={height} viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -157,7 +158,7 @@ export const Clock = ({ width = 14, height = 15, stroke = '#6B7280', strokeWidth
         </svg>
     );
 };
-
+ 
 interface Circle {
     width?: number;
     height?: number;
@@ -189,14 +190,14 @@ export const FileText = ({ width = 12, height = 12, stroke = '#6B7280', strokeWi
             </svg>
     );
 };
-
+ 
 interface MapPinOutline {
   width?: number;
   height?: number;
   stroke?: string;
   strokeWidth?: number;
 }
-
+ 
 export const MapPinOutline = ({ width = 20, height = 24, stroke = '#4B5663', strokeWidth = 2 }: MapPinOutline) => {
   return (
     <svg width={width} height={height} viewBox="0 0 18 22" fill="none">
@@ -205,14 +206,14 @@ export const MapPinOutline = ({ width = 20, height = 24, stroke = '#4B5663', str
     </svg>
   )
 }
-
+ 
 interface Dot {
     width?: number;
     height?: number;
     fill?: string;
     stroke?: string;
 }
-
+ 
 export const Dot = ({ width = 20, height = 20, fill = 'white',stroke = '#6A6A67' }: Dot) => {
     return ( 
         <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -221,13 +222,13 @@ export const Dot = ({ width = 20, height = 20, fill = 'white',stroke = '#6A6A67'
         </svg>
     );
 };
-
+ 
 interface Recipe {
     width?: number;
     height?: number;
     stroke?: string;
 }
-
+ 
 export const Recipe = ({ width = 10, height = 12, stroke = '#6A6A67' }: Recipe) => {
     return ( 
         <svg width={width} height={height} viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -235,13 +236,13 @@ export const Recipe = ({ width = 10, height = 12, stroke = '#6A6A67' }: Recipe) 
         </svg>
     );
 };
-
+ 
 interface XButton{
     width: number;
     height: number;
     strokeWidth: number;
 }
-
+ 
 export const XButton = () => {
     return(
             <div className="x-button">
@@ -249,18 +250,18 @@ export const XButton = () => {
                 <path d="M15 9L9 15M9 9L15 15M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="#6A6A67" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
-
+ 
     )
 }
-
-
+ 
+ 
 interface Wallet {
     width?: number;
     height?: number;
     stroke?: string;
     strokeWidth?: number;
 }
-
+ 
 export const Wallet = ({ width = 20, height = 20, stroke = '#6B7280', strokeWidth = 2 }: Wallet) => {
     return (
         <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -269,14 +270,14 @@ export const Wallet = ({ width = 20, height = 20, stroke = '#6B7280', strokeWidt
         </svg>
     );
 };
-
+ 
 interface Eye {
     width?: number;
     height?: number;
     stroke?: string;
     strokeWidth?: number;
 }
-
+ 
 export const Eye = ({ width = 24, height = 24, stroke = '#6A6A67', strokeWidth = 2 }: Eye) => {
     return (
         <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -285,14 +286,14 @@ export const Eye = ({ width = 24, height = 24, stroke = '#6A6A67', strokeWidth =
         </svg>
     );
 };
-
+ 
 interface EyeOff {
     width?: number;
     height?: number;
     stroke?: string;
     strokeWidth?: number;
 }
-
+ 
 export const EyeOff = ({ width = 24, height = 24, stroke = '#6A6A67', strokeWidth = 2 }: EyeOff) => {
     return (
         <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -303,14 +304,14 @@ export const EyeOff = ({ width = 24, height = 24, stroke = '#6A6A67', strokeWidt
         </svg>
     );
 };
-
+ 
 interface CircleCheck {
     width?: number;
     height?: number;
     fill?: string;
     check?: string;
 }
-
+ 
 export const CircleCheck = ({ width = 24, height = 24, fill = '#FD5D35', check = '#FFFFFF' }: CircleCheck) => {
     return (
         <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -319,14 +320,14 @@ export const CircleCheck = ({ width = 24, height = 24, fill = '#FD5D35', check =
         </svg>
     );
 };
-
+ 
 interface Truck {
     width?: number;
     height?: number;
     stroke?: string;
     strokeWidth?: number;
 }
-
+ 
 export const Truck = ({ width = 24, height = 24, stroke = '#4576F7', strokeWidth = 2 }: Truck) => {
     return (
         <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -338,13 +339,13 @@ export const Truck = ({ width = 24, height = 24, stroke = '#4576F7', strokeWidth
         </svg>
     );
 };
-
+ 
 interface CircleEmpty {
     width?: number;
     height?: number;
     color?: string;
 }
-
+ 
 export const CircleEmpty = ({ width = 24, height = 24, color = '#6A6A67' }: CircleEmpty) => {
     return (
         <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -367,6 +368,152 @@ export const CircleX = ({ width = 24, height = 24, fill = '#FD5D35', x = '#FFFFF
         <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="12" cy="12" r="10" fill={fill} />
             <path d="m9 9 6 6M15 9l-6 6" stroke={x} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+};
+ 
+/* ---------- 아코디언 (+ / −) ---------- */
+interface Plus {
+    width?: number;
+    height?: number;
+    stroke?: string;
+    strokeWidth?: number;
+}
+ 
+export const Plus = ({ width = 24, height = 24, stroke = '#6A6A67', strokeWidth = 2 }: Plus) => {
+    return (
+        <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 12H19M12 5V19" stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+};
+ 
+interface Minus {
+    width?: number;
+    height?: number;
+    stroke?: string;
+    strokeWidth?: number;
+}
+ 
+export const Minus = ({ width = 24, height = 24, stroke = '#6A6A67', strokeWidth = 2 }: Minus) => {
+    return (
+        <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 12H19" stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+};
+ 
+/* ---------- 아래 방향 화살표 (프로필 카드 등) ---------- */
+interface ChevronDown {
+    width?: number;
+    height?: number;
+    stroke?: string;
+    strokeWidth?: number;
+}
+ 
+export const ChevronDown = ({ width = 24, height = 24, stroke = '#33363D', strokeWidth = 2 }: ChevronDown) => {
+    return (
+        <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="m6 9 6 6 6-6" stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+};
+ 
+/* ---------- 결제정보 (카드) ---------- */
+interface CreditCard {
+    width?: number;
+    height?: number;
+    stroke?: string;
+    strokeWidth?: number;
+}
+ 
+export const CreditCard = ({ width = 20, height = 20, stroke = '#FD5D35', strokeWidth = 2 }: CreditCard) => {
+    return (
+        <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="20" height="14" x="2" y="5" rx="2" stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+            <line x1="2" x2="22" y1="10" y2="10" stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+};
+ 
+/* ---------- 알림 (확성기) ---------- */
+interface Megaphone {
+    width?: number;
+    height?: number;
+    stroke?: string;
+    strokeWidth?: number;
+}
+ 
+export const Megaphone = ({ width = 24, height = 24, stroke = '#FD5D35', strokeWidth = 2 }: Megaphone) => {
+    return (
+        <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="m3 11 18-5v12L3 14v-3z" stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+};
+ 
+/* ---------- 마이페이지 ---------- */
+interface ThumbsUp {
+    width?: number;
+    height?: number;
+    stroke?: string;
+    strokeWidth?: number;
+}
+ 
+export const ThumbsUp = ({ width = 24, height = 24, stroke = '#33363D', strokeWidth = 2 }: ThumbsUp) => {
+    return (
+        <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 10v12" stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z" stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+};
+ 
+interface Edit {
+    width?: number;
+    height?: number;
+    stroke?: string;
+    strokeWidth?: number;
+}
+ 
+export const Edit = ({ width = 24, height = 24, stroke = '#33363D', strokeWidth = 2 }: Edit) => {
+    return (
+        <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+};
+ 
+interface ChevronRight {
+    width?: number;
+    height?: number;
+    stroke?: string;
+    strokeWidth?: number;
+}
+ 
+export const ChevronRight = ({ width = 24, height = 24, stroke = '#33363D', strokeWidth = 2 }: ChevronRight) => {
+    return (
+        <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="m9 18 6-6-6-6" stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+};
+ 
+interface Logout {
+    width?: number;
+    height?: number;
+    stroke?: string;
+    strokeWidth?: number;
+}
+ 
+export const Logout = ({ width = 24, height = 24, stroke = '#33363D', strokeWidth = 2 }: Logout) => {
+    return (
+        <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+            <path d="m16 17 5-5-5-5" stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M21 12H9" stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
         </svg>
     );
 };

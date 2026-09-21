@@ -7,10 +7,10 @@ import CustomAccordion from '../components/CustomAccordion'
 import EmptyState from '../components/EmptyState'
 import TextArea from '../components/TextArea'
 import CustomButton from '../components/CustomButton'
-import { Truck } from '../components/CustomIcon'
+import { Truck, Box, CreditCard, Megaphone, ChevronDown, CircleCheck } from '../components/CustomIcon'
 import './CustomRouteDetailPage.css'
  
-
+ 
  
 // 진행 단계 7개 전부 — 완료/현재/취소/대기 네 가지 모양이 모두 보이도록 섞어둠
 const ALL_STEPS: Step[] = [
@@ -52,45 +52,6 @@ const REQUESTS: RequestItem[] = [
 const extraInfo = "자차 이용합니다! 퇴근하면서 이동하는 경로라 시간 맞으면 바로 전달 가능해요. 작은 물품은 여러 개도 가능합니다."
  
 /* =========================================================
-   이 페이지에서만 쓰는 아이콘
-   ========================================================= */
-function ChevronDownIcon() {
-    return (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#33363D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="m6 9 6 6 6-6" />
-        </svg>
-    )
-}
-function PackageIcon() {
-    return (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FD5D35" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="m7.5 4.27 9 5.15" /><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" /><path d="m3.3 7 8.7 5 8.7-5" /><path d="M12 22V12" />
-        </svg>
-    )
-}
-function CardIcon() {
-    return (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FD5D35" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect width="20" height="14" x="2" y="5" rx="2" /><line x1="2" x2="22" y1="10" y2="10" />
-        </svg>
-    )
-}
-function CheckSmallIcon() {
-    return (
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FD5D35" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="10" fill="#FEF1ED" stroke="none" /><path d="m8 12 2.5 2.5 5.5-5.5" />
-        </svg>
-    )
-}
-function MegaphoneIcon() {
-    return (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FD5D35" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="m3 11 18-5v12L3 14v-3z" /><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
-        </svg>
-    )
-}
- 
-/* =========================================================
    하단 블록 (페이지 내부 전용)
    ========================================================= */
  
@@ -99,7 +60,7 @@ function RequestBody({ r }: { r: RequestItem }) {
     return (
         <div className="request-body">
             <div className="request-body__section">
-                <p className="request-body__heading"><PackageIcon />물품정보</p>
+                <p className="request-body__heading"><Box width={18} height={20} strokeWidth={2} stroke="#FD5D35" />물품정보</p>
                 <div className="request-body__row"><span>물품명</span><span>{r.item.name}</span></div>
                 <div className="request-body__row"><span>물품 전달</span><span>{r.item.handover}</span></div>
                 <div className="request-body__row"><span>상세 설명</span><span>{r.item.desc}</span></div>
@@ -111,10 +72,10 @@ function RequestBody({ r }: { r: RequestItem }) {
                 <div className="request-body__row"><span>배송 날짜</span><span>{r.route.date}</span></div>
             </div>
             <div className="request-body__section">
-                <p className="request-body__heading"><CardIcon />결제정보</p>
+                <p className="request-body__heading"><CreditCard width={20} height={20} />결제정보</p>
                 <div className="request-body__row"><span>결제시점</span><span>{r.payment.timing}</span></div>
             </div>
-            <p className="request-body__agree"><CheckSmallIcon />위 허용금지 물품 기준과 포장 책임 범위를 확인하였으며 동의하였습니다.</p>
+            <p className="request-body__agree"><CircleCheck width={16} height={16} fill="#FEF1ED" check="#FD5D35" />위 허용금지 물품 기준과 포장 책임 범위를 확인하였으며 동의하였습니다.</p>
         </div>
     )
 }
@@ -140,7 +101,7 @@ function CustomRouteDetailPage() {
                         <p className="route-detail__profile-name">하루</p>
                         <p className="route-detail__profile-date">2026.09.17</p>
                     </div>
-                    <ChevronDownIcon />
+                    <ChevronDown width={24} height={24} />
                 </div>
  
                 <CustomRouteInfo
@@ -159,7 +120,7 @@ function CustomRouteDetailPage() {
  
                 {/* 취소/중단 알림 박스 */}
                 <div className="route-detail__notice">
-                    <MegaphoneIcon />
+                    <Megaphone width={24} height={24} />
                     <div>
                         <p className="route-detail__notice-time">2026.09.22 09:00</p>
                         <p className="route-detail__notice-msg">개인 사정으로 예정 시간에 배송이 어려워 중단했습니다.</p>
