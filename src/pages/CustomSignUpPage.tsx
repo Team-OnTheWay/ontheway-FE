@@ -110,7 +110,7 @@ function CustomSignupPage() {
             <div className="signup__body">
                 {/* 아이디 + 중복확인 */}
                 <div className="signup__row">
-                    <TextField label="아이디" height={56} borderColor="lightGray" backgroundColor="white"
+                    <TextField label="아이디" height={56} borderColor="gray" backgroundColor="white"
                         leftLocationIcon={false} placeholder="아이디를 입력해주세요." timer={false} rightButton="none" 
                         value={id}
                         disabled={isIdChecked} // 중복확인 완료되면 아이디 수정 잠금 (선택사항)
@@ -127,13 +127,13 @@ function CustomSignupPage() {
                 </div>
  
                 {/* 이름 */}
-                <TextField label="이름" height={56} borderColor="lightGray" backgroundColor="white"
+                <TextField label="이름" height={56} borderColor="gray" backgroundColor="white"
                     leftLocationIcon={false} placeholder="이름을 입력해주세요." timer={false} rightButton="none" 
                     value={name}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}/>
  
                 {/* 생년월일 */}
-                <DateInput label="생년월일" borderColor="lightGray" value={birth} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                <DateInput label="생년월일" borderColor="gray" value={birth} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         const rawValue = e.target.value.replace(/[^0-9]/g, '');
                         let formattedValue = '';
 
@@ -150,7 +150,7 @@ function CustomSignupPage() {
  
                 {/* 이메일 + 인증받기 */}
                 <div className="signup__row">
-                    <TextField label="이메일" height={56} borderColor="lightGray" backgroundColor="white"
+                    <TextField label="이메일" height={56} borderColor="gray" backgroundColor="white"
                         leftLocationIcon={false} placeholder="이메일을 입력해주세요." timer={false} rightButton="none" 
                         value={email}
                         disabled={isEmailVerified} 
@@ -172,7 +172,7 @@ function CustomSignupPage() {
                     <TextField 
                         label="이메일 인증" 
                         height={56} 
-                        borderColor="lightGray" 
+                        borderColor="gray" 
                         backgroundColor="white"
                         leftLocationIcon={false} 
                         placeholder={isEmailVerified ? "인증이 완료되었습니다." : "인증번호를 입력해주세요."} 
@@ -190,21 +190,21 @@ function CustomSignupPage() {
                 )}
  
                 {/* 비밀번호 */}
-                <TextField label="비밀번호" height={56} borderColor="lightGray" backgroundColor="white"
+                <TextField label="비밀번호" height={56} borderColor="gray" backgroundColor="white"
                     leftLocationIcon={false} placeholder="비밀번호를 입력해주세요." timer={false} rightButton="eye"
                     helperText="8~15자리 이내" 
                     value={password}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}/>
  
                 {/* 비밀번호 확인 */}
-                <TextField label="비밀번호 확인" height={56} borderColor="lightGray" backgroundColor="white"
+                <TextField label="비밀번호 확인" height={56} borderColor="gray" backgroundColor="white"
                     leftLocationIcon={false} placeholder="비밀번호를 다시 입력해주세요." timer={false} rightButton="eye"
                     helperText="비밀번호 일치" 
                     value={passwordConfirm}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPasswordConfirm(e.target.value)}/>
  
                 {/* 닉네임 */}
-                <TextField label="닉네임" height={56} borderColor="lightGray" backgroundColor="white"
+                <TextField label="닉네임" height={56} borderColor="gray" backgroundColor="white"
                     leftLocationIcon={false} placeholder="닉네임을 입력해주세요." timer={false} rightButton="none"
                     helperText="7자리 이내" 
                     value={nickname}

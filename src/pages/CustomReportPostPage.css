@@ -11,18 +11,28 @@
  
 /* 가운데: 스크롤 영역 */
 .report__body {
-    flex: 1;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 24px;
-    padding: 16px;
+    padding: 24px 16px 0;   /* 피그마: 상단바 아래 24px에서 카드 시작 */
     box-sizing: border-box;
+}
+
+/* 피그마: 카드 ~ 제목 30px, 제목 ~ 체크박스 16px, 체크박스 ~ 신고 사유 40px */
+.report__section {
+    margin-top: 30px;
+}
+
+.report__checks {
+    margin-top: 16px;
+}
+
+.report__area {
+    margin-top: 40px;
 }
  
 /* 고정폭 컴포넌트를 반응형(100%)으로 — 세로 스크롤바가 폭을 먹어도 가로로 안 넘침 */
-.report .custom-product,
-.report .text-area {
+.report__body .custom-product,
+.report__body .text-area {
     width: 100%;
     box-sizing: border-box;
 }
@@ -45,25 +55,30 @@
 }
  
 .report__hint {
-    margin: 8px 0 0;
+    margin: 4px 0 0;
     font-size: 14px;
     font-weight: 400;
     line-height: 20px;
-    color: #6b7280;
+    color: #4b5663;
 }
  
 /* 체크박스 목록 */
 .report__checks {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+}
+
+/* 체크박스 한 줄 = 안쪽 10px + 24px → 44px 간격 */
+.report__checks .checkbox {
+    padding: 12px 10px;
+    box-sizing: border-box;
 }
  
 /* 신고 사유 입력 */
 .report__area-label {
-    margin: 0 0 12px;
+    margin: 0 0 8px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 24px;
     color: #14191f;
 }
@@ -71,6 +86,20 @@
 /* 하단 고정 버튼  */
 .report__footer {
     flex-shrink: 0;
-    padding: 16px;
+    padding: 12px 16px 40px;
     box-sizing: border-box;
+}
+/* 피그마: 신고 대상 물품 카드는 테두리 없는 연회색 박스, 아이콘 칸은 흰색 */
+.report__body > .custom-product {
+    border: none;
+    background-color: #f3f6f9;
+}
+
+.report__body > .custom-product .product-box-section {
+    background-color: #ffffff;
+}
+
+/* 물품 카드가 없을 때 첫 섹션의 윗여백 제거 */
+.report__body > .report__section:first-child {
+    margin-top: 0;
 }

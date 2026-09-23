@@ -43,3 +43,27 @@ export function priceLabel(value: PriceValue) {
 export function ratingLabel(value: number) {
     return value === 5 ? '5.0' : value.toFixed(1) + ' 이상'
 }
+
+// 주소 검색(다음 우편번호)이 돌려주는 주소는 "서울 영등포구 …"처럼 시·도를 줄여 쓴다.
+// 서버는 주소를 LIKE 로 찾으므로 필터 값도 같은 형태로 바꿔 보낸다
+const SIDO_SHORT: Record<string, string> = {
+    '서울특별시': '서울', '부산광역시': '부산', '대구광역시': '대구', '인천광역시': '인천',
+    '광주광역시': '광주', '대전광역시': '대전', '울산광역시': '울산', '경기도': '경기',
+    '충청북도': '충북', '충청남도': '충남', '전라남도': '전남', '경상북도': '경북', '경상남도': '경남',
+}
+
+export function regionQuery(value: RegionValue | null) {
+    if (!value) return undefined
+    const sido = SIDO_SHORT[value.sido] ?? value.sido
+    return value.district ? `${sido} ${value.district}` : sido
+}
+
+// 필터 값 -> 목록 API 쿼리 (희망금액은 "이 금액 이하"로 거른다)
+export function filterQuery(values: FilterValues) {
+    return {
+        startAddress: regionQuery(values.start),
+        endAddress: regionQuery(values.end),
+        rating: values.rating ?? undefined,
+        hopePrice: values.price?.max,
+    }
+}

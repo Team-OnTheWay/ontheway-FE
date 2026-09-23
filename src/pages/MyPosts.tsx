@@ -1,5 +1,6 @@
 import './MyPosts.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useAsync } from '../hooks/useAsync'
 import CustomTopAppBar from '../components/CustomTopAppBar'
 import CustomTab from '../components/CustomTab'
 import CustomFilterBar from '../components/CustomFilterBar'
@@ -9,44 +10,100 @@ import CustomFab from '../components/CustomFab'
 import CustomNavBar from '../components/CustomNavBar'
 import CustomDiv from '../components/CustomDiv'
 import { SearchIcon } from '../components/CustomIcon'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { Delivery } from '../api/Delivery'
+import { Product } from '../api/Product'
+import { EMPTY_FILTERS, filterQuery, type FilterValues } from '../utils/filter'
+import { errorMessage, formatDate, formatNumber, formatTime } from '../utils/apiFormat'
+
+type LoadState = 'loading' | 'done' | 'error'
+const stateOf = (r: { loading: boolean; error?: unknown }): LoadState => r.loading ? 'loading' : r.error ? 'error' : 'done'
 
 function MyPosts(){
-    const [tab,setTab]=useState(0)
+    // /my/post?tab=1 로 들어오면 배송의뢰 탭부터 (배송의뢰 작성완료 후)
+    const [searchParams] = useSearchParams()
+    const [tab,setTab]=useState(searchParams.get('tab') === '1' ? 1 : 0)
     const navigate = useNavigate();
+
+    // 가는길: 내가 올린 이동 경로 (필터 적용)
+    const [filters, setFilters] = useState<FilterValues>(EMPTY_FILTERS)
+    const routeResult = useAsync(
+        () => tab !== 0 ? Promise.resolve([]) : new Delivery()
+            .myList({ myBoardDeliveryListRequestDto: { ...filterQuery(filters), page: 0, size: 50 } })
+            .then(res => res.data.data?.deliveryList ?? []),
+        `${tab}:${JSON.stringify(filters)}`,
+    )
+    const routes = routeResult.data ?? []
+    const routeState = stateOf(routeResult)
+
+    // 배송의뢰: 내가 올린 물품 (검색어는 입력을 멈춘 뒤 0.3초 후에 조회)
+    const [keyword, setKeyword] = useState('')
+    const [debouncedKeyword, setDebouncedKeyword] = useState('')
+    useEffect(() => {
+        const timer = setTimeout(() => setDebouncedKeyword(keyword.trim()), 300)
+        return () => clearTimeout(timer)
+    }, [keyword])
+    const productResult = useAsync(
+        () => tab !== 1 ? Promise.resolve([]) : new Product()
+            .list1({ productListRequestDto: { keyword: debouncedKeyword || undefined, page: 0, size: 50 } })
+            .then(res => res.data.data?.productList ?? []),
+        `${tab}:${debouncedKeyword}`,
+    )
+    const products = productResult.data ?? []
+    const productState = stateOf(productResult)
+    const error = errorMessage(routeResult.error ?? productResult.error, '게시글을 불러오지 못했어요.')
+
+    const message = (state: LoadState, empty: boolean, emptyText: string) =>
+        state === 'loading' ? <p className="list-message">불러오는 중이에요.</p>
+        : state === 'error' ? <p className="list-message">{error}</p>
+        : empty ? <p className="list-message">{emptyText}</p>
+        : null
 
     return(
         <CustomDiv backgroundColor={'#F3F4F6'} footerElement={<CustomNavBar initialActive="posts"/>}>
             <CustomTopAppBar variant="title" title="내 게시글"/>
 
             <div className="my-posts__body">
-                <div onClick={()=>setTab(tab===0?1:0)}>
-                    <CustomTab tabs={['가는길','배송의뢰']} activeIndex={tab}/>
-                </div>
+                <CustomTab tabs={['가는길','배송의뢰']} activeIndex={tab} onChange={setTab}/>
 
                 {tab===0 ? (
                     <>
-                        <CustomFilterBar className="my-posts__filters"/>
+                        <CustomFilterBar className="my-posts__filters" onChange={setFilters}/>
 
                         <div className="my-posts__cards">
-                            <CustomDeliveryCard id={1} count={6} startAddr="서울 마포구 성미산로 25" endAddr="서울 강남구 테헤란로 123" date="2026.09.17" startTime="08:00" endTime="09:00" price="8,000"/>
-                            <CustomDeliveryCard id={2} count={26} startAddr="인천 연수구 송도과학로 32" endAddr="서울 영등포구 국제금융로 10" date="2026.09.22" startTime="08:00" endTime="10:00" price="20,000"/>
-                            <CustomDeliveryCard id={3} count={13} startAddr="경기 성남시 분당구 정자일로 120" endAddr="서울 마포구 월드컵로 123" date="2026.09.12" startTime="14:00" endTime="16:00" price="12,000"/>
+                            {message(routeState, routes.length === 0, '등록한 이동 경로가 없어요.')}
+                            {routeState === 'done' && routes.map(route => (
+                                <CustomDeliveryCard
+                                    key={route.deliveryId}
+                                    id={route.deliveryId ?? 0}
+                                    count={route.requestCount ?? 0}
+                                    startAddr={route.startAddress ?? ''}
+                                    endAddr={route.endAddress ?? ''}
+                                    date={formatDate(route.deliveryDate)}
+                                    startTime={formatTime(route.deliveryDate)}
+                                    price={formatNumber(route.hopePrice)}
+                                />
+                            ))}
                         </div>
                     </>
                             ) : (
                     <>
                         <div className="my-posts__search">
                             <SearchIcon />
-                            <input placeholder="물품명으로 검색해보세요."/>
+                            <input placeholder="물품명으로 검색해보세요." value={keyword} onChange={(e) => setKeyword(e.target.value)}/>
                         </div>
 
                         <div className="my-posts__products">
-                            <CustomProductCard number="302384-334592" category="노트북 파우치" money="15,000" onClick={() => navigate('/product/detail/1')}/>
-                            <CustomProductCard number="581247-903164" category="전자기기" money="20,000" onClick={() => navigate('/product/detail/2')}/>
-                            <CustomProductCard number="746291-128537" category="화장품 선물세트" money="10,000" onClick={() => navigate('/product/detail/3')}/>
-                            <CustomProductCard number="193805-672418" category="교재 3권" money="12,000" onClick={() => navigate('/product/detail/4')}/>
-                            <CustomProductCard number="824630-451927" category="화분" money="7,000" onClick={() => navigate('/product/detail/5')}/>
+                            {message(productState, products.length === 0, keyword ? '검색 결과가 없어요.' : '등록한 배송 의뢰가 없어요.')}
+                            {productState === 'done' && products.map(product => (
+                                <CustomProductCard
+                                    key={product.productId}
+                                    number={`물품번호 ${product.productSerialNumber ?? ''}`}
+                                    category={product.productName ?? ''}
+                                    money={formatNumber(product.deliveryPrice)}
+                                    onClick={() => navigate(`/product/detail/${product.productId}`)}
+                                />
+                            ))}
                         </div>
                     </>
                 )}

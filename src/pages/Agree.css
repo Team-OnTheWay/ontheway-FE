@@ -76,22 +76,58 @@
 
 .agree-page-hug {
     width: 100%;
-    flex: 1;
+    min-height: calc(100% - 140px);   /* 스크롤 영역에서 상단바(140px)를 뺀 높이 → 버튼을 화면 하단에 고정 */
     box-sizing: border-box;
-
     padding: 0 16px;
-
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
-
-    min-height: 0;
 }
 
 .all-agree {
   gap: 12px;
   cursor: pointer;
+}
+
+/* 피그마: 전체동의 박스 y=164(상단바 아래 24px), 높이 56, 아래 약관 목록까지 24px */
+.agree-page-hug .all-agree {
+  width: 100%;
+  height: 56px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  margin: 24px 0;
+  padding: 0 12px;
+}
+
+.all-agree p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  color: #14191f;
+}
+
+.one-agree p {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #14191f;
+}
+
+/* 아이콘 칸은 24px (svg는 가운데 정렬) */
+.one-agree .arrow-check,
+.one-agree .agree-detail-arrow {
+  width: 24px;
+  height: 24px;
+  overflow: visible;
+}
+
+/* Arrow 아이콘(viewBox 40)의 화살표 폭을 피그마 lucide 크기(12px)에 맞춤 */
+.one-agree .arrow-check svg,
+.one-agree .agree-detail-arrow svg {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
 }
 
 .arrow-check {
@@ -110,9 +146,10 @@
 
 .one-agree {
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: flex-start;
-    gap: 8px;
+    gap: 12px;
 }
 
 .one-agree p {

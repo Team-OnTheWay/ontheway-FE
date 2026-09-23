@@ -8,13 +8,19 @@ import { ChevronRightIcon, LogoutIcon, ThumbsUpIcon } from '../components/Custom
 import CustomDiv from '../components/CustomDiv'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../store/useAuthStore'
+import { User } from '../api/User'
+import { useMyInfo } from '../hooks/useMyInfo'
  
 function CustomMyPage() {
     const navigate = useNavigate();
     const setLogout = useAuthStore((state) => state.setLogout);
 
-    function logout() {
+    const { info } = useMyInfo();
+
+    async function logout() {
         if(confirm('정말 로그아웃 하시겠습니까?')) {
+            // 서버의 리프레시 토큰을 지운다 (실패해도 이 기기에서는 로그아웃)
+            await new User().logout().catch(() => {});
             setLogout();
             navigate('/login');
         }
@@ -31,8 +37,8 @@ function CustomMyPage() {
                         <CustomProfile width={40} height={20} strok="#FD5D35" strokWidth={2} diameter={40} backgroundColor="#FEF1ED" />
                     </div>
                     <div className="mypage__profile-text">
-                        <p className="mypage__profile-name">하루</p>
-                        <p className="mypage__profile-date">2026.09.08</p>
+                        <p className="mypage__profile-name">{info?.nickName ?? ""}</p>
+                        <p className="mypage__profile-date">{info?.userId ?? ""}</p>
                     </div>
                     <ChevronRightIcon />
                 </button>

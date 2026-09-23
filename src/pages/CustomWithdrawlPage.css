@@ -15,8 +15,8 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 24px;
-    padding: 16px;
+    gap: 32px;
+    padding: 24px 16px 16px;   /* 피그마: 상단바 아래 24px에서 경고 박스 시작 */
     box-sizing: border-box;
 }
  
@@ -27,7 +27,7 @@
     gap: 12px;
     padding: 16px;
     box-sizing: border-box;
-    border-radius: 12px;
+    border-radius: 24px;
     background-color: #fdf7f5;
 }
  
@@ -46,10 +46,10 @@
  
 .withdrawal__warning-list {
     margin: 0;
-    padding-left: 20px;
+    padding-left: 21px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 0;
     font-size: 14px;
     font-weight: 400;
     line-height: 20px;
@@ -64,14 +64,14 @@
 /* 하단 고정 버튼 */
 .withdrawal__footer {
     flex-shrink: 0;
-    padding: 16px;
+    padding: 16px 16px 43px;   /* 피그마: 버튼 아래 43px */
     box-sizing: border-box;
 }
 
 .withdrawal_content {
     display: flex;
     flex-direction: column;
-    height: 90vh;
+    min-height: calc(100% - 64px);   /* 상단바(64px)를 뺀 나머지 높이 → 버튼을 화면 하단에 */
 }
 /* 탈퇴 사유 선택 */
 .withdrawal__reason {
@@ -83,7 +83,7 @@
 .withdrawal__reason-label {
     margin: 0;
     color: #14191f;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
-    line-height: 20px;
+    line-height: 24px;
 }

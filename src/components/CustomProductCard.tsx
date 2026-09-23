@@ -6,12 +6,13 @@ interface CustomProductCard {
     category: string;
     money: string;
     onClick?: () => void;
+    selected?: boolean;   // 요청하기 화면에서 고른 물품
 }
 
-function CustomProductCard({number, category, money, onClick}: CustomProductCard) {
+function CustomProductCard({number, category, money, onClick, selected = false}: CustomProductCard) {
   return (
     <>
-        <div className="custom-product" onClick={onClick}>
+        <div className={`custom-product ${selected ? 'custom-product--selected' : ''}`} onClick={onClick}>
             <div className='product-section'>
                 <div className='product-box-section'>
                     <Box width={22} height={22} strokeWidth={2}></Box>

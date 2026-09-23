@@ -20,11 +20,25 @@
 .product-box-section {
     width: 40px;
     height: 40px;
+    flex-shrink: 0;
     background-color: #FDF7F5;
-    border-radius: 10px;
+    border-radius: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.product-box-section svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* 금액 + '원' 아래쪽 기준 정렬 */
+.custom-product > div:last-child {
+    display: flex;
+    align-items: flex-end;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .product-info-section {
@@ -63,10 +77,19 @@
 }
 
 .product-money-unit {
-    color: #14191F;
+    color: #FD5D35;
     font-family: Pretendard;
-    font-size: 16px;
+    font-size: 14px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 24px;
+    font-weight: 400;
+    line-height: 20px;
+}
+.custom-product {
+    cursor: pointer;
+}
+
+/* 요청하기 화면에서 고른 물품 */
+.custom-product--selected {
+    border-color: #FD5D35;
+    background-color: #FEF1ED;
 }

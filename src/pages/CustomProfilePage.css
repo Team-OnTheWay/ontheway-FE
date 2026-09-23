@@ -10,8 +10,8 @@
 .profile__body {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 8px 16px 24px;
+    gap: 24px;   /* 피그마: 입력칸 사이 24px */
+    padding: 16px 16px 0;   /* 피그마: 상단바 아래 16px에 프로필 사진 */
     box-sizing: border-box;
 }
  
@@ -21,7 +21,7 @@
     align-self: center;
     width: 90px;
     height: 90px;
-    margin: 8px 0 16px;
+    margin: 0 0 40px;   /* 사진 ~ 첫 입력칸 64px (gap 24 + 40) */
 }
  
 .profile__camera {
@@ -69,18 +69,28 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 95px;
+    width: 97px;
     height: 56px;
-    border-radius: 10px;
+    border-radius: 12px;
     background-color: #f2f2f2;
     color: #33363d;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
+    line-height: 24px;
     white-space: nowrap;
     cursor: pointer;
 }
  
 /* 하단 버튼 */
 .profile__footer {
-    padding: 8px 16px 24px;
+    padding: 56px 16px 40px;   /* 피그마: 마지막 입력칸 ~ 버튼 56px, 아래 40px */
+}
+/* 서버에 올린 프로필 사진 */
+.profile__image,
+.profile-edit__image {
+    display: block;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
 }

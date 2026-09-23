@@ -21,7 +21,6 @@ import type {
   MemberDeleteAccountRequestDto,
   MemberFindIdRequestDto,
   MemberFindPasswordRequestDto,
-  MemberRatingRequestDto,
   MemberSaveRequestDto,
   RatingsData,
   ReissueData,
@@ -58,6 +57,7 @@ export class User<
    *
    * @tags 회원 관리
    * @name Reissue
+   * @summary 토큰 재발급
    * @request POST:/user/reissue
    * @response `200` `ReissueData` OK
    */
@@ -74,6 +74,7 @@ export class User<
    *
    * @tags 회원 관리
    * @name Logout
+   * @summary 로그아웃
    * @request POST:/user/logout
    * @response `200` `LogoutData` OK
    */
@@ -174,20 +175,14 @@ export class User<
    *
    * @tags 회원 관리
    * @name Ratings
-   * @summary 내 만족도 조회
+   * @summary 내 후기 조회
    * @request GET:/user/ratings
    * @response `200` `RatingsData` OK
    */
-  ratings = (
-    query: {
-      memberRatingRequestDto: MemberRatingRequestDto;
-    },
-    params: RequestParams = {},
-  ) =>
+  ratings = (params: RequestParams = {}) =>
     this.request<RatingsData, any>({
       path: `/user/ratings`,
       method: "GET",
-      query: query,
       ...params,
     });
   /**

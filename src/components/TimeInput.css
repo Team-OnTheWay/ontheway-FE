@@ -10,13 +10,13 @@
   display:flex;
   width:100%;
   align-items:center;
-  gap:10px;
+  gap:12px;
 }
 
 .time-input-block select{
   flex:1;
-  height:48px;
-  padding:0 10px;
+  height:50px;
+  padding:0 12px;   /* 피그마: 안쪽 여백 12px, 높이 50px */
   box-sizing:border-box;
   border-radius:8px;
   color:#14191F;
@@ -48,7 +48,8 @@
 
 .time-dropdown-arrow{
   position:absolute;
-  right:8px;
+  display:flex;
+  right:12px;
   top:50%;
   transform:translateY(-50%);
   pointer-events:none;

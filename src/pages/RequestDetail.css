@@ -13,8 +13,8 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: 16px;
+    gap: 16px;
+    padding: 20px 16px 16px;   /* 피그마: 상단바 아래 20px에서 프로필 카드 시작 */
     box-sizing: border-box;
     overflow-y: auto;
 }
@@ -51,20 +51,22 @@
     line-height: 16px;
 }
 
+/* 피그마 물품정보 카드: 제목(좌우 12·위아래 16) + 항목(좌우 16·위아래 8), 아래 16px */
 .request-detail__card{
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: 16px;
+    gap: 0;
+    padding: 0 0 16px;
     box-sizing: border-box;
     border-radius: 16px;
     background-color: #FFFFFF;
 }
 
 .request-detail__title{
+    padding: 16px 12px;
     color: #14191F;
     font-family: Pretendard;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     line-height: 24px;
 }
@@ -72,13 +74,13 @@
 .request-detail__product-info{
     display: flex;
     flex-direction: column;
-    gap: 16px;
 }
 
 .request-detail__product-item{
     display: flex;
     align-items: flex-start;
     gap: 8px;
+    padding: 8px 16px;
 }
 
 .request-detail__product-item svg{
@@ -96,25 +98,26 @@
 .request-detail__product-label{
     color: #14191F;
     font-family: Pretendard;
-    font-size: 12px;
+    font-size: 16px;
     font-style: normal;
-    font-weight: 600;
-    line-height: 16px;
+    font-weight: 500;
+    line-height: 24px;
 }
 
 .request-detail__product-value{
     color: #6B7280;
     font-family: Pretendard;
-    font-size: 12px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 16px;
+    line-height: 20px;
 }
 
 .request-detail__notice{
     display: flex;
-    align-items: flex-start;
-    gap: 6px;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
 }
 
 .request-detail__notice svg{
@@ -127,23 +130,23 @@
     margin: 0;
     color: #6B7280;
     font-family: Pretendard;
-    font-size: 10px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 14px;
+    line-height: 20px;
     word-break: keep-all;
 }
 
 .request-detail__footer{
     flex-shrink: 0;
-    padding: 8px 16px 16px;
+    padding: 12px 16px 40px;
     box-sizing: border-box;
     background-color: #FFFFFF;
 }
 
 .request-detail__buttons{
     display: flex;
-    gap: 8px;
+    gap: 4px;
 }
 
 .request-detail__buttons > *{

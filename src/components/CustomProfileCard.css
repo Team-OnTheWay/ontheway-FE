@@ -14,8 +14,8 @@
 /* 아바타 + 텍스트 + 화살표 */
 .custom-profile-card-content {
     display: flex;
-    align-items: flex-start;
-    gap: 12px;
+    align-items: center;
+    gap: 16px;   /* 피그마: 아바타·텍스트·화살표 사이 16px, 세로 가운데 정렬 */
 }
  
 .content-profile {
@@ -25,7 +25,7 @@
 .profile-info {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
     flex: 1;
     min-width: 0;
 }
@@ -33,6 +33,7 @@
 .nickname {
     font-size: 16px;
     font-weight: 600;
+    line-height: 24px;
     color: #14191f;
     white-space: nowrap;
     overflow: hidden;
@@ -41,8 +42,9 @@
  
 .date {
     font-size: 12px;
-    font-weight: 600;
-    color: #cbd5e1;
+    font-weight: 400;
+    line-height: 16px;
+    color: #6b7280;
 }
  
 /* 펼침: 평균 · 후기 한 줄 (닉네임·날짜 바로 아래) */
@@ -50,13 +52,13 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-top: 4px;
 }
  
 .rating,
 .review {
-    font-weight: 600;
+    font-weight: 400;
     font-size: 12px;
+    line-height: 16px;
     color: #4b5663;
 }
  
@@ -84,8 +86,24 @@
  
 /* 신고: 화살표 아래, 오른쪽 정렬 */
 .profile-report {
-    font-weight: 600;
+    font-weight: 400;
     font-size: 12px;
-    color: #4b5663;
+    line-height: 16px;
+    color: #6b7280;
     cursor: pointer;
+}
+/* 화살표: 48px 터치 영역 안에 피그마 lucide 크기(12px 폭)·색(#6A6A67)으로 */
+.content-arrow {
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+}
+
+.content-arrow svg {
+    width: 40px;
+    height: 40px;
+}
+
+.content-arrow svg path {
+    stroke: #6a6a67;
 }

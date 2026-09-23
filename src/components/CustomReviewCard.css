@@ -1,8 +1,8 @@
+/* 피그마 Card/후기: 안쪽 16px, 줄 사이 12px */
 .custom-review {
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    border: 0px 1px white;
     border-radius: 16px;
     background-color: white;
     padding: 16px;
@@ -12,7 +12,9 @@
  
 .review-profile-info {
     display: flex;
-    justify-content: space-between
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
 }
  
 .review-profile-content {
@@ -22,32 +24,52 @@
 }
  
 .review-nickname {
-    font-weight: 600;
+    font-weight: 700;
     font-size: 16px;
+    line-height: 24px;
+    color: #14191f;
 }
  
 .reivew-date {
     color: #9CA3AF;
     font-size: 12px;
+    line-height: 16px;
+    white-space: nowrap;
 }
  
 .review-star-info {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
+}
+
+/* 별 16px, 간격 4px */
+.review-star-info > div {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.review-star-info svg {
+    display: block;
 }
  
 .rating-number {
     font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    color: #14191f;
 }
  
 .review-content {
     font-size: 16px;
-    color: #6B7280;
+    font-weight: 400;
+    line-height: 24px;
+    color: #14191F;
 }
 
 .review-profile-title {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
 }

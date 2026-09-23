@@ -27,7 +27,7 @@
 
 .recent-post {
     width: calc(100% - 32px);
-    margin: 16px;
+    margin: 12px 16px 0;   /* 피그마: 상단바 아래 12px */
     padding: 12px;
     box-sizing: border-box;
     display: flex;
@@ -45,12 +45,15 @@
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: #FEE8E1;
+    background: #FEE9E3;
 }
 
 .recent-post-text {
     flex: 1;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .recent-post-title {
@@ -74,11 +77,13 @@
     box-sizing: border-box;
 }
 
+/* 섹션 제목(list 03): 18px SemiBold, 위아래 16px → 높이 56 */
 .path-info-title {
-    margin: 20px 0 16px;
+    margin-top: 12px;
+    padding: 16px 0;
     color: #14191F;
     font-family: Pretendard;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     line-height: 24px;
 }
@@ -94,12 +99,12 @@
 }
 
 .path-setup-item + .path-setup-item {
-    margin-top: 16px;
+    margin-top: 24px;
 }
 
 .path-setup-icon {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -109,13 +114,19 @@
     background: white;
 }
 
+.path-setup-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* 출발지 아이콘 아래(2px 띄움)부터 도착지 아이콘 바로 위까지 이어지는 선 */
 .start-icon .path-line {
     position: absolute;
-    top:20px;
+    top: 26px;
     left: 50%;
     transform: translateX(-50%);
     width: 2px;
-    height: 128px;
+    height: 132px;
     background: #D7DAE0;
     z-index: -1;
 }
@@ -129,9 +140,28 @@
 }
 
 .path-setup-label {
-    height: 20px;
+    height: 24px;
     display: flex;
     align-items: center;
+    color: #14191F;
+    font-family: Pretendard;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+}
+
+.path-setup-address-box {
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border: 1px solid #D7DAE0;
+    border-radius: 12px;
+    background: white;
     color: #14191F;
     font-family: Pretendard;
     font-size: 16px;
@@ -139,26 +169,12 @@
     line-height: 24px;
 }
 
-.path-setup-address-box {
-    width: 100%;
-    height: 48px;
-    padding: 0 12px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border: 1px solid #D7DAE0;
-    border-radius: 12px;
-    background: white;
-    color: #14191F;
-    font-family: Pretendard;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 20px;
+.path-setup-address-box .x-button {
+    padding: 0;
 }
 
 .registered-route {
-    margin: 24px 16px 0;
+    margin: 32px 16px 0;
 }
 
 .delivery-section {
@@ -167,13 +183,16 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 24px;
 }
 
+/* 섹션 제목(list 03) 바로 아래에 첫 입력칸이 붙음 */
 .delivery-title {
+    margin-bottom: -24px;
+    padding: 16px 0;
     color: #14191F;
     font-family: Pretendard;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     line-height: 24px;
 }
@@ -189,13 +208,17 @@
 .delivery-extra-title {
     color: #14191F;
     font-family: Pretendard;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
-    line-height: 20px;
+    line-height: 24px;
+}
+
+.delivery-time-title {
+    font-weight: 400;
 }
 
 .path-setup-button {
-    margin: 24px 16px 30px;
+    margin: 40px 16px;   /* 피그마: 버튼 아래 40px */
     display: flex;
     justify-content: center;
 }

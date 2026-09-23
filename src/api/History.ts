@@ -10,14 +10,15 @@
  * ---------------------------------------------------------------
  */
 
-import {
+import type {
   CancelListData,
   DeliveryListData,
   HistoryListRequestDto,
   List2Data,
   RequestListData,
 } from "./data-contracts";
-import { HttpClient, RequestParams } from "./http-client";
+import { HttpClient } from "./http-client";
+import type { RequestParams } from "./http-client";
 
 export class History<
   SecurityDataType = unknown,

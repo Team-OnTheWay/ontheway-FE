@@ -1,17 +1,43 @@
-#info1,#info2{
+/* 피그마 info Type01: 회색 박스 안에 아이콘 + 한 줄 안내 (가로 배치) */
+#info1{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:16px;
+  box-sizing:border-box;
+  border-radius:12px;
+  background:#D7DAE0;
+}
+
+#info1 svg{
+  flex-shrink:0;
+}
+
+#info1 p{
+  flex:1;
+  min-width:0;
+  margin:0;
+  color:#4B5663;
+  font-family:Pretendard;
+  font-size:18px;
+  font-weight:400;
+  line-height:24px;
+}
+
+/* 피그마 info Type02: 제목(아이콘+안내) 아래 설명 */
+#info2{
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:flex-start;
   gap:12px;
-  flex:1 0 0;
   padding:16px;
   box-sizing:border-box;
-  border-radius:12px;
-  background:#F5F5F5;
+  border-radius:16px;
+  background:#F2F2F2;
 }
 
-#info1 p,#info2 p{
+#info2 p{
   margin:0;
   color:#6B7280;
   font-family:Pretendard;

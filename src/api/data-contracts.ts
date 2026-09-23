@@ -88,17 +88,24 @@ export interface ApiResponseVoid {
 }
 
 export interface MemberFindPasswordRequestDto {
-  /** 아이디 */
-  userId?: string;
-  /** 이메일 */
-  email?: string;
-  /** 인증코드 */
-  validCode?: string;
+  /**
+   * 아이디
+   * @minLength 1
+   */
+  accountId: string;
+  /**
+   * 이메일
+   * @minLength 1
+   */
+  email: string;
 }
 
 export interface MemberFindIdRequestDto {
-  /** 이메일 */
-  email?: string;
+  /**
+   * 이메일
+   * @minLength 1
+   */
+  email: string;
   /** 인증코드 */
   validCode?: string;
 }
@@ -142,8 +149,25 @@ export interface ReportUserRequestDto {
    * @format int64
    */
   userId?: number;
-  /** 신고 사유 */
-  reason?: string;
+  /**
+   * 신고 유형 (최대 3개)
+   * @uniqueItems true
+   */
+  categories?: (
+    | "PROHIBITED_ITEM"
+    | "INFO_MISMATCH"
+    | "DUPLICATE_POSTING"
+    | "ADVERTISEMENT"
+    | "SCHEDULE_VIOLATION"
+    | "NO_RESPONSE"
+    | "UNFAIR_PAYMENT_DEMAND"
+    | "ITEM_DAMAGE"
+    | "FALSE_IDENTITY"
+    | "SAFETY_THREAT"
+    | "ABUSIVE_LANGUAGE"
+  )[];
+  /** 신고 내용 */
+  content?: string;
 }
 
 export interface ReportBoardRequestDto {
@@ -152,8 +176,27 @@ export interface ReportBoardRequestDto {
    * @format int64
    */
   boardId?: number;
-  /** 신고 사유 */
-  reason?: string;
+  /** 게시글 종류 (PRODUCT 또는 DELIVERY) */
+  boardType?: "USER" | "PRODUCT" | "DELIVERY";
+  /**
+   * 신고 유형 (최대 3개)
+   * @uniqueItems true
+   */
+  categories?: (
+    | "PROHIBITED_ITEM"
+    | "INFO_MISMATCH"
+    | "DUPLICATE_POSTING"
+    | "ADVERTISEMENT"
+    | "SCHEDULE_VIOLATION"
+    | "NO_RESPONSE"
+    | "UNFAIR_PAYMENT_DEMAND"
+    | "ITEM_DAMAGE"
+    | "FALSE_IDENTITY"
+    | "SAFETY_THREAT"
+    | "ABUSIVE_LANGUAGE"
+  )[];
+  /** 신고 내용 */
+  content?: string;
 }
 
 export interface ProductSaveRequestDto {
@@ -435,11 +478,6 @@ export interface DeliveryUpdateResponseDto {
    * @format date-time
    */
   updatedAt?: string;
-}
-
-export interface MemberRatingRequestDto {
-  /** @format int64 */
-  userNo?: number;
 }
 
 export interface ReviewListRequestDto {
@@ -872,8 +910,11 @@ export interface DeliveryListResponseDto {
 }
 
 export interface MemberDeleteAccountRequestDto {
-  /** @format int64 */
-  userNo?: number;
+  /**
+   * 비밀번호 확인
+   * @minLength 1
+   */
+  password: string;
 }
 
 export interface ApiResponseProductDeleteResponseDto {
@@ -922,7 +963,7 @@ export type CheckIdData = ApiResponseObject;
 
 export type CreateData = ApiResponseObject;
 
-export type Create1Data = ApiResponseObject;
+export type RegisterData = ApiResponseObject;
 
 export type UserData = ApiResponseObject;
 
@@ -930,7 +971,7 @@ export type BoardData = ApiResponseObject;
 
 export type DetailData = ApiResponseProductDetailResponseDto;
 
-export type Create2Data = ApiResponseProductSaveResponseDto;
+export type Create1Data = ApiResponseProductSaveResponseDto;
 
 export type UpdateData = ApiResponseProductUpdateResponseDto;
 
@@ -948,14 +989,14 @@ export type SendCodeData = ApiResponseObject;
 
 export type Detail1Data = ApiResponseDeliveryDetailResponseDto;
 
-export type Create3Data = ApiResponseDeliverySaveResponseDto;
+export type Create2Data = ApiResponseDeliverySaveResponseDto;
 
 export type Update1Data = ApiResponseDeliveryUpdateResponseDto;
 
 export type InfoData = ApiResponseObject;
 
 export interface UpdateInfoPayload {
-  memberUpdateInfoRequestDto: MemberUpdateInfoRequestDto;
+  dto: MemberUpdateInfoRequestDto;
   /** @format binary */
   image?: File;
 }

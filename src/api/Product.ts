@@ -10,8 +10,8 @@
  * ---------------------------------------------------------------
  */
 
-import {
-  Create2Data,
+import type {
+  Create1Data,
   DeleteData,
   DetailData,
   List1Data,
@@ -21,7 +21,8 @@ import {
   ProductUpdateRequestDto,
   UpdateData,
 } from "./data-contracts";
-import { ContentType, HttpClient, RequestParams } from "./http-client";
+import { ContentType, HttpClient } from "./http-client";
+import type { RequestParams } from "./http-client";
 
 export class Product<
   SecurityDataType = unknown,
@@ -51,13 +52,13 @@ export class Product<
    * No description
    *
    * @tags 물품 게시글
-   * @name Create2
+   * @name Create1
    * @summary 물품 게시글 등록
    * @request POST:/product
-   * @response `200` `Create2Data` OK
+   * @response `200` `Create1Data` OK
    */
-  create2 = (data: ProductSaveRequestDto, params: RequestParams = {}) =>
-    this.request<Create2Data, any>({
+  create1 = (data: ProductSaveRequestDto, params: RequestParams = {}) =>
+    this.request<Create1Data, any>({
       path: `/product`,
       method: "POST",
       body: data,

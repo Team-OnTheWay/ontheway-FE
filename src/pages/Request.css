@@ -6,8 +6,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 8px;   /* 피그마: + 아이콘과 글자 사이 8px */
 
-    border: 1px solid #D7DAE0;;
+    border: 1px solid #D7DAE0;
     border-radius: 12px;
     background-color: white;
 
@@ -18,14 +19,16 @@
     cursor: pointer;
 }
 
+/* 피그마: 상단바(64) 아래 40px에서 카드 시작, 버튼은 하단 40px */
 .request-products {
-    margin-top: 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 16px;
-    height: 80vh;
     justify-content: space-between;
+    gap: 24px;
+    min-height: calc(100% - 64px);
+    padding: 40px 16px;
+    box-sizing: border-box;
 }
 
 .request-button {

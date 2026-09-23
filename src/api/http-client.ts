@@ -60,6 +60,24 @@ export enum ContentType {
   Text = "text/plain",
 }
 
+// { dto: { page: 0, size: 10 } } -> "page=0&size=10" (값이 없는 항목은 빼고 보낸다)
+function flattenQuery(params: Record<string, unknown>): string {
+  const search = new URLSearchParams();
+  const append = (key: string, value: unknown) => {
+    if (value === undefined || value === null || value === "") return;
+    if (Array.isArray(value)) value.forEach((item) => append(key, item));
+    else search.append(key, String(value));
+  };
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value && typeof value === "object" && !Array.isArray(value)) {
+      Object.entries(value as Record<string, unknown>).forEach(([k, v]) => append(k, v));
+    } else {
+      append(key, value);
+    }
+  });
+  return search.toString();
+}
+
 export class HttpClient<SecurityDataType = unknown> {
   public instance: AxiosInstance;
   private securityData: SecurityDataType | null = null;
@@ -76,6 +94,9 @@ export class HttpClient<SecurityDataType = unknown> {
     this.instance = axios.create({
       ...axiosConfig,
       baseURL: axiosConfig.baseURL || "https://swyp-ontheway.duckdns.org",
+      // 생성된 메서드는 쿼리를 { xxxRequestDto: { page, size } } 처럼 한 번 감싸서 넘긴다.
+      // 서버(@ModelAttribute)는 page=0&size=10 처럼 평평한 쿼리를 받으므로 한 단계 풀어서 보낸다
+      paramsSerializer: { serialize: flattenQuery },
     });
     this.secure = secure;
     this.format = format;
@@ -162,11 +183,16 @@ export class HttpClient<SecurityDataType = unknown> {
         property instanceof Array ? property : [property];
 
       for (const formItem of propertyContent) {
+        if (formItem === undefined || formItem === null) continue;
         const isFileType = formItem instanceof Blob || formItem instanceof File;
-        formData.append(
-          key,
-          isFileType ? formItem : this.stringifyFormItem(formItem),
-        );
+        if (isFileType) {
+          formData.append(key, formItem);
+        } else if (typeof formItem === "object") {
+          // 서버의 @RequestPart(JSON) 는 파트 Content-Type 이 application/json 이어야 읽는다
+          formData.append(key, new Blob([JSON.stringify(formItem)], { type: "application/json" }));
+        } else {
+          formData.append(key, this.stringifyFormItem(formItem));
+        }
       }
 
       return formData;

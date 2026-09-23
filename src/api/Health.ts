@@ -10,8 +10,9 @@
  * ---------------------------------------------------------------
  */
 
-import { HealthData } from "./data-contracts";
-import { HttpClient, RequestParams } from "./http-client";
+import type { HealthData } from "./data-contracts";
+import { HttpClient } from "./http-client";
+import type { RequestParams } from "./http-client";
 
 export class Health<
   SecurityDataType = unknown,

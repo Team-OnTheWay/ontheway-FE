@@ -5,8 +5,13 @@
   gap: 8px;
 }
  
+/* 입력칸 위 라벨 (TextField 라벨과 동일: Body1/Medium) */
 .date-input__label {
   margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #14191f;
 }
  
 .date-input-box {
@@ -15,19 +20,31 @@
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  gap: 8px;
+  padding: 0 16px;
   border: 1px solid;
   border-radius: 12px;
   background-color: white;
 }
+
+.date-input-box:focus-within {
+  border-color: #fd5d35 !important;
+}
  
 .date-input-box input {
   flex: 1;
+  min-width: 0;
+  padding: 0;
   border: none;
   outline: none;
   background: transparent;
   font-size: 16px;
-  padding-left: 4px;
+  line-height: 24px;
+  color: #14191f;
+}
+
+.date-input-box input::placeholder {
+  color: #9ca3af;
 }
  
 .calendar-icon {
@@ -35,7 +52,32 @@
   justify-content: center;
   align-items: center;
   margin-left: auto;
-  padding: 2px;
+  padding: 0;
   border: none;
   background: none;
+}
+
+.date-input-box {
+  position: relative;
+}
+
+.calendar-icon {
+  cursor: pointer;
+}
+
+.calendar-icon:disabled {
+  cursor: default;
+}
+
+/* 브라우저 날짜 선택창의 기준점 (보이지 않게, 달력 아이콘 아래에 둔다) */
+.date-input__picker {
+  position: absolute;
+  right: 16px;
+  bottom: 0;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
 }
