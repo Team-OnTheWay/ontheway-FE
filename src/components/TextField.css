@@ -60,6 +60,19 @@
   background: var(--Neutral-Border4, #F2F2F2);
   border-radius: 8px;
 }
+
+.label-button.orange {
+  background: #FD5D35;
+}
+
+.label-button.disabled {
+  background: transparent; 
+}
+
+.label-button button:disabled {
+  cursor: default;
+  transform: none;
+}
  
 .label-button button {
   all: unset;

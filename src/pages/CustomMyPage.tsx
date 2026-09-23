@@ -7,9 +7,18 @@ import CustomFaq from '../components/CustomFaq'
 import { ChevronRightIcon, LogoutIcon, ThumbsUpIcon } from '../components/CustomIcon'
 import CustomDiv from '../components/CustomDiv'
 import { useNavigate } from 'react-router-dom'
+import { useAuthStore } from '../store/useAuthStore'
  
 function CustomMyPage() {
     const navigate = useNavigate();
+    const setLogout = useAuthStore((state) => state.setLogout);
+
+    function logout() {
+        if(confirm('정말 로그아웃 하시겠습니까?')) {
+            setLogout();
+            navigate('/login');
+        }
+    }
 
     return (
         <CustomDiv backgroundColor={'#F3F4F6'} footerElement={<CustomNavBar initialActive="my" />}>
@@ -42,7 +51,7 @@ function CustomMyPage() {
                 {/* 계정관리 */}
                 <div className="mypage__section">
                     <CustomList variant="list03" label="계정관리" />
-                    <CustomList variant="list01" label="로그아웃" trailing={<LogoutIcon />} onClick={() => confirm('정말 로그아웃 하시겠습니까?')}/>
+                    <CustomList variant="list01" label="로그아웃" trailing={<LogoutIcon />} onClick={logout}/>
                     <CustomList variant="list01" label="회원탈퇴" onClick={() => navigate('/with-draw')}/>
                 </div>
             </div>

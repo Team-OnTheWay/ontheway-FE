@@ -18,13 +18,14 @@ function CustomLoginPage() {
 
     const handleLoginSubmit = async () => {
         try {
-            const response = await axios.post('/user/login', { id, password });
+            const response = await axios.post(`${import.meta.env.VITE_LOGIN_HOST_URL}/user/login`, { accountId: id, password });
             const accessToken = response.data.accessToken;
             const refreshToken = response.data.refreshToken;
 
             setLogin(accessToken, refreshToken);
             navigate('/');
         } catch (error) {
+            alert('로그인 실패');
             console.error('로그인 실패', error);
         }
     };

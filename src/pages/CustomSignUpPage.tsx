@@ -133,7 +133,20 @@ function CustomSignupPage() {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}/>
  
                 {/* 생년월일 */}
-                <DateInput label="생년월일" borderColor="lightGray" value={birth} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBirth(e.target.value)}/>
+                <DateInput label="생년월일" borderColor="lightGray" value={birth} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        const rawValue = e.target.value.replace(/[^0-9]/g, '');
+                        let formattedValue = '';
+
+                        if (rawValue.length <= 4) {
+                            formattedValue = rawValue;
+                        } else if (rawValue.length <= 6) {
+                            formattedValue = `${rawValue.slice(0, 4)}-${rawValue.slice(4)}`;
+                        } else {
+                            formattedValue = `${rawValue.slice(0, 4)}-${rawValue.slice(4, 6)}-${rawValue.slice(6, 10)}`;
+                        }
+
+                        setBirth(formattedValue);
+                    }}/>
  
                 {/* 이메일 + 인증받기 */}
                 <div className="signup__row">
@@ -156,14 +169,24 @@ function CustomSignupPage() {
  
                 {/* 이메일 인증번호 입력창 */}
                 {isEmailSent && (
-                    <TextField label="이메일 인증" height={56} borderColor="lightGray" backgroundColor="white"
-                        leftLocationIcon={false} placeholder="인증번호를 입력해주세요." timer={true}
+                    <TextField 
+                        label="이메일 인증" 
+                        height={56} 
+                        borderColor="lightGray" 
+                        backgroundColor="white"
+                        leftLocationIcon={false} 
+                        placeholder={isEmailVerified ? "인증이 완료되었습니다." : "인증번호를 입력해주세요."} 
+                        timer={!isEmailVerified}
                         resetKey={timerKey}
-                        rightButton="label" rightButtonLabel={isEmailVerified ? '완료' : '인증'} 
+                        rightButton="label" 
+                        rightButtonLabel={isEmailVerified ? '확인완료' : '인증'} 
+                        rightButtonColor={isEmailVerified ? '#9CA3AF' : '#FD5D35'}
+                        rightButtonDisabled={isEmailVerified}
                         value={authCode}
                         disabled={isEmailVerified} 
-                        onRightButtonClick={!isEmailVerified ? handleVerifyEmailCode : undefined}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthCode(e.target.value)}/>
+                        onRightButtonClick={handleVerifyEmailCode}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthCode(e.target.value)}
+                    />
                 )}
  
                 {/* 비밀번호 */}

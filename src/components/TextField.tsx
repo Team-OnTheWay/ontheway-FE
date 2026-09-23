@@ -21,6 +21,8 @@ type TextFieldProps = {
   resetKey?: number
   rightButton: 'x' | 'label' | 'eye' | 'none'
   rightButtonLabel?: string
+  rightButtonColor?: string
+  rightButtonDisabled?: boolean
   helperText?: string
   defaultValue?: string
   disabled?: boolean
@@ -66,7 +68,8 @@ useEffect(() => {
         <input type={inputType} placeholder={props.placeholder} defaultValue={props.defaultValue} value={props.value} onChange={props.onChange} disabled={props.disabled} />
         {(props.timer || props.rightButton === 'label') && <div className='text-field-right'>
           {props.timer && <span className='timer'>{minutes}:{seconds.toString().padStart(2, '0')}</span>}
-          {props.rightButton === 'label' && <div className='label-button'><button style={{color:'#9CA3AF'}} onClick={props.onRightButtonClick}>{props.rightButtonLabel ?? 'Label'}</button></div>}
+          {props.rightButton === 'label' && <div className={`label-button ${props.rightButtonDisabled ? 'disabled' : 'orange'}`}><button style={{color: props.rightButtonDisabled ? '#9CA3AF' : '#FFFFFF', cursor: props.rightButtonDisabled ? 'default' : 'pointer'}} onClick={props.rightButtonDisabled ? undefined : props.onRightButtonClick}
+                disabled={props.rightButtonDisabled}>{props.rightButtonLabel ?? 'Label'}</button></div>}
         </div>}
         {props.rightButton === 'x' && <XButton />}
         {props.rightButton === 'eye' && (
