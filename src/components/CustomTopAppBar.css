@@ -10,7 +10,7 @@
     height: 64px;
     align-items: center;
     gap: 6px;
-    padding: 8px 16px;
+    padding: 8px 4px;   /* 피그마: 좌우 4px + 뒤로가기 48px 박스 */
 }
  
 .top-app-bar--large {
@@ -50,17 +50,20 @@
 }
  
 .top-app-bar__trailing {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 48px;
+    height: 48px;
     flex-shrink: 0;
-    text-align: right;
     cursor: pointer;
 }
  
 .top-app-bar__meta {
     margin: 0;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 400;
-    line-height: 16px;
+    line-height: 20px;
     color: #14191f;
     white-space: nowrap;
 }
@@ -97,7 +100,7 @@
  
 .top-app-bar__page-title {
     margin: 0;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     line-height: 28px;
     color: #14191f;

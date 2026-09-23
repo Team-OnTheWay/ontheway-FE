@@ -1,29 +1,36 @@
+/* 피그마 Empty State: 점선 박스, 위아래 32 · 좌우 20 여백, 아이콘-글자 20px */
 .empty-state{
   width:100%;
-  height:180px;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
+  padding:32px 20px;
   box-sizing:border-box;
   background-color:transparent;
   border:1px dashed #D7DAE0;
-  border-radius:20px;
+  border-radius:24px;
+  text-align:center;
 }
 
 .empty-icon{
-  font-size:36px;
-  margin-bottom:5px;
+  display:flex;
+  margin-bottom:20px;   /* 아이콘과 글자 사이 20px */
   color:#5f6872;
 }
 
 .empty-state strong{
+  display:block;
   font-size:18px;
-  margin-bottom:6px;
+  font-weight:600;
+  line-height:24px;
+  color:#14191f;
 }
 
 .empty-state p{
   margin:0;
-  font-size:14px;
-  color:#7b8490;
+  font-size:16px;
+  font-weight:500;
+  line-height:24px;
+  color:#6b7280;
 }

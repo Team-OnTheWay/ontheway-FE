@@ -19,8 +19,9 @@
 
 .usage-history__filters{
     display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
+    gap: 12px;
+    padding-top: 16px;     /* 피그마: 상단바 아래 16px에 필터칩 */
+    margin-bottom: 20px;   /* 필터칩 ~ 첫 카드 20px */
 }
 
 .usage-history__filters .filter-chip{
@@ -38,6 +39,18 @@
     gap: 16px;
 }
 
-.usage-history .custom-request-count-chips{
+/* 이용내역 카드에는 요청 건수 뱃지가 없음 */
+.usage-history__cards .custom-request-count-chips{
     display: none;
+}
+
+/* 뱃지가 없으므로 경로가 카드 위 여백을 넘지 않게 원래 높이로 */
+.usage-history__cards .delivery-route{
+    height: auto;
+    padding-top: 2px;
+}
+/* 누른 칩은 주황 (QA: 매칭/의뢰/취소 및 중단 클릭 시 주황으로 전환) */
+.usage-history__filters .filter-chip--selected{
+    background: #FD5D35;
+    color: #FFFFFF;
 }

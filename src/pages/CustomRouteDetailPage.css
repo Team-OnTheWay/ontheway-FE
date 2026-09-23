@@ -17,7 +17,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding: 16px;
+    padding: 20px 16px 16px;   /* 피그마: 상단바 아래 20px에서 프로필 카드 시작 */
     box-sizing: border-box;
 }
  
@@ -58,14 +58,22 @@
 /* ===== 취소/중단 알림 박스 ===== */
 .route-detail__notice {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 12px;
     padding: 16px;
     border-radius: 16px;
     background-color: #ffffff;
 }
 .route-detail__notice-time { margin: 0; font-size: 16px; font-weight: 600; line-height: 24px; color: #14191f; }
-.route-detail__notice-msg  { margin: 2px 0 0; font-size: 12px; font-weight: 400; line-height: 16px; color: #6b7280; }
+.route-detail__notice-msg  { margin: 2px 0 0; font-size: 12px; font-weight: 400; line-height: 16px; color: #4b5663; }
+/* 확성기 아이콘은 연주황 원 안에 (피그마) */
+.route-detail__notice > svg {
+    flex-shrink: 0;
+    box-sizing: content-box;
+    padding: 10px;
+    border-radius: 50%;
+    background-color: #fef1ed;
+}
  
 /* ===== 배송 의뢰요청 ===== */
 .route-detail__requests {
@@ -86,45 +94,51 @@
     box-sizing: border-box;
 }
  
-/* 의뢰카드 펼침 내용 */
+/* 의뢰카드 펼침 내용 (피그마 Accordion open) */
 .request-body {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: 16px;
+    gap: 12px;
+    padding: 0 0 16px;
     box-sizing: border-box;
     border-radius: 16px;
     background-color: #ffffff;
 }
-.request-body__section { display: flex; flex-direction: column; gap: 6px; }
+.request-body__section { display: flex; flex-direction: column; gap: 8px; }
 .request-body__heading {
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin: 0 0 4px;
-    font-size: 14px;
+    gap: 8px;
+    margin: 0;
+    padding: 16px 12px 8px;
+    font-size: 16px;
     font-weight: 600;
-    line-height: 20px;
+    line-height: 24px;
     color: #14191f;
 }
+.request-body__heading svg { width: 24px; height: 24px; flex-shrink: 0; }
 .request-body__row {
     display: flex;
-    gap: 12px;
-    font-size: 12px;
-    line-height: 16px;
+    gap: 32px;
+    padding: 0 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #4b5663;
 }
-.request-body__row span:first-child { flex-shrink: 0; width: 64px; color: #6b7280; }
-.request-body__row span:last-child  { flex: 1; min-width: 0; color: #14191f; word-break: keep-all; }
+.request-body__row span:first-child { flex-shrink: 0; min-width: 61px; }
+.request-body__row span:last-child  { flex: 1; min-width: 0; word-break: keep-all; }
 .request-body__agree {
     display: flex;
-    align-items: flex-start;
-    gap: 6px;
+    align-items: center;
+    gap: 8px;
     margin: 0;
-    font-size: 12px;
-    line-height: 16px;
+    padding: 8px 12px 0;
+    font-size: 14px;
+    line-height: 20px;
     color: #6b7280;
 }
-.request-body__agree svg { flex-shrink: 0; margin-top: 1px; }
+.request-body__agree svg { flex-shrink: 0; width: 20px; height: 20px; }
  
 /* ===== 지도 / 사진 자리 ===== */
 .route-detail__placeholder {
@@ -180,4 +194,33 @@
     min-width: 0 !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
+}
+/* ===== 서버 이미지 (프로필, 배송 완료 사진) ===== */
+.route-detail__avatar {
+    display: block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.route-detail__photo {
+    display: block;
+    width: 100%;
+    border-radius: 20px;
+    object-fit: cover;
+}
+
+/* 게시자가 배송 중에 눌러서 배송 완료 사진을 고르는 자리 */
+.route-detail__photo-pick {
+    cursor: pointer;
+}
+
+.route-detail__photo-button {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
 }

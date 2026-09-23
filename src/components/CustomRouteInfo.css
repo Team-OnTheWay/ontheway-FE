@@ -70,7 +70,9 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+    max-width: 361px;   /* 피그마: 웹(500px)에서도 모바일 폭 그대로 왼쪽 정렬 */
     padding: 16px 32px;
+    box-sizing: border-box;
 }
  
 .route-info__meta-item {

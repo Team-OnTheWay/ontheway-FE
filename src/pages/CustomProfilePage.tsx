@@ -4,52 +4,40 @@ import TextField from '../components/TextField'
 import DateInput from '../components/DateInput'
 import CustomButton from '../components/CustomButton'
 import './CustomProfilePage.css'
-import { CameraIcon } from '../components/CustomIcon'
 import CustomDiv from '../components/CustomDiv'
 import { useNavigate } from 'react-router-dom'
+import { useMyInfo } from '../hooks/useMyInfo'
+import { formatDate } from '../utils/apiFormat'
  
+// 내 프로필 조회 (수정은 '수정하기' 화면에서)
 function CustomProfilePage() {
     const navigate = useNavigate();
+    const { info } = useMyInfo();
 
     return (
         <CustomDiv backgroundColor='#FFFFFF'>
-            <CustomTopAppBar variant="centered" title="하루님의 프로필" />
+            <CustomTopAppBar variant="centered" title={info ? `${info.nickName}님의 프로필` : '프로필'} />
  
             <div className="profile__body">
-                {/* 프로필 사진 + 카메라 배지 */}
                 <div className="profile__avatar">
-                    <CustomProfile width={36} height={45} strok="#FD5D35" strokWidth={2} diameter={90} backgroundColor="#FEF1ED" />
-                    <button className="profile__camera" aria-label="사진 변경">
-                        <CameraIcon />
-                    </button>
+                    {info?.userImage
+                        ? <img className="profile__image" src={info.userImage} alt="프로필 사진" />
+                        : <CustomProfile width={36} height={45} strok="#FD5D35" strokWidth={2} diameter={90} backgroundColor="#FEF1ED" />}
                 </div>
  
-                {/* 아이디 (수정 불가) */}
                 <TextField label="아이디" height={56} borderColor="none" backgroundColor="gray"
                     leftLocationIcon={false} placeholder="아이디" timer={false} rightButton="none"
-                    defaultValue="haru27" disabled />
+                    value={info?.userId ?? ''} disabled />
  
-                {/* 생년월일 */}
-                <DateInput label="생년월일" borderColor="lightGray" defaultValue="1998.04.17" />
+                <DateInput label="생년월일" borderColor="gray" value={formatDate(info?.birthday)} disabled />
  
-                {/* 이메일 + 인증받기 */}
-                <div className="profile__row">
-                    <TextField label="이메일" height={56} borderColor="lightGray" backgroundColor="white"
-                        leftLocationIcon={false} placeholder="이메일을 입력해주세요." timer={false} rightButton="none"
-                        defaultValue="haru27@example.com" />
-                    <div className="profile__side-btn">인증받기</div>
-                </div>
+                <TextField label="이메일" height={56} borderColor="gray" backgroundColor="white"
+                    leftLocationIcon={false} placeholder="이메일" timer={false} rightButton="none"
+                    value={info?.email ?? ''} disabled />
  
-                {/* 비밀번호 */}
-                <TextField label="비밀번호" height={56} borderColor="lightGray" backgroundColor="white"
-                    leftLocationIcon={false} placeholder="비밀번호를 입력해주세요." timer={false} rightButton="eye"
-                    helperText="8~15자리 이내" defaultValue="password" />
-
- 
-                {/* 닉네임 */}
-                <TextField label="닉네임" height={56} borderColor="lightGray" backgroundColor="white"
-                    leftLocationIcon={false} placeholder="닉네임을 입력해주세요." timer={false} rightButton="none"
-                    helperText="7자리 이내" defaultValue="하루" />
+                <TextField label="닉네임" height={56} borderColor="gray" backgroundColor="white"
+                    leftLocationIcon={false} placeholder="닉네임" timer={false} rightButton="none"
+                    value={info?.nickName ?? ''} disabled />
             </div>
  
             <div className="profile__footer">

@@ -11,23 +11,21 @@
  
 /* 가운데: 스크롤 영역 */
 .review-write__body {
-    flex: 1;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    padding: 16px;
+    padding: 20px 16px 0;   /* 피그마: 상단바 아래 20px에서 프로필 카드 시작 */
     box-sizing: border-box;
-    height: 80vh;
+    min-height: calc(100% - 64px - 117px);   /* 상단바(64)·하단 버튼 영역(117)을 뺀 높이 → 버튼을 화면 하단에 */
 }
  
 /* 프로필 카드: 이 화면에선 폭 100%·연회색 배경, 칩 빈자리 제거 */
-.review-write .custom-profile-card {
+.review-write__body .custom-profile-card {
     width: 100%;
     box-sizing: border-box;
     background-color: #f3f6f9;
 }
  
-.review-write .custom-profile-card-title {
+.review-write__body .custom-profile-card-title {
     display: none;
 }
  
@@ -36,8 +34,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
-    margin-top: 32px;
+    gap: 16px;
+    margin-top: 54px;
 }
  
 .review-write__stars {
@@ -65,13 +63,13 @@
  
 /* 후기 입력 */
 .review-write__area {
-    margin-top: 32px;
+    margin-top: 44px;
 }
  
 .review-write__area-label {
-    margin: 0 0 12px;
+    margin: 0 0 8px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 24px;
     color: #14191f;
 }
@@ -79,6 +77,6 @@
 /* 하단 고정 버튼 */
 .review-write__footer {
     flex-shrink: 0;
-    padding: 16px;
+    padding: 16px 16px 43px;
     box-sizing: border-box;
 }

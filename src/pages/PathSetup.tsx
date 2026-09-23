@@ -4,12 +4,16 @@ import './PathSetup.css'
 import './postcode.css'
 import CustomTopAppBar from '../components/CustomTopAppBar'
 import EmptyState from '../components/EmptyState'
+import RouteMap from '../components/RouteMap'
 import CustomButton from '../components/CustomButton'
 import { Circle, MapPin } from '../components/CustomIcon'
 import TextField from '../components/TextField'
 import TextArea from '../components/TextArea'
 import TimeInput from '../components/TimeInput'
 import CustomDiv from '../components/CustomDiv'
+import { useNavigate } from 'react-router-dom'
+import { Delivery } from '../api/Delivery'
+import { errorMessage, parseDateInput, parsePrice, toLocalDateTime } from '../utils/apiFormat'
  
 function PathXButton({ onClick }: { onClick?: () => void }) {
     return (
@@ -38,6 +42,45 @@ function PathSetup() {
  
     // 지금 검색 중인 칸: 'start' | 'end' | null(닫힘)
     const [searchTarget, setSearchTarget] = useState<'start' | 'end' | null>(null)
+
+    // 배송정보
+    const navigate = useNavigate()
+    const [date, setDate] = useState('')
+    const [price, setPrice] = useState('')
+    const [startTime, setStartTime] = useState('08:00')
+    const [endTime, setEndTime] = useState('10:00')
+    const [addInfo, setAddInfo] = useState('')
+    const [submitting, setSubmitting] = useState(false)
+
+    // 주소 + 상세 주소를 한 줄로 (API는 주소 칸이 하나뿐)
+    const fullAddress = (addr: string, detail: string) => detail.trim() ? `${addr} ${detail.trim()}` : addr
+
+    const handleSubmit = async () => {
+        const deliveryDate = parseDateInput(date)
+        const hopePrice = parsePrice(price)
+        if (!startAddr || !endAddr) return alert('출발지와 도착지를 선택해주세요.')
+        if (!deliveryDate) return alert('배송 가능날을 2026.09.22 또는 9월22일 형식으로 입력해주세요.')
+        if (hopePrice === undefined) return alert('희망금액을 입력해주세요.')
+        if (endTime <= startTime) return alert('예정시간의 끝 시간이 시작 시간보다 늦어야 해요.')
+
+        setSubmitting(true)
+        try {
+            await new Delivery().create2({
+                startAddress: fullAddress(startAddr, startDetail),
+                endAddress: fullAddress(endAddr, endDetail),
+                deliveryDate: toLocalDateTime(deliveryDate, startTime),
+                estimatedDeliveryTime: toLocalDateTime(deliveryDate, endTime),
+                hopePrice,
+                addInfo,
+            })
+            alert('이동 경로가 등록되었습니다.')
+            navigate('/my/post')
+        } catch (error) {
+            alert(errorMessage(error, '이동 경로 등록에 실패했어요.'))
+        } finally {
+            setSubmitting(false)
+        }
+    }
  
     // 주소 선택 시 → 검색 중이던 칸에 넣고 창 닫기
     const handleComplete = (data: Address) => {
@@ -113,30 +156,36 @@ function PathSetup() {
                 </div>
             </div>
  
+            {/* 출발지·도착지를 모두 고르면 지도, 아니면 안내 문구 */}
             <div className="registered-route">
-                <EmptyState type="route" />
+                {startAddr && endAddr
+                    ? <RouteMap startAddr={startAddr} endAddr={endAddr} />
+                    : <EmptyState type="route" />}
             </div>
  
             <div className="delivery-section">
                 <div className="delivery-title">배송정보</div>
  
-                <TextField label="배송 가능날" height={48} borderColor="gray" backgroundColor="white" leftLocationIcon={false} placeholder="9월22일" timer={false} rightButton="none" />
+                <TextField label="배송 가능날" height={48} borderColor="gray" backgroundColor="white" leftLocationIcon={false} placeholder="9월22일" timer={false} rightButton="none"
+                    value={date} onChange={(e) => setDate(e.target.value)} />
  
-                <TextField label="희망금액" height={48} borderColor="gray" backgroundColor="white" leftLocationIcon={false} placeholder="20,000원" timer={false} rightButton="none" />
+                <TextField label="희망금액" height={48} borderColor="gray" backgroundColor="white" leftLocationIcon={false} placeholder="20,000원" timer={false} rightButton="none"
+                    value={price} onChange={(e) => setPrice(e.target.value)} />
  
                 <div className="delivery-time">
                     <div className="delivery-time-title">예정시간</div>
-                    <TimeInput borderColor="gray" backgroundColor="white" />
+                    <TimeInput borderColor="gray" backgroundColor="white" start={startTime} end={endTime}
+                        onChange={(start, end) => { setStartTime(start); setEndTime(end) }} />
                 </div>
  
                 <div className="delivery-extra">
                     <div className="delivery-extra-title">추가정보</div>
-                    <TextArea borderColor="gray" textcount={63} />
+                    <TextArea borderColor="gray" value={addInfo} onChange={setAddInfo} placeholder="추가로 알릴 내용을 적어주세요." />
                 </div>
             </div>
  
             <div className="path-setup-button">
-                <CustomButton name="작성완료" color="#FD5D35" fontColor="#FFFFFF" size="lg" />
+                <CustomButton name={submitting ? "등록 중..." : "작성완료"} color="#FD5D35" fontColor="#FFFFFF" size="lg" onClick={submitting ? undefined : handleSubmit} />
             </div>
  
             {/* 주소 검색 오버레이 — searchTarget이 있을 때만 */}

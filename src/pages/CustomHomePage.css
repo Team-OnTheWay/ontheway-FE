@@ -35,7 +35,7 @@
  
 .home-page__fab {
     position: absolute;
-    right: 16px;
-    bottom: 100px;
+    right: 24px;     /* 피그마: 오른쪽 24px, 내비바 위 24px */
+    bottom: calc(87px + env(safe-area-inset-bottom));   /* 내비바(63px) 위 24px */
     z-index: 10;
 }

@@ -4,12 +4,18 @@
     box-sizing: border-box;
     background-color: #ffffff;
     border-top: 1px solid #f2f2f2;
+    /* 피그마 84px 중 아래 여백은 홈 인디케이터 자리 → 실제 기기의 안전 영역만큼만 둔다 */
+    padding-bottom: env(safe-area-inset-bottom);
 }
  
+/* 네 칸을 같은 폭으로 나누고 각 칸 가운데에 아이콘 (피그마 웹 Nav bar) */
 .nav-bar__items {
     display: flex;
     flex: 1;
     align-items: center;
-    justify-content: space-around;
-    padding: 8px 6px;
+    padding: 8px 16px;
+}
+
+.nav-bar__items > .nav-icon {
+    flex: 1;
 }

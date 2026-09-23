@@ -4,15 +4,16 @@ import { Circle, MapPin, Calendar, Wallet } from './CustomIcon'
  
 interface CustomRouteInfoProps {
     startAddr: string;
-    startDetail: string;
+    startDetail?: string;
     endAddr: string;
-    endDetail: string;
+    endDetail?: string;
     date: string;
     time: string;
     price: string;
+    priceLabel?: string;   // 기본 '희망금액' (물품 게시글은 '배송비')
 }
  
-function CustomRouteInfo({ startAddr, startDetail, endAddr, endDetail, date, time, price }: CustomRouteInfoProps) {
+function CustomRouteInfo({ startAddr, startDetail, endAddr, endDetail, date, time, price, priceLabel = '희망금액' }: CustomRouteInfoProps) {
     return (
         <div className="route-info">
             <CustomList variant="list03" label="경로정보" />
@@ -25,7 +26,7 @@ function CustomRouteInfo({ startAddr, startDetail, endAddr, endDetail, date, tim
                     </div>
                     <div className="route-info__address">
                         <p className="route-info__addr-main">{startAddr}</p>
-                        <p className="route-info__addr-sub">{startDetail}</p>
+                        {startDetail && <p className="route-info__addr-sub">{startDetail}</p>}
                     </div>
                 </div>
  
@@ -35,7 +36,7 @@ function CustomRouteInfo({ startAddr, startDetail, endAddr, endDetail, date, tim
                     </div>
                     <div className="route-info__address">
                         <p className="route-info__addr-main">{endAddr}</p>
-                        <p className="route-info__addr-sub">{endDetail}</p>
+                        {endDetail && <p className="route-info__addr-sub">{endDetail}</p>}
                     </div>
                 </div>
             </div>
@@ -55,7 +56,7 @@ function CustomRouteInfo({ startAddr, startDetail, endAddr, endDetail, date, tim
                 <div className="route-info__meta-item">
                     <Wallet width={20} height={20} />
                     <div className="route-info__meta-text">
-                        <p className="route-info__meta-label">희망금액</p>
+                        <p className="route-info__meta-label">{priceLabel}</p>
                         <p className="route-info__meta-value">{price}</p>
                     </div>
                 </div>

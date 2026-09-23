@@ -40,7 +40,7 @@ function Agree(){
                     variant="large"
                     subtitle="서비스 이용을 위해 약관에 동의해 주세요."
                     />
-            <div className='find-pw-page-hug'>
+            <div className='agree-page-hug'>
                 
                 <div className={`all-agree ${agreed.every(Boolean) ? 'checked' : ''}`} onClick={toggleAll}>
                     <div className='check-icon'>

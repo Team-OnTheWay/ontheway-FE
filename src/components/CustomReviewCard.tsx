@@ -16,15 +16,15 @@ function CustomReviewCard({profileElement, nickname, date, rating, content}: Cus
     for (let i = 1; i <= 5; i++) {
       if (currentRating >= i) {
         stars.push(
-          <Star key={i} width={15} height={15} stroke={'#33363D'} strokeWidth={1.5} fill={'#FFC107'} isHalf={false} />
+          <Star key={i} width={16} height={16} stroke={'#FD5D35'} strokeWidth={1.5} fill={'#FD5D35'} isHalf={false} />
         );
       } else if (currentRating >= i - 0.5) {
         stars.push(
-          <Star key={i} width={15} height={15} stroke={'#33363D'} strokeWidth={1.5} fill={'#FFC107'} emptyColor={'none'} isHalf={true} />
+          <Star key={i} width={16} height={16} stroke={'#FD5D35'} strokeWidth={1.5} fill={'#FD5D35'} emptyColor={'none'} isHalf={true} />
         );
       } else {
         stars.push(
-          <Star key={i} width={15} height={15} stroke={'#33363D'} strokeWidth={1.5} fill={'none'} isHalf={false} />
+          <Star key={i} width={16} height={16} stroke={'#D7DAE0'} strokeWidth={1.5} fill={'none'} isHalf={false} />
         );
       }
     }

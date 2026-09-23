@@ -9,16 +9,15 @@
     flex-direction: column;
 }
 
+/* 피그마: 상단바(140) 아래 8px에 아이디, 그 아래 20px에 이메일, 버튼은 하단 43px */
 .find-pw-page-hug {
     width: 100%;
-    flex: 1;
+    min-height: calc(100% - 140px);   /* 스크롤 영역에서 상단바(140px)를 뺀 높이 → 버튼을 화면 하단에 고정 */
     box-sizing: border-box;
-    padding: 0 16px;
+    padding: 8px 16px 0;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
-    height: 80vh;
 }
 
 .find-pw-page .email-input {
@@ -42,6 +41,6 @@
 .email-input, .find-pw-input-section{ 
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
     width: 100%;
 }

@@ -11,8 +11,8 @@
 .signup__body {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 8px 16px 24px;
+    gap: 24px;   /* 피그마: 입력칸 사이 24px */
+    padding: 8px 16px 0;
     box-sizing: border-box;
 }
  
@@ -49,8 +49,9 @@
     border-radius: 12px;
     background-color: #fd5d35;
     color: #ffffff;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
+    line-height: 24px;
     white-space: nowrap;
     cursor: pointer;
 }
@@ -62,7 +63,7 @@
  
 /* 하단 버튼 */
 .signup__footer {
-    padding: 8px 16px 24px;
+    padding: 72px 16px 40px;   /* 피그마: 마지막 입력칸과 버튼 사이 72px, 아래 40px */
 }
 
 .signup__side-btn.disabled,

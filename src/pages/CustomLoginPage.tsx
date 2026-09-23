@@ -8,6 +8,7 @@ import CustomDiv from '../components/CustomDiv'
 import { useAuthStore } from '../store/useAuthStore'
 import { useState } from 'react'
 import axios from 'axios'
+import { errorMessage } from '../utils/apiFormat'
  
 function CustomLoginPage() {
     const navigate = useNavigate();
@@ -19,13 +20,13 @@ function CustomLoginPage() {
     const handleLoginSubmit = async () => {
         try {
             const response = await axios.post(`${import.meta.env.VITE_LOGIN_HOST_URL}/user/login`, { accountId: id, password });
-            const accessToken = response.data.accessToken;
-            const refreshToken = response.data.refreshToken;
+            // 응답: { success, status, message, data: { accessToken, refreshToken } }
+            const { accessToken, refreshToken } = response.data.data;
 
             setLogin(accessToken, refreshToken);
             navigate('/');
         } catch (error) {
-            alert('로그인 실패');
+            alert(errorMessage(error, '로그인에 실패했어요.'));
             console.error('로그인 실패', error);
         }
     };
@@ -41,7 +42,7 @@ function CustomLoginPage() {
                     <TextField
                         label="아이디"
                         height={56}
-                        borderColor="lightGray"
+                        borderColor="gray"
                         backgroundColor="white"
                         leftLocationIcon={false}
                         placeholder="아이디를 입력해주세요."
@@ -56,7 +57,7 @@ function CustomLoginPage() {
                     <TextField
                         label="비밀번호"
                         height={56}
-                        borderColor="lightGray"
+                        borderColor="gray"
                         backgroundColor="white"
                         leftLocationIcon={false}
                         placeholder="비밀번호를 입력해주세요."

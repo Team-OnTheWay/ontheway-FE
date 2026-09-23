@@ -107,3 +107,7 @@
     color: #fd5d35;
 }
  
+/* 진행 중에 중단된 단계: 제목은 기본 글자색, 아이콘만 회색 트럭 */
+.progress-step__text--halted .progress-step__step-title {
+    color: #14191f;
+}

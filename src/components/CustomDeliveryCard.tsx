@@ -5,12 +5,12 @@ import CustomRequestCount from './CustomRequestCount'
 
 interface CustomDeliveryCard {
     id:number;
-    count: number;
+    count?: number;   // 없으면 요청 뱃지를 숨긴다
     startAddr: string;
     endAddr: string;
     date: string;
     startTime: string;
-    endTime: string;
+    endTime?: string;
     price: string;
     review?: boolean;
 }
@@ -21,7 +21,7 @@ function CustomDeliveryCard({ id, count, startAddr, endAddr, date, startTime, en
     return (
         <div className={`custom-delivery ${review ? 'review' : ''}`}> 
             <Link className='w-100' to={`/delivery/detail/${id}`}>
-                <CustomRequestCount count={count} />
+                {count !== undefined && <CustomRequestCount count={count} />}
                 <div className="delivery-content">
                     <div className="delivery-route">
                         <div className="delivery-route-row">
@@ -42,7 +42,7 @@ function CustomDeliveryCard({ id, count, startAddr, endAddr, date, startTime, en
                                 <Calendar width={14} height={14} />
                                 <span>일정</span>
                             </div>
-                            <span className="delivery-info-value">{date} {startTime}~{endTime}</span>
+                            <span className="delivery-info-value">{date} {startTime}{endTime ? `~${endTime}` : ''}</span>
                         </div>
                         <div className="delivery-info-row">
                             <div className="delivery-info-label">
@@ -54,7 +54,7 @@ function CustomDeliveryCard({ id, count, startAddr, endAddr, date, startTime, en
                     </div>
                 </div>
             </Link>
-            {review && <button onClick={() => navigate('/review/write')} className="delivery-review-button">후기 작성하기</button>}
+            {review && <button onClick={() => navigate(`/review/write?boardId=${id}`)} className="delivery-review-button">후기 작성하기</button>}
         </div>
     )
 }

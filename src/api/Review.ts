@@ -10,13 +10,14 @@
  * ---------------------------------------------------------------
  */
 
-import {
+import type {
   CreateData,
   ListData,
   ReviewListRequestDto,
   ReviewSaveRequestDto,
 } from "./data-contracts";
-import { ContentType, HttpClient, RequestParams } from "./http-client";
+import { ContentType, HttpClient } from "./http-client";
+import type { RequestParams } from "./http-client";
 
 export class Review<
   SecurityDataType = unknown,
@@ -43,13 +44,13 @@ export class Review<
    *
    * @tags 후기
    * @name List
-   * @summary 내 후기 목록 조회
+   * @summary 내가 받은 후기 목록 조회
    * @request GET:/review/me/list
    * @response `200` `ListData` OK
    */
   list = (
     query: {
-      reviewListRequestDto: ReviewListRequestDto;
+      dto: ReviewListRequestDto;
     },
     params: RequestParams = {},
   ) =>

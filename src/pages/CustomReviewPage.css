@@ -17,7 +17,7 @@
 /* 탭 영역 (좌우 16px) */
 .review-page__tab {
     flex-shrink: 0;
-    padding: 8px 16px;
+    padding: 0 16px;   /* 피그마: 탭은 상단바 바로 아래 */
     box-sizing: border-box;
 }
  
@@ -27,11 +27,28 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: 8px 16px 24px;
+    gap: 16px;
+    padding: 24px 16px;
     box-sizing: border-box;
 }
 
 .review-page__list .custom-review {
     width: 100%;
+}
+/* 받은 후기 평균·개수 */
+.review-page__summary {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    color: #4b5663;
+}
+
+/* 후기 작성자 프로필 사진 */
+.review-page__avatar {
+    display: block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
 }

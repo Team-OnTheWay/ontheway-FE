@@ -13,22 +13,22 @@
 .my-posts__body{
     flex: 1;
     overflow-y: auto;
-    padding: 8px 16px 16px;
+    padding: 0 16px 16px;   /* 피그마: 탭은 상단바 바로 아래 */
     box-sizing: border-box;
 }
 
 .my-posts__filters{
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 12px;
-    margin-bottom: 16px;
+    gap: 12px;
+    margin-top: 24px;
+    margin-bottom: 24px;
 }
 
 .my-posts__cards{
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
 }
 
 .my-posts__search{
@@ -71,12 +71,12 @@
 .my-posts__products{
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
 }
 
 .my-posts__fab{
     position: absolute;
-    right: 16px;
-    bottom: 100px;
+    right: 24px;     /* 피그마: 오른쪽 24px, 내비바 위 24px */
+    bottom: calc(87px + env(safe-area-inset-bottom));   /* 내비바(63px) 위 24px */
     z-index: 10;
 }

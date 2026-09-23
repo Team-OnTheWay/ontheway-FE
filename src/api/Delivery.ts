@@ -10,8 +10,8 @@
  * ---------------------------------------------------------------
  */
 
-import {
-  Create3Data,
+import type {
+  Create2Data,
   Delete1Data,
   DeliveryDetailRequestDto,
   DeliveryListRequestDto,
@@ -23,7 +23,8 @@ import {
   MyListData,
   Update1Data,
 } from "./data-contracts";
-import { ContentType, HttpClient, RequestParams } from "./http-client";
+import { ContentType, HttpClient } from "./http-client";
+import type { RequestParams } from "./http-client";
 
 export class Delivery<
   SecurityDataType = unknown,
@@ -53,13 +54,13 @@ export class Delivery<
    * No description
    *
    * @tags 이동 경로 게시글
-   * @name Create3
+   * @name Create2
    * @summary 이동 경로 게시글 등록
    * @request POST:/delivery
-   * @response `200` `Create3Data` OK
+   * @response `200` `Create2Data` OK
    */
-  create3 = (data: DeliverySaveRequestDto, params: RequestParams = {}) =>
-    this.request<Create3Data, any>({
+  create2 = (data: DeliverySaveRequestDto, params: RequestParams = {}) =>
+    this.request<Create2Data, any>({
       path: `/delivery`,
       method: "POST",
       body: data,

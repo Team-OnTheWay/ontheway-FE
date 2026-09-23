@@ -11,28 +11,38 @@
  
 /* 가운데: 스크롤 영역 */
 .report-user__body {
-    flex: 1;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 24px;
-    padding: 16px;
+    padding: 24px 16px 0;   /* 피그마: 상단바 아래 24px에서 카드 시작 */
     box-sizing: border-box;
+}
+
+/* 피그마: 카드 ~ 제목 32px, 제목 ~ 체크박스 16px, 체크박스 ~ 신고 사유 40px */
+.report-user__section {
+    margin-top: 32px;
+}
+
+.report-user__checks {
+    margin-top: 16px;
+}
+
+.report-user__area {
+    margin-top: 40px;
 }
  
 /* 프로필 카드: 폭 100%·box-sizing, 배경 연회색, 빈 칩 자리 제거 */
-.report-user .custom-profile-card {
+.report-user__body .custom-profile-card {
     width: 100%;
     box-sizing: border-box;
     background-color: #f3f6f9;
 }
  
-.report-user .custom-profile-card-title {
+.report-user__body .custom-profile-card-title {
     display: none;
 }
  
 /* TextArea 반응형 */
-.report-user .text-area {
+.report-user__body .text-area {
     width: 100%;
     box-sizing: border-box;
 }
@@ -55,25 +65,30 @@
 }
  
 .report-user__hint {
-    margin: 8px 0 0;
+    margin: 4px 0 0;
     font-size: 14px;
     font-weight: 400;
     line-height: 20px;
-    color: #6b7280;
+    color: #4b5663;
 }
  
 /* 체크박스 목록 */
 .report-user__checks {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+}
+
+/* 체크박스 한 줄 = 안쪽 10px + 24px → 44px 간격 */
+.report-user__checks .checkbox {
+    padding: 12px 10px;
+    box-sizing: border-box;
 }
  
 /* 신고 사유 입력 */
 .report-user__area-label {
-    margin: 0 0 12px;
+    margin: 0 0 8px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 24px;
     color: #14191f;
 }
@@ -81,6 +96,10 @@
 /* 하단 고정 버튼  */
 .report-user__footer {
     flex-shrink: 0;
-    padding: 16px;
+    padding: 12px 16px 40px;
     box-sizing: border-box;
+}
+/* 신고 대상 카드가 없을 때 첫 섹션의 윗여백 제거 */
+.report-user__body > .report-user__section:first-child {
+    margin-top: 0;
 }

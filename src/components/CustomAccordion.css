@@ -12,9 +12,9 @@
     transition: border-color 0.2s ease;
 }
 
-.custom-accordion.is-open{
+.custom-accordion.is-selected{
     border: 1px solid #FD5D35;
-    background-color: #FEF1ED;
+    background-color: #FDF7F5;
 }
 
 .accordion-card-header{
@@ -37,7 +37,7 @@
     transition: background-color 0.2s ease;
 }
 
-.custom-accordion.is-open .accordion-card-indicator{
+.custom-accordion.is-selected .accordion-card-indicator{
     background-color: #FD5D35;
 }
 
@@ -120,4 +120,8 @@
     border: 1px solid #F3F4F6;
     border-radius: 8px;
     background-color: #FFFFFF;
+}
+/* 선택할 수 있는 카드: 카드를 누르면 선택, +/- 는 펼치기만 */
+.custom-accordion.is-selectable .accordion-card-header{
+    cursor: pointer;
 }

@@ -10,12 +10,13 @@
  * ---------------------------------------------------------------
  */
 
-import {
-  Create1Data,
+import type {
   DeliveryRequestListData,
+  RegisterData,
   RequestSaveRequestDto,
 } from "./data-contracts";
-import { ContentType, HttpClient, RequestParams } from "./http-client";
+import { ContentType, HttpClient } from "./http-client";
+import type { RequestParams } from "./http-client";
 
 export class Request<
   SecurityDataType = unknown,
@@ -24,13 +25,13 @@ export class Request<
    * No description
    *
    * @tags 물품 의뢰 요청
-   * @name Create1
+   * @name Register
    * @summary 물품 의뢰 요청하기
    * @request POST:/request
-   * @response `200` `Create1Data` OK
+   * @response `200` `RegisterData` OK
    */
-  create1 = (data: RequestSaveRequestDto, params: RequestParams = {}) =>
-    this.request<Create1Data, any>({
+  register = (data: RequestSaveRequestDto, params: RequestParams = {}) =>
+    this.request<RegisterData, any>({
       path: `/request`,
       method: "POST",
       body: data,

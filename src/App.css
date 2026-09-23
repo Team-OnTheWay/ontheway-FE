@@ -1,62 +1,62 @@
 @font-face {
   font-family: 'Pretendard';
-  src: url('./assets/fonts/Pretendard-Thin.otf') format('opentype');
+  src: url('./assets/font/Pretendard-Thin.otf') format('opentype');
   font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Pretendard';
-  src: url('./assets/fonts/Pretendard-ExtraLight.otf') format('opentype');
+  src: url('./assets/font/Pretendard-ExtraLight.otf') format('opentype');
   font-weight: 200;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Pretendard';
-  src: url('./assets/fonts/Pretendard-Light.otf') format('opentype');
+  src: url('./assets/font/Pretendard-Light.otf') format('opentype');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Pretendard';
-  src: url('./assets/fonts/Pretendard-Regular.otf') format('opentype');
+  src: url('./assets/font/Pretendard-Regular.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Pretendard';
-  src: url('./assets/fonts/Pretendard-Medium.otf') format('opentype');
+  src: url('./assets/font/Pretendard-Medium.otf') format('opentype');
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Pretendard';
-  src: url('./assets/fonts/Pretendard-SemiBold.otf') format('opentype');
+  src: url('./assets/font/Pretendard-SemiBold.otf') format('opentype');
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Pretendard';
-  src: url('./assets/fonts/Pretendard-Bold.otf') format('opentype');
+  src: url('./assets/font/Pretendard-Bold.otf') format('opentype');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Pretendard';
-  src: url('./assets/fonts/Pretendard-ExtraBold.otf') format('opentype');
+  src: url('./assets/font/Pretendard-ExtraBold.otf') format('opentype');
   font-weight: 800;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Pretendard';
-  src: url('./assets/fonts/Pretendard-Black.otf') format('opentype');
+  src: url('./assets/font/Pretendard-Black.otf') format('opentype');
   font-weight: 900;
   font-style: normal;
 }
@@ -75,4 +75,23 @@ body {
 
 *::-webkit-scrollbar {
     display: none;                /* 크롬·사파리·엣지 (웹킷) */
+}
+
+/* 폼 요소는 기본적으로 글꼴을 상속하지 않으므로 Pretendard로 통일 */
+button,
+input,
+textarea,
+select {
+    font-family: inherit;
+}
+
+/* 목록이 비었거나 불러오는 중일 때 보여주는 안내 문구 (API 연동 화면 공통) */
+.list-message {
+    margin: 0;
+    padding: 48px 16px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    color: #6b7280;
 }

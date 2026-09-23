@@ -132,3 +132,14 @@
     width: auto;
     color: #fd5d35;
 }
+
+/* 웹(500px 이상): 피그마 웹 온보딩은 버튼이 더 위(하단 99px)에 있고 로그인 안내 간격이 넓음 */
+@media (min-width: 500px) {
+    .onboarding-page__footer {
+        padding-bottom: 99px;
+    }
+
+    .onboarding-page__login {
+        gap: 20px;
+    }
+}
