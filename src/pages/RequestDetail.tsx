@@ -45,7 +45,14 @@ function RequestDetail(){
     ] : []
 
     return(
-        <CustomDiv backgroundColor='#f3f4f6'>
+        <CustomDiv backgroundColor='#f3f4f6' footerElement={detail && (
+            <div className="request-detail__footer">
+                <div className="request-detail__buttons">
+                    <CustomButton name="삭제하기" color="#FEF1ED" fontColor="#FD5D35" size="md" onClick={handleDelete}/>
+                    <CustomButton name="수정하기" color="#FD5D35" fontColor="#FFFFFF" size="md" onClick={() => navigate(`/product/write?id=${productId}`)}/>
+                </div>
+            </div>
+        )}>
             <CustomTopAppBar title="배송의뢰"/>
 
             <div className="request-detail__body">
@@ -92,15 +99,6 @@ function RequestDetail(){
                     </section>
                 </>}
             </div>
-
-            {detail && (
-                <div className="request-detail__footer">
-                    <div className="request-detail__buttons">
-                        <CustomButton name="삭제하기" color="#FEF1ED" fontColor="#FD5D35" size="md" onClick={handleDelete}/>
-                        <CustomButton name="수정하기" color="#FD5D35" fontColor="#FFFFFF" size="md" onClick={() => navigate(`/product/write?id=${productId}`)}/>
-                    </div>
-                </div>
-            )}
         </CustomDiv>
     )
 }

@@ -49,7 +49,11 @@ function CustomReportUser() {
     }
 
     return (
-        <CustomDiv>
+        <CustomDiv pullToRefresh={false} footerElement={
+            <div className="report-user__footer">
+                <CustomButton name={submitting ? "접수 중..." : "신고하기"} color={selected.length ? "#fd5d35" : "#BABABA"} fontColor="#ffffff" size="lg" onClick={submitting ? undefined : handleSubmit} />
+            </div>
+        }>
             <CustomTopAppBar variant="centered" title="유저 신고" />
 
             <div className="report-user__body">
@@ -80,10 +84,6 @@ function CustomReportUser() {
                     <p className="report-user__area-label">신고 사유</p>
                     <TextArea borderColor="gray" value={content} onChange={setContent} placeholder="신고 사유를 적어주세요." />
                 </div>
-            </div>
-
-            <div className="report-user__footer">
-                <CustomButton name={submitting ? "접수 중..." : "신고하기"} color={selected.length ? "#fd5d35" : "#BABABA"} fontColor="#ffffff" size="lg" onClick={submitting ? undefined : handleSubmit} />
             </div>
         </CustomDiv>
     )
