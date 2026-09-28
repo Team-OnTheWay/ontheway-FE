@@ -69,7 +69,9 @@ function PathSetup() {
                 startAddress: fullAddress(startAddr, startDetail),
                 endAddress: fullAddress(endAddr, endDetail),
                 deliveryDate: toLocalDateTime(deliveryDate, startTime),
-                estimatedDeliveryTime: toLocalDateTime(deliveryDate, endTime),
+                // 예정시간: 시작 ~ 끝 (estimatedDeliveryTime 하나에서 둘로 나뉨)
+                estimatedStartDeliveryTime: toLocalDateTime(deliveryDate, startTime),
+                estimatedEndDeliveryTime: toLocalDateTime(deliveryDate, endTime),
                 hopePrice,
                 addInfo,
             })
