@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { toPage, useInfiniteList } from '../hooks/useInfiniteList'
+import InfiniteListFooter from '../components/InfiniteListFooter'
 import CustomTopAppBar from '../components/CustomTopAppBar'
 import CustomTab from '../components/CustomTab'
 import CustomReviewCard from '../components/CustomReviewCard'
@@ -27,30 +29,29 @@ interface RatingSummary {
 }
 
 const TABS = ['보낸후기', '받은후기']
+const PAGE_SIZE = 20
+const fetchSummary = () => new User().ratings().then(res => (res.data.data as RatingSummary) ?? null)
  
 function CustomReviewPage() {
     const { info } = useMyInfo()
     const [tab, setTab] = useState(1)   // 조회 API가 있는 '받은후기'부터 보여준다
-    const [reviews, setReviews] = useState<ReviewItem[]>([])
     const [summary, setSummary] = useState<RatingSummary | null>(null)
-    const [status, setStatus] = useState<'loading' | 'done' | 'error'>('loading')
-    const [error, setError] = useState('')
+    const list = useInfiniteList(
+        page => new Review().list({ dto: { page, size: PAGE_SIZE } })
+            .then(res => toPage((res.data.data as { reviewList?: ReviewItem[] } | undefined)?.reviewList, PAGE_SIZE)),
+        'received',
+    )
+    const { items: reviews, status } = list
+    const error = errorMessage(list.error, '후기를 불러오지 못했어요.')
 
     useEffect(() => {
-        Promise.all([
-            new Review().list({ dto: { page: 0, size: 50 } }),
-            new User().ratings(),
-        ])
-            .then(([list, ratings]) => {
-                setReviews((list.data.data as { reviewList?: ReviewItem[] } | undefined)?.reviewList ?? [])
-                setSummary((ratings.data.data as RatingSummary) ?? null)
-                setStatus('done')
-            })
-            .catch(err => { setError(errorMessage(err, '후기를 불러오지 못했어요.')); setStatus('error') })
+        fetchSummary().then(setSummary).catch(() => setSummary(null))
     }, [])
 
+    const refresh = () => Promise.all([list.refresh(), fetchSummary().then(setSummary).catch(() => {})])
+
     return (
-        <CustomDiv backgroundColor={'#f3f4f6'}>
+        <CustomDiv backgroundColor={'#f3f4f6'} onRefresh={refresh}>
             <CustomTopAppBar variant="centered" title={info ? `${info.nickName}님의 후기` : '후기'} />
  
             <div className="review-page__tab">
@@ -79,6 +80,7 @@ function CustomReviewPage() {
                             content={r.reviewContent}
                         />
                     ))}
+                    <InfiniteListFooter list={list} />
                 </>}
             </div>
         </CustomDiv>

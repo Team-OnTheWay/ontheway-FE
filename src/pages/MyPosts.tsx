@@ -1,6 +1,7 @@
 import './MyPosts.css'
 import { useEffect, useState } from 'react'
-import { useAsync } from '../hooks/useAsync'
+import { toPage, useInfiniteList } from '../hooks/useInfiniteList'
+import InfiniteListFooter from '../components/InfiniteListFooter'
 import CustomTopAppBar from '../components/CustomTopAppBar'
 import CustomTab from '../components/CustomTab'
 import CustomFilterBar from '../components/CustomFilterBar'
@@ -17,7 +18,8 @@ import { EMPTY_FILTERS, filterQuery, type FilterValues } from '../utils/filter'
 import { errorMessage, formatDate, formatNumber, formatTime } from '../utils/apiFormat'
 
 type LoadState = 'loading' | 'done' | 'error'
-const stateOf = (r: { loading: boolean; error?: unknown }): LoadState => r.loading ? 'loading' : r.error ? 'error' : 'done'
+const PAGE_SIZE = 20
+const NO_PAGE = Promise.resolve({ items: [], hasNext: false })
 
 function MyPosts(){
     // /my/post?tab=1 로 들어오면 배송의뢰 탭부터 (배송의뢰 작성완료 후)
@@ -27,14 +29,14 @@ function MyPosts(){
 
     // 가는길: 내가 올린 이동 경로 (필터 적용)
     const [filters, setFilters] = useState<FilterValues>(EMPTY_FILTERS)
-    const routeResult = useAsync(
-        () => tab !== 0 ? Promise.resolve([]) : new Delivery()
-            .myList({ myBoardDeliveryListRequestDto: { ...filterQuery(filters), page: 0, size: 50 } })
-            .then(res => res.data.data?.deliveryList ?? []),
+    const routeResult = useInfiniteList(
+        page => tab !== 0 ? NO_PAGE : new Delivery()
+            .myList({ myBoardDeliveryListRequestDto: { ...filterQuery(filters), page, size: PAGE_SIZE } })
+            .then(res => toPage(res.data.data?.deliveryList, PAGE_SIZE)),
         `${tab}:${JSON.stringify(filters)}`,
     )
-    const routes = routeResult.data ?? []
-    const routeState = stateOf(routeResult)
+    const routes = routeResult.items
+    const routeState = routeResult.status
 
     // 배송의뢰: 내가 올린 물품 (검색어는 입력을 멈춘 뒤 0.3초 후에 조회)
     const [keyword, setKeyword] = useState('')
@@ -43,14 +45,14 @@ function MyPosts(){
         const timer = setTimeout(() => setDebouncedKeyword(keyword.trim()), 300)
         return () => clearTimeout(timer)
     }, [keyword])
-    const productResult = useAsync(
-        () => tab !== 1 ? Promise.resolve([]) : new Product()
-            .list1({ productListRequestDto: { keyword: debouncedKeyword || undefined, page: 0, size: 50 } })
-            .then(res => res.data.data?.productList ?? []),
+    const productResult = useInfiniteList(
+        page => tab !== 1 ? NO_PAGE : new Product()
+            .list1({ productListRequestDto: { keyword: debouncedKeyword || undefined, page, size: PAGE_SIZE } })
+            .then(res => toPage(res.data.data?.productList, PAGE_SIZE, res.data.data?.hasNext)),
         `${tab}:${debouncedKeyword}`,
     )
-    const products = productResult.data ?? []
-    const productState = stateOf(productResult)
+    const products = productResult.items
+    const productState = productResult.status
     const error = errorMessage(routeResult.error ?? productResult.error, '게시글을 불러오지 못했어요.')
 
     const message = (state: LoadState, empty: boolean, emptyText: string) =>
@@ -60,7 +62,7 @@ function MyPosts(){
         : null
 
     return(
-        <CustomDiv backgroundColor={'#F3F4F6'} footerElement={<CustomNavBar initialActive="posts"/>}>
+        <CustomDiv backgroundColor={'#F3F4F6'} onRefresh={tab === 0 ? routeResult.refresh : productResult.refresh} footerElement={<CustomNavBar initialActive="posts"/>}>
             <CustomTopAppBar variant="title" title="내 게시글"/>
 
             <div className="my-posts__body">
@@ -84,6 +86,7 @@ function MyPosts(){
                                     price={formatNumber(route.hopePrice)}
                                 />
                             ))}
+                            <InfiniteListFooter list={routeResult} />
                         </div>
                     </>
                             ) : (
@@ -104,6 +107,7 @@ function MyPosts(){
                                     onClick={() => navigate(`/product/detail/${product.productId}`)}
                                 />
                             ))}
+                            <InfiniteListFooter list={productResult} />
                         </div>
                     </>
                 )}

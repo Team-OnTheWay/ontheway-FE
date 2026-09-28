@@ -13,7 +13,7 @@
 .report-user__body {
     display: flex;
     flex-direction: column;
-    padding: 24px 16px 0;   /* 피그마: 상단바 아래 24px에서 카드 시작 */
+    padding: 24px 16px 16px;   /* 피그마: 상단바 아래 24px에서 카드 시작 */
     box-sizing: border-box;
 }
 
@@ -93,11 +93,12 @@
     color: #14191f;
 }
  
-/* 하단 고정 버튼  */
+/* 하단 고정 버튼 (CustomDiv footerElement) */
 .report-user__footer {
     flex-shrink: 0;
     padding: 12px 16px 40px;
     box-sizing: border-box;
+    background-color: #ffffff;
 }
 /* 신고 대상 카드가 없을 때 첫 섹션의 윗여백 제거 */
 .report-user__body > .report-user__section:first-child {

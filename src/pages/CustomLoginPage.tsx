@@ -32,7 +32,7 @@ function CustomLoginPage() {
     };
 
     return (
-        <CustomDiv>
+        <CustomDiv pullToRefresh={false}>
             <div style={{display:'flex', justifyContent:'center'}}>
                 <CustomLogo className="login-page__logo" />
             </div>

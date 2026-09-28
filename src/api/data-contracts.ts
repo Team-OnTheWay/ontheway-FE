@@ -739,6 +739,11 @@ export interface DeliveryDetailResponseDto {
   createdAt?: string;
   /** 배송 상태 변경 이력 목록 */
   deliveryStatusHistory?: DeliveryStatusHistory[];
+  /**
+   * 게시자 회원번호 (유저 신고용)
+   * @format int64
+   */
+  userId?: number;
   /** 사용자 프로필 이미지 URL */
   userImage?: string;
   /** 사용자 이름 */

@@ -48,7 +48,8 @@ function CustomProfileCard({ nickname, date, rateing, review, chipElement, profi
                     >
                         <Arrow width={48} height={48} strokeWidth={2} />
                     </button>
-                    {isOpen && <span onClick={onClick} className="profile-report">신고</span>}
+                    {/* 신고할 동작(onClick)을 넘겨줬을 때만 표시 (내 글 등에서는 숨김) */}
+                    {isOpen && onClick && <span onClick={onClick} className="profile-report">신고</span>}
                 </div>
             </div>
         </div>

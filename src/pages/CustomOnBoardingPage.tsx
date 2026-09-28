@@ -60,7 +60,7 @@ function CustomOnBoardingPage() {
     )
 
     return (
-        <CustomDiv footerElement={footer}>
+        <CustomDiv footerElement={footer} pullToRefresh={false}>
             <div className="onboarding-page">
                 <div
                     className="onboarding-page__viewport"

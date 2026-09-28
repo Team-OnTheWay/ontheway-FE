@@ -48,7 +48,11 @@ function CustomReportPostPage() {
     }
 
     return (
-        <CustomDiv>
+        <CustomDiv pullToRefresh={false} footerElement={
+            <div className="report__footer">
+                <CustomButton name={submitting ? "접수 중..." : "신고하기"} color={selected.length ? "#fd5d35" : "#BABABA"} fontColor="#ffffff" size="lg" onClick={submitting ? undefined : handleSubmit} />
+            </div>
+        }>
             <CustomTopAppBar variant="centered" title="게시글 신고" />
 
             <div className="report__body">
@@ -70,10 +74,6 @@ function CustomReportPostPage() {
                     <p className="report__area-label">신고 사유</p>
                     <TextArea borderColor="gray" value={content} onChange={setContent} placeholder="신고 사유를 적어주세요." />
                 </div>
-            </div>
-
-            <div className="report__footer">
-                <CustomButton name={submitting ? "접수 중..." : "신고하기"} color={selected.length ? "#fd5d35" : "#BABABA"} fontColor="#ffffff" size="lg" onClick={submitting ? undefined : handleSubmit} />
             </div>
         </CustomDiv>
     )

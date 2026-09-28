@@ -33,8 +33,11 @@ function CustomMyPage() {
             <div className="mypage__body">
                 {/* 프로필 카드 — 펼침이 아니라 이동(오른쪽 화살표)이라 이 페이지에서 직접 구성 */}
                 <button className="mypage__profile" onClick={() => navigate('/my/profile')}>
+                    {/* 등록한 프로필 사진이 있으면 사진, 없으면 기본 아이콘 */}
                     <div>
-                        <CustomProfile width={40} height={20} strok="#FD5D35" strokWidth={2} diameter={40} backgroundColor="#FEF1ED" />
+                        {info?.userImage
+                            ? <img className="mypage__avatar" src={info.userImage} alt="프로필 사진" />
+                            : <CustomProfile width={40} height={20} strok="#FD5D35" strokWidth={2} diameter={40} backgroundColor="#FEF1ED" />}
                     </div>
                     <div className="mypage__profile-text">
                         <p className="mypage__profile-name">{info?.nickName ?? ""}</p>

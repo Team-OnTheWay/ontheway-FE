@@ -5,6 +5,15 @@
     background-color: #f3f4f6;
 }
  
+.home-page__logo-button {
+    display: block;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
 .home-page__logo {
     display: block;
     height: 22px;

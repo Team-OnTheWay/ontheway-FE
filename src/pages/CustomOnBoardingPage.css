@@ -1,7 +1,9 @@
 .onboarding-page {
     display: flex;
     flex-direction: column;
-    padding-top: 178px;
+    /* 피그마 178px. 화면이 낮으면(아이폰 SE, 사파리 툴바가 보일 때) 줄여서 설명과 점이 버튼에 가리지 않게 한다
+       (572px = 하단 버튼 영역 약 131 + 이미지 283 + 글·점 약 134 + 여유 24) */
+    padding-top: clamp(16px, calc(100dvh - 572px), 178px);
     overflow: hidden;
 }
 
@@ -40,7 +42,8 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    height: 283px;
+    /* 화면이 아주 낮으면 이미지 칸도 줄인다 (300px = 하단 버튼 영역 + 글·점 + 위 여백) */
+    height: min(283px, calc(100dvh - 300px));
     box-sizing: border-box;
 }
 
@@ -54,6 +57,8 @@
 
 .onboarding-page__image img {
     display: block;
+    max-height: 100%;
+    width: auto;
     pointer-events: none;
     -webkit-user-drag: none;
 }

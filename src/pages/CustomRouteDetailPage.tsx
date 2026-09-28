@@ -342,7 +342,11 @@ function CustomRouteDetailPage() {
                     profileElement={detail.userImage
                         ? <img className="route-detail__avatar" src={detail.userImage} alt="" />
                         : <CustomProfile width={40} height={20} strok="#FD5D35" strokWidth={2} diameter={40} backgroundColor="#FEF1ED" />}
-                    onClick={() => navigate('/user/report', { state: { name: detail.userName, date: formatDate(detail.createdAt) } })}
+                    // 게시글 신고처럼 신고 대상(게시자 회원번호)을 주소에 붙여 넘긴다. 내 글에서는 신고를 숨긴다
+                    onClick={isOwner ? undefined : () => {
+                        if (!detail.userId) return alert('신고할 회원 정보가 없어요. 잠시 후 다시 시도해주세요.')
+                        navigate(`/user/report?userId=${detail.userId}`, { state: { name: detail.userName, date: formatDate(detail.createdAt) } })
+                    }}
                 />
 
                 <CustomRouteInfo

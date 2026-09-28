@@ -207,6 +207,7 @@
 .route-detail__photo {
     display: block;
     width: 100%;
+    max-height: 360px;   /* 세로 사진이 화면을 다 차지하지 않게 (넘치는 부분은 잘라서 채운다) */
     border-radius: 20px;
     object-fit: cover;
 }

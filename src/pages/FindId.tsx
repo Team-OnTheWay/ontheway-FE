@@ -59,7 +59,7 @@ function FindId(){
 
     return(
         <>
-        <CustomDiv>
+        <CustomDiv pullToRefresh={false}>
             <CustomTopAppBar
                 variant="large"
                 title="아이디 찾기"

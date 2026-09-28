@@ -9,10 +9,10 @@
     background-color: #ffffff;
 }
  
-/* 가운데: 스크롤 영역 */
+/* 가운데 본문 (스크롤은 CustomDiv 본문이 맡는다.
+   여기에 overflow를 주면 펼친 탈퇴 사유 목록이 작은 화면에서 잘린다) */
 .withdrawal__body {
     flex: 1;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 32px;

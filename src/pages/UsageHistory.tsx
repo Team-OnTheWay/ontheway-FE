@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { useAsync } from '../hooks/useAsync'
+import { toPage, useInfiniteList, type ListPage } from '../hooks/useInfiniteList'
+import InfiniteListFooter from '../components/InfiniteListFooter'
 import './UsageHistory.css'
 import CustomTopAppBar from '../components/CustomTopAppBar'
 import CustomFilterChip from '../components/CustomFilterChip'
@@ -18,19 +19,24 @@ const CHIPS: { tab: Exclude<Tab, 'all'>; label: string }[] = [
     { tab: 'canceled', label: '취소 및 중단' },
 ]
 
-const PAGE = { historyListRequestDto: { page: 0, size: 50 } }
+const PAGE_SIZE = 20
 
-async function fetchHistory(tab: Tab): Promise<HistoryList[]> {
+async function fetchHistory(tab: Tab, page: number): Promise<ListPage<HistoryList>> {
     const api = new History()
-    if (tab === 'matched') return (await api.deliveryList(PAGE)).data.data?.historyList ?? []
-    if (tab === 'requested') return (await api.requestList(PAGE)).data.data?.historyList ?? []
-    if (tab === 'canceled') return (await api.cancelList(PAGE)).data.data?.historyList ?? []
+    const query = { historyListRequestDto: { page, size: PAGE_SIZE } }
+    const pageOf = (res: { data: { data?: { historyList?: HistoryList[] } } }) => toPage(res.data.data?.historyList, PAGE_SIZE)
+    if (tab === 'matched') return pageOf(await api.deliveryList(query))
+    if (tab === 'requested') return pageOf(await api.requestList(query))
+    if (tab === 'canceled') return pageOf(await api.cancelList(query))
     try {
-        return (await api.list2(PAGE)).data.data?.historyList ?? []
+        return pageOf(await api.list2(query))
     } catch {
-        // 전체 목록 API(/history/list)가 서버 오류일 때는 세 목록을 합쳐 최신순으로 보여준다
-        const lists = await Promise.all(CHIPS.map(chip => fetchHistory(chip.tab)))
-        return lists.flat().sort((a, b) => (b.deliveryDate ?? '').localeCompare(a.deliveryDate ?? ''))
+        // 전체 목록 API(/history/list)가 서버 오류일 때는 세 목록의 같은 페이지를 합쳐 최신순으로 보여준다
+        const pages = await Promise.all(CHIPS.map(chip => fetchHistory(chip.tab, page)))
+        return {
+            items: pages.flatMap(p => p.items).sort((a, b) => (b.deliveryDate ?? '').localeCompare(a.deliveryDate ?? '')),
+            hasNext: pages.some(p => p.hasNext),
+        }
     }
 }
 
@@ -40,12 +46,11 @@ const canReview = (item: HistoryList) =>
 
 function UsageHistory(){
     const [tab, setTab] = useState<Tab>('all')
-    const { loading, data, error } = useAsync(() => fetchHistory(tab), tab)
-    const items = data ?? []
-    const status = loading ? 'loading' : error ? 'error' : 'done'
+    const list = useInfiniteList(page => fetchHistory(tab, page), tab)
+    const { items, status, error } = list
 
     return(
-        <CustomDiv backgroundColor='#F3F4F6' footerElement={<CustomNavBar initialActive="history"/>}>
+        <CustomDiv backgroundColor='#F3F4F6' onRefresh={list.refresh} footerElement={<CustomNavBar initialActive="history"/>}>
             <CustomTopAppBar variant="title" title="이용내역"/>
 
             <div className="usage-history__body">
@@ -72,6 +77,7 @@ function UsageHistory(){
                             review={canReview(item)}
                         />
                     ))}
+                    <InfiniteListFooter list={list} />
                 </div>
             </div>
         </CustomDiv>

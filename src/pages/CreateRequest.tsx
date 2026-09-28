@@ -141,7 +141,7 @@ function CreateRequest() {
     }
 
     return (
-        <CustomDiv>
+        <CustomDiv pullToRefresh={false}>
         
             <CustomTopAppBar title="배송의뢰"/>
 
