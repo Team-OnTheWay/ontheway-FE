@@ -345,10 +345,15 @@ export interface DeliverySaveRequestDto {
    */
   hopePrice?: number;
   /**
-   * 배송 예정 시간
+   * 배송 예정 시작 시간
    * @format date-time
    */
-  estimatedDeliveryTime?: string;
+  estimatedStartDeliveryTime?: string;
+  /**
+   * 배송 예정 종료 시간
+   * @format date-time
+   */
+  estimatedEndDeliveryTime?: string;
 }
 
 export interface ApiResponseDeliverySaveResponseDto {
@@ -458,10 +463,15 @@ export interface DeliveryUpdateRequestDto {
    */
   hopePrice?: number;
   /**
-   * 배송 예정 시간
+   * 배송 예정 시작 시간
    * @format date-time
    */
-  estimatedDeliveryTime?: string;
+  estimatedStartDeliveryTime?: string;
+  /**
+   * 배송 예정 종료 시간
+   * @format date-time
+   */
+  estimatedEndDeliveryTime?: string;
 }
 
 export interface ApiResponseDeliveryUpdateResponseDto {
