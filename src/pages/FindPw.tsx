@@ -30,7 +30,7 @@ function FindPw(){
 
     return(
         <>
-        <CustomDiv>
+        <CustomDiv pullToRefresh={false}>
             <CustomTopAppBar
                 title="비밀번호 찾기"
                 variant="large"

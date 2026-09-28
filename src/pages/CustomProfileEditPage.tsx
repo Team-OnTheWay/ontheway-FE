@@ -109,7 +109,7 @@ function CustomProfileEditPage() {
     }
 
     return (
-        <CustomDiv backgroundColor='#FFFFFF'>
+        <CustomDiv backgroundColor='#FFFFFF' pullToRefresh={false}>
             <CustomTopAppBar variant="centered" title={info ? `${info.nickName}님의 프로필` : '프로필'} />
 
             <div className="profile__body">

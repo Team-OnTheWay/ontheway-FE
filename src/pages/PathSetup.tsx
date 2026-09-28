@@ -92,7 +92,7 @@ function PathSetup() {
     }
  
     return (
-        <CustomDiv>
+        <CustomDiv pullToRefresh={false}>
             <CustomTopAppBar title="경로등록" />
  
             <div className="recent-post">

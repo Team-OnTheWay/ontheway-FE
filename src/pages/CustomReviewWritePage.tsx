@@ -51,7 +51,7 @@ function CustomReviewWritePage() {
     }
  
     return (
-        <CustomDiv>
+        <CustomDiv pullToRefresh={false}>
             <CustomTopAppBar variant="centered" title="배송 후기 작성" />
  
             <div className="review-write__body">

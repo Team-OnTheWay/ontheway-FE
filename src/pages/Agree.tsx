@@ -34,7 +34,7 @@ function Agree(){
 
     return(
         <>
-        <CustomDiv>
+        <CustomDiv pullToRefresh={false}>
             <CustomTopAppBar
                     title="약관동의"
                     variant="large"

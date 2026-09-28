@@ -47,7 +47,7 @@ function CustomWithdrawalPage() {
     }
 
     return (
-        <CustomDiv>
+        <CustomDiv pullToRefresh={false}>
             <CustomTopAppBar variant="centered" title="탈퇴하기" />
             <div className='withdrawal_content'>
                 <div className="withdrawal__body">

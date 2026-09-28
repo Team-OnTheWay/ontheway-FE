@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { toPage, useInfiniteList } from '../hooks/useInfiniteList'
+import InfiniteListFooter from '../components/InfiniteListFooter'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import CustomTopAppBar from '../components/CustomTopAppBar'
 import CustomProductCard from '../components/CustomProductCard'
@@ -8,25 +10,23 @@ import CustomDiv from '../components/CustomDiv'
 import { PlusIcon } from '../components/CustomIcon'
 import { Product } from '../api/Product'
 import { Request as RequestApi } from '../api/Request'
-import type { Product as ProductItem } from '../api/data-contracts'
 import { errorMessage, formatNumber } from '../utils/apiFormat'
 
 // 이동 경로 상세의 '의뢰하기' -> /delivery/request?deliveryId=3
 // 내 물품 게시글 중 하나를 골라 그 경로에 배송을 의뢰한다
+const PAGE_SIZE = 20
+
 function Request(){
     const navigate = useNavigate();
     const deliveryId = Number(useSearchParams()[0].get('deliveryId')) || null
-    const [products, setProducts] = useState<ProductItem[]>([])
-    const [loaded, setLoaded] = useState(false)
+    const list = useInfiniteList(
+        page => new Product().list1({ productListRequestDto: { page, size: PAGE_SIZE } })
+            .then(res => toPage(res.data.data?.productList, PAGE_SIZE, res.data.data?.hasNext)),
+        'mine',
+    )
+    const products = list.items
     const [selectedId, setSelectedId] = useState<number | null>(null)
     const [submitting, setSubmitting] = useState(false)
-
-    useEffect(() => {
-        new Product().list1({ productListRequestDto: { page: 0, size: 50 } })
-            .then(res => setProducts(res.data.data?.productList ?? []))
-            .catch(err => alert(errorMessage(err, '물품 목록을 불러오지 못했어요.')))
-            .finally(() => setLoaded(true))
-    }, [])
 
     const handleSubmit = async () => {
         if (!deliveryId) return alert('의뢰할 이동 경로 정보가 없어요. 이동 경로 게시글에서 다시 시도해주세요.')
@@ -44,11 +44,12 @@ function Request(){
     }
 
     return (
-        <CustomDiv>
+        <CustomDiv onRefresh={list.refresh}>
             <CustomTopAppBar title="요청하기"/>
                 <div className="request-products">
                     <div className='request-product-list'>
-                        {loaded && products.length === 0 && <p className="list-message">등록한 배송 의뢰 물품이 없어요.<br/>새글을 추가해주세요.</p>}
+                        {list.status === 'error' && <p className="list-message">{errorMessage(list.error, '물품 목록을 불러오지 못했어요.')}</p>}
+                        {list.status === 'done' && products.length === 0 && <p className="list-message">등록한 배송 의뢰 물품이 없어요.<br/>새글을 추가해주세요.</p>}
                         {products.map(product => (
                             <CustomProductCard
                                 key={product.productId}
@@ -59,6 +60,7 @@ function Request(){
                                 onClick={() => setSelectedId(product.productId ?? null)}
                             />
                         ))}
+                        <InfiniteListFooter list={list} />
 
                         <div className='new-box' onClick={() => navigate('/product/write')}>
                             <PlusIcon/>

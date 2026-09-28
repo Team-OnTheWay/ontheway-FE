@@ -1,0 +1,20 @@
+.infinite-footer {
+    margin: 0;
+    padding: 12px 0;
+    text-align: center;
+    font-size: 14px;
+    line-height: 20px;
+    color: #6b7280;
+}
+
+.infinite-footer--retry {
+    width: 100%;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.infinite-footer__sentinel {
+    height: 1px;
+}

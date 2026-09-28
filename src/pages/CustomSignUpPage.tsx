@@ -104,7 +104,7 @@ function CustomSignupPage() {
     };
 
     return (
-        <CustomDiv>
+        <CustomDiv pullToRefresh={false}>
             <CustomTopAppBar variant="large" title="회원가입" />
  
             <div className="signup__body">
