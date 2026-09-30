@@ -158,37 +158,32 @@ function CustomSignupPage() {
                             setIsEmailVerified(false);
                         }}/>
                     <div 
-                        className={`signup__side-btn ${!isEmailValidForSend ? 'disabled' : ''}`} 
+                        className={`signup__side-btn signup__side-btn--gray ${!isEmailValidForSend ? 'disabled' : ''}`} 
                         onClick={isEmailValidForSend ? handleSendEmailCode : undefined}
                     >
                         {isEmailVerified ? '인증완료' : (isEmailSent ? '재전송' : '인증받기')}
                     </div>
                 </div>
  
-                {/* 이메일 인증번호 입력창 + 인증 버튼 (피그마: 인증 버튼은 위 재전송 버튼과 같은 크기) */}
+                {/* 이메일 인증번호 입력창 (인증 버튼은 입력칸 안, 타이머 옆) */}
                 {isEmailSent && (
-                    <div className="signup__row">
-                        <TextField 
-                            label="이메일 인증" 
-                            height={56} 
-                            borderColor="gray" 
-                            backgroundColor="white"
-                            leftLocationIcon={false} 
-                            placeholder={isEmailVerified ? "인증이 완료되었습니다." : "인증번호를 입력해주세요."} 
-                            timer={!isEmailVerified}
-                            resetKey={timerKey}
-                            rightButton="none" 
-                            value={authCode}
-                            disabled={isEmailVerified} 
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthCode(e.target.value)}
-                        />
-                        <div 
-                            className={`signup__side-btn ${isEmailVerified || !authCode.trim() ? 'disabled' : ''}`} 
-                            onClick={!isEmailVerified && authCode.trim() ? handleVerifyEmailCode : undefined}
-                        >
-                            {isEmailVerified ? '확인완료' : '인증'}
-                        </div>
-                    </div>
+                    <TextField 
+                        label="이메일 인증" 
+                        height={56} 
+                        borderColor="gray" 
+                        backgroundColor="white"
+                        leftLocationIcon={false} 
+                        placeholder={isEmailVerified ? "인증이 완료되었습니다." : "인증번호를 입력해주세요."} 
+                        timer={!isEmailVerified}
+                        resetKey={timerKey}
+                        rightButton="label" 
+                        rightButtonLabel={isEmailVerified ? '확인완료' : '인증'} 
+                        rightButtonDisabled={isEmailVerified || !authCode.trim()}
+                        value={authCode}
+                        disabled={isEmailVerified} 
+                        onRightButtonClick={handleVerifyEmailCode}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthCode(e.target.value)}
+                    />
                 )}
  
                 {/* 비밀번호 */}

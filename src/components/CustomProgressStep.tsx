@@ -2,7 +2,7 @@ import './CustomProgressStep.css'
 import CustomList from './CustomList'
 import { CircleCheck, Truck, CircleEmpty, CircleX } from './CustomIcon'
  
-// canceled: 배송취소/배송중단 (주황 X)
+// canceled: 배송취소/배송중단 (빨간 X)
 // halted: 진행 중에 중단된 단계 (회색 트럭)
 type StepStatus = "done" | "current" | "pending" | "canceled" | "halted"
  
