@@ -14,6 +14,7 @@ import './CustomRouteDetailPage.css'
 import CustomDiv from '../components/CustomDiv';
 import CustomProfileCard from '../components/CustomProfileCard';
 import RouteMap from "../components/RouteMap";
+import { useCourierLocation, useShareLocation } from '../hooks/useDeliveryLocation'
 import { Delivery } from '../api/Delivery'
 import { Request as RequestApi } from '../api/Request'
 import { Order } from '../api/Order'
@@ -79,30 +80,47 @@ function stoppedStage(detail: DeliveryDetailResponseDto, status: DeliveryStatus)
     return !Number.isNaN(start) && Date.now() >= start ? 'DELIVERING' : 'DELIVERY_WAITING'
 }
 
+// 상태 이력 -> 상태별로 그 상태가 된 시각
+function statusTimes(detail: DeliveryDetailResponseDto): Partial<Record<DeliveryStatus, string>> {
+    const at: Partial<Record<DeliveryStatus, string>> = {}
+    for (const h of detail.deliveryStatusHistory ?? []) {
+        if (h.deliveryStatus && h.deliveryDate) at[h.deliveryStatus as DeliveryStatus] = h.deliveryDate
+    }
+    return at
+}
+
 // 현재 상태로 진행 단계 목록을 만든다. 중단·취소는 멈춘 단계 자리에 끼워 넣고 뒤 단계는 '진행 전'으로 둔다
 function buildSteps(detail: DeliveryDetailResponseDto): Step[] {
     const status = effectiveStatus(detail)
-    const matchedAt = formatDateTime(detail.deliveryStatusHistory?.[0]?.deliveryDate)   // 이력 날짜 = 매칭 시각
+    const at = statusTimes(detail)
+    // 단계가 끝난 시각 = 다음 단계가 시작된 시각 (배송완료는 완료된 시각).
+    // 매칭완료는 다음 단계 기록이 없으면 첫 이력 시각(매칭 시각)으로
+    const doneAt = (s: DeliveryStatus) => {
+        if (s === 'COMPLETED') return at.COMPLETED
+        const next = at[FLOW[FLOW.indexOf(s) + 1]]
+        return next ?? (s === 'MATCHING_WAITING' ? detail.deliveryStatusHistory?.[0]?.deliveryDate : undefined)
+    }
     const done = (s: DeliveryStatus): Step => ({
         title: STEP_TEXT[s].done[0], description: STEP_TEXT[s].done[1], status: 'done',
-        meta: s === 'MATCHING_WAITING' ? matchedAt : undefined,
+        meta: formatDateTime(doneAt(s)) || undefined,
     })
     const pending = (s: DeliveryStatus): Step => ({ title: STEP_TEXT[s].current[0], description: '아직 진행 전이에요.', status: 'pending' })
 
     const stage = stoppedStage(detail, status)
     if (stage) {
-        const at = FLOW.indexOf(stage)
+        const stageIndex = FLOW.indexOf(stage)
+        const stopMeta = formatDateTime(status === 'CANCELED' ? at.CANCELED : at.FAILED) || undefined
         const stop: Step = status === 'CANCELED'
-            ? { title: '배송취소', description: '배송이 취소되었어요.', status: 'canceled' }
-            : { title: '배송중단', description: '배송이 완료되지 못했어요.', status: 'canceled' }
+            ? { title: '배송취소', description: '배송이 취소되었어요.', status: 'canceled', meta: stopMeta }
+            : { title: '배송중단', description: '배송이 완료되지 못했어요.', status: 'canceled', meta: stopMeta }
         // 취소: 매칭완료 -> 배송취소 -> 픽업중(진행 전)…
         // 중단: … -> 멈춘 단계(회색 트럭) -> 배송중단 -> 다음 단계(진행 전)…
         const halted: Step[] = status === 'CANCELED' ? [] : [{
             title: STEP_TEXT[stage].current[0], description: STEP_TEXT[stage].current[1], status: 'halted',
         }]
-        const nextFrom = status === 'CANCELED' ? at : at + 1
+        const nextFrom = status === 'CANCELED' ? stageIndex : stageIndex + 1
         return [
-            ...FLOW.slice(0, at).map(done),
+            ...FLOW.slice(0, stageIndex).map(done),
             ...halted,
             stop,
             ...FLOW.slice(nextFrom).map(pending),
@@ -213,7 +231,8 @@ function CustomRouteDetailPage() {
             setError(result.error)
             setRole(result.role)
             setRequests(result.requests)
-            setSelectedRequestId(prev => prev ?? result.requests[0]?.requestId ?? null)
+            // 고른 의뢰가 목록에서 사라졌으면(거절 등) 첫 의뢰로
+            setSelectedRequestId(prev => result.requests.some(r => r.requestId === prev) ? prev : result.requests[0]?.requestId ?? null)
         })
         return () => { cancelled = true }
     }, [deliveryId, version])
@@ -221,6 +240,11 @@ function CustomRouteDetailPage() {
     // 고른 증빙 사진 미리보기
     const proofPreview = useMemo(() => proof ? URL.createObjectURL(proof) : null, [proof])
     useEffect(() => () => { if (proofPreview) URL.revokeObjectURL(proofPreview) }, [proofPreview])
+
+    // 배송 중 GPS (배송 중일 때만 5초마다): 의뢰자는 전달자 위치 조회, 전달자(게시자)는 내 위치 전송
+    const delivering = !!detail && effectiveStatus(detail) === 'DELIVERING'
+    const courier = useCourierLocation(deliveryId, delivering && role === 'requester')
+    const sharing = useShareLocation(deliveryId, delivering && role === 'owner')
 
     // 배송 진행 처리 (수락 / 픽업 완료 / 취소 / 중단 / 완료 요청 / 완료 확인)
     const process = async (dto: Omit<ProcessRequestDto, 'deliveryId'>, image?: File, done = '처리되었습니다.') => {
@@ -245,8 +269,36 @@ function CustomRouteDetailPage() {
         }
     }
 
-    // 의뢰 거절 API가 아직 없다
-    const reject = () => alert('의뢰 거절은 아직 지원되지 않아요. 수락하지 않은 의뢰는 다른 의뢰를 수락하면 자동으로 거절됩니다.')
+    const reject = async () => {
+        const target = requests.find(r => r.requestId === selectedRequestId)
+        if (!target) return alert('거절할 의뢰를 선택해주세요.')
+        if (!confirm(`${target.requesterNickname || target.requesterName}님의 의뢰를 거절할까요?`)) return
+        setBusy(true)
+        try {
+            await new RequestApi().reject(target.requestId)
+            alert('의뢰를 거절했습니다.')
+            load()
+        } catch (err) {
+            alert(errorMessage(err, '의뢰 거절에 실패했어요.'))
+        } finally {
+            setBusy(false)
+        }
+    }
+
+    // 의뢰가 들어오기 전에만: 게시글 삭제 / 수정(경로등록 화면의 수정 모드)
+    const removePost = async () => {
+        if (!confirm('이 이동 경로 게시글을 삭제할까요?')) return
+        setBusy(true)
+        try {
+            await new Delivery().delete1(deliveryId)
+            alert('게시글이 삭제되었습니다.')
+            navigate('/my/post', { replace: true })
+        } catch (err) {
+            alert(errorMessage(err, '게시글 삭제에 실패했어요.'))
+            setBusy(false)
+        }
+    }
+    const editPost = () => navigate(`/delivery/write?id=${deliveryId}`)
 
     const cancel = () => {
         const reason = prompt('배송 취소 사유를 입력해주세요.')?.trim()
@@ -293,7 +345,10 @@ function CustomRouteDetailPage() {
     // 상태·역할별 하단 버튼 (피그마)
     const buttons: { name: string; primary?: boolean; onClick: () => void }[] = []
     if (status === 'MATCHING_WAITING') {
-        if (isOwner) {
+        if (isOwner && requests.length === 0) {
+            buttons.push({ name: '삭제하기', onClick: removePost })
+            buttons.push({ name: '수정하기', primary: true, onClick: editPost })
+        } else if (isOwner) {
             buttons.push({ name: '거절하기', onClick: reject })
             buttons.push({ name: '수락하기', primary: true, onClick: accept })
         } else {
@@ -330,7 +385,11 @@ function CustomRouteDetailPage() {
             {isOwner
                 ? <CustomTopAppBar variant="centered" title={`${detail.userName ?? ''}님의 가는길`} />
                 : <CustomTopAppBar variant="meta" title={`${detail.userName ?? ''}님의 가는길`} meta="신고"
-                    onClick={() => navigate(`/board/report?boardId=${deliveryId}&boardType=DELIVERY`)} />}
+                    onClick={() => navigate(`/board/report?boardId=${deliveryId}&boardType=DELIVERY`, { state: { post: {
+                        number: `게시글번호 ${deliveryId}`,
+                        category: `${detail.userName ?? ''}님의 가는길`,
+                        money: formatNumber(detail.hopePrice),
+                    } } })} />}
 
             <div className="route-detail__body">
                 <CustomProfileCard
@@ -406,7 +465,21 @@ function CustomRouteDetailPage() {
 
                 {/* 배송 중: 지도 */}
                 {status === 'DELIVERING' && isParticipant && detail.startAddress && detail.endAddress && (
-                    <RouteMap startAddr={detail.startAddress} endAddr={detail.endAddress} />
+                    <div className="route-detail__gps">
+                        <RouteMap startAddr={detail.startAddress} endAddr={detail.endAddress} courier={courier.location?.position} />
+                        <p className="route-detail__gps-text">
+                            {role === 'requester' && (courier.location
+                                ? `전달자 위치 · ${formatTime(courier.location.updatedAt) || '방금'} 기준`
+                                : courier.failed ? '전달자 위치를 아직 받지 못했어요.' : '전달자 위치를 불러오는 중이에요.')}
+                            {isOwner && ({
+                                idle: '위치를 확인하는 중이에요.',
+                                sharing: `내 위치를 의뢰자에게 공유하고 있어요${sharing.sentAt ? ` · ${formatTime(sharing.sentAt.toISOString())} 전송` : ''}`,
+                                denied: '위치 권한이 꺼져 있어요. 브라우저 설정에서 위치 권한을 허용해주세요.',
+                                unsupported: '이 브라우저에서는 위치를 공유할 수 없어요.',
+                                error: '위치를 보내지 못했어요. 잠시 후 다시 시도해요.',
+                            }[sharing.state])}
+                        </p>
+                    </div>
                 )}
 
                 {/* 게시자: 배송중단사유 (배송 대기 중·배송 중) */}

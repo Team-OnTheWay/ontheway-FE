@@ -8,40 +8,53 @@ import { User } from '../api/User'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Email } from '../api/Email'
+import { useSignupDraft } from '../store/useSignupDraft'
  
 function CustomSignupPage() {
     const navigate = useNavigate();
 
-    const [id, setId] = useState('');
-    const [name, setName] = useState('');
-    const [birth, setBirth] = useState('');
-    const [email, setEmail] = useState('');
+    // 약관동의에서 뒤로 돌아오면 입력했던 값을 그대로 채운다
+    const { draft, setDraft } = useSignupDraft();
+
+    const [id, setId] = useState(draft?.id ?? '');
+    const [name, setName] = useState(draft?.name ?? '');
+    const [birth, setBirth] = useState(draft?.birth ?? '');
+    const [email, setEmail] = useState(draft?.email ?? '');
     const [authCode, setAuthCode] = useState('');
-    const [password, setPassword] = useState('');
-    const [passwordConfirm, setPasswordConfirm] = useState('');
-    const [nickname, setNickname] = useState('');
+    const [password, setPassword] = useState(draft?.password ?? '');
+    const [passwordConfirm, setPasswordConfirm] = useState(draft?.passwordConfirm ?? '');
+    const [nickname, setNickname] = useState(draft?.nickname ?? '');
     
-    const [isIdChecked, setIsIdChecked] = useState(false);
-    const [isEmailSent, setIsEmailSent] = useState(false);
-    const [isEmailVerified, setIsEmailVerified] = useState(false);
+    const [isIdChecked, setIsIdChecked] = useState(draft?.isIdChecked ?? false);
+    const [isEmailSent, setIsEmailSent] = useState(draft?.isEmailVerified ?? false);
+    const [isEmailVerified, setIsEmailVerified] = useState(draft?.isEmailVerified ?? false);
     const [timerKey, setTimerKey] = useState(0);
 
     const isIdValidForCheck = id.trim().length > 0;
     const isEmailValidForSend = email.trim().length > 0 && !isEmailVerified;
+    // 비밀번호·비밀번호 확인·닉네임 조건 (도움말: 충족 전 회색, 충족하면 주황)
+    const isPasswordOk = password.length >= 8 && password.length <= 15;
+    const isPasswordMatch = passwordConfirm.length > 0 && password === passwordConfirm;
+    const isNicknameOk = nickname.trim().length > 0 && nickname.length <= 7;
     const isFormValid = 
         isIdChecked &&
         isEmailVerified &&
         name.trim().length > 0 &&
         birth.trim().length > 0 &&
-        password.length >= 8 && password.length <= 15 &&
-        password === passwordConfirm &&
-        nickname.trim().length > 0 && nickname.length <= 7;
+        isPasswordOk &&
+        isPasswordMatch &&
+        isNicknameOk;
 
     const handleCheckId = async () => {
         if (!isIdValidForCheck) return;
         try {
             const userApi = new User();
-            await userApi.checkId({ userId: id });
+            const res = await userApi.checkId({ userId: id });
+            // 서버는 중복이어도 성공(200)으로 답하고 data.exist 로 알려준다
+            if ((res.data.data as { exist?: boolean } | undefined)?.exist) {
+                alert('이미 사용 중인 아이디입니다.');
+                return;
+            }
             alert('사용 가능한 아이디입니다.');
             setIsIdChecked(true);
         } catch (error) {
@@ -81,26 +94,11 @@ function CustomSignupPage() {
         }
     };
 
-    const handleSignUp = async () => {
+    // 가입 요청은 약관동의에서 보낸다 (회원가입 -> 약관동의 순서)
+    const handleNext = () => {
         if (!isFormValid) return;
-
-        try {
-            const userApi = new User();
-            await userApi.signUp({
-                userId: id,
-                userName: name,
-                birthday: birth,
-                email: email,
-                password: password,
-                nickName: nickname,
-            });
-
-            alert('회원가입이 완료되었습니다!');
-            navigate('/login');
-        } catch (error) {
-            console.error('회원가입 실패', error);
-            alert('회원가입에 실패했습니다. 입력한 정보를 확인해주세요.');
-        }
+        setDraft({ id, name, birth, email, password, passwordConfirm, nickname, isIdChecked, isEmailVerified });
+        navigate('/agree');
     };
 
     return (
@@ -167,46 +165,50 @@ function CustomSignupPage() {
                     </div>
                 </div>
  
-                {/* 이메일 인증번호 입력창 */}
+                {/* 이메일 인증번호 입력창 + 인증 버튼 (피그마: 인증 버튼은 위 재전송 버튼과 같은 크기) */}
                 {isEmailSent && (
-                    <TextField 
-                        label="이메일 인증" 
-                        height={56} 
-                        borderColor="gray" 
-                        backgroundColor="white"
-                        leftLocationIcon={false} 
-                        placeholder={isEmailVerified ? "인증이 완료되었습니다." : "인증번호를 입력해주세요."} 
-                        timer={!isEmailVerified}
-                        resetKey={timerKey}
-                        rightButton="label" 
-                        rightButtonLabel={isEmailVerified ? '확인완료' : '인증'} 
-                        rightButtonColor={isEmailVerified ? '#9CA3AF' : '#FD5D35'}
-                        rightButtonDisabled={isEmailVerified}
-                        value={authCode}
-                        disabled={isEmailVerified} 
-                        onRightButtonClick={handleVerifyEmailCode}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthCode(e.target.value)}
-                    />
+                    <div className="signup__row">
+                        <TextField 
+                            label="이메일 인증" 
+                            height={56} 
+                            borderColor="gray" 
+                            backgroundColor="white"
+                            leftLocationIcon={false} 
+                            placeholder={isEmailVerified ? "인증이 완료되었습니다." : "인증번호를 입력해주세요."} 
+                            timer={!isEmailVerified}
+                            resetKey={timerKey}
+                            rightButton="none" 
+                            value={authCode}
+                            disabled={isEmailVerified} 
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthCode(e.target.value)}
+                        />
+                        <div 
+                            className={`signup__side-btn ${isEmailVerified || !authCode.trim() ? 'disabled' : ''}`} 
+                            onClick={!isEmailVerified && authCode.trim() ? handleVerifyEmailCode : undefined}
+                        >
+                            {isEmailVerified ? '확인완료' : '인증'}
+                        </div>
+                    </div>
                 )}
  
                 {/* 비밀번호 */}
                 <TextField label="비밀번호" height={56} borderColor="gray" backgroundColor="white"
                     leftLocationIcon={false} placeholder="비밀번호를 입력해주세요." timer={false} rightButton="eye"
-                    helperText="8~15자리 이내" 
+                    helperText="8~15자리 이내" helperActive={isPasswordOk}
                     value={password}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}/>
  
                 {/* 비밀번호 확인 */}
                 <TextField label="비밀번호 확인" height={56} borderColor="gray" backgroundColor="white"
                     leftLocationIcon={false} placeholder="비밀번호를 다시 입력해주세요." timer={false} rightButton="eye"
-                    helperText="비밀번호 일치" 
+                    helperText="비밀번호 일치" helperActive={isPasswordMatch}
                     value={passwordConfirm}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPasswordConfirm(e.target.value)}/>
  
                 {/* 닉네임 */}
                 <TextField label="닉네임" height={56} borderColor="gray" backgroundColor="white"
                     leftLocationIcon={false} placeholder="닉네임을 입력해주세요." timer={false} rightButton="none"
-                    helperText="7자리 이내" 
+                    helperText="7자리 이내" helperActive={isNicknameOk}
                     value={nickname}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNickname(e.target.value)}/>
             </div>
@@ -219,7 +221,7 @@ function CustomSignupPage() {
                         color={isFormValid ? "#fd5d35" : "#D7DAE0"} 
                         fontColor="#ffffff" 
                         size="lg" 
-                        onClick={isFormValid ? handleSignUp : undefined}
+                        onClick={isFormValid ? handleNext : undefined}
                     />
                 </div>
             </div>

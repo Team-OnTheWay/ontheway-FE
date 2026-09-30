@@ -57,6 +57,7 @@
 .login-page__links {
     display: flex;
     justify-content: center;
+    align-items: center;   /* 사이 막대(13px)를 글자 가운데에 */
     gap: 24px;
     margin-top: 16px;
     font-size: 14px;
@@ -86,10 +87,11 @@
 a {
   text-decoration: none;
 }
-/* 웹(500px): 피그마상 입력칸·자동로그인은 361px 가운데 정렬, 버튼만 전체 폭 */
+/* 웹(500px): 피그마상 입력칸·자동로그인·로그인 버튼 모두 361px 가운데 정렬 */
 .login-page__id,
 .login-page__pw,
-.login-page__auto {
+.login-page__auto,
+.login-page__button {
     max-width: 361px;
     margin-left: auto;
     margin-right: auto;

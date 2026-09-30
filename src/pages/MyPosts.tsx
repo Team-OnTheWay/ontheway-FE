@@ -32,7 +32,7 @@ function MyPosts(){
     const routeResult = useInfiniteList(
         page => tab !== 0 ? NO_PAGE : new Delivery()
             .myList({ myBoardDeliveryListRequestDto: { ...filterQuery(filters), page, size: PAGE_SIZE } })
-            .then(res => toPage(res.data.data?.deliveryList, PAGE_SIZE)),
+            .then(res => toPage(res.data.data?.deliveryList)),
         `${tab}:${JSON.stringify(filters)}`,
     )
     const routes = routeResult.items
@@ -48,7 +48,7 @@ function MyPosts(){
     const productResult = useInfiniteList(
         page => tab !== 1 ? NO_PAGE : new Product()
             .list1({ productListRequestDto: { keyword: debouncedKeyword || undefined, page, size: PAGE_SIZE } })
-            .then(res => toPage(res.data.data?.productList, PAGE_SIZE, res.data.data?.hasNext)),
+            .then(res => toPage(res.data.data?.productList, res.data.data?.hasNext)),
         `${tab}:${debouncedKeyword}`,
     )
     const products = productResult.items

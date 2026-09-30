@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import DaumPostcode, { type Address } from 'react-daum-postcode'
 import './PathSetup.css'
 import './postcode.css'
@@ -11,9 +11,11 @@ import TextField from '../components/TextField'
 import TextArea from '../components/TextArea'
 import TimeInput from '../components/TimeInput'
 import CustomDiv from '../components/CustomDiv'
-import { useNavigate } from 'react-router-dom'
+import DateInput from '../components/DateInput'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Delivery } from '../api/Delivery'
-import { errorMessage, parseDateInput, parsePrice, toLocalDateTime } from '../utils/apiFormat'
+import type { DeliveryDetailResponseDto } from '../api/data-contracts'
+import { errorMessage, formatDate, formatTime, parseDateInput, parsePrice, toDateText, toLocalDateTime } from '../utils/apiFormat'
  
 function PathXButton({ onClick }: { onClick?: () => void }) {
     return (
@@ -33,7 +35,11 @@ function PathXButton({ onClick }: { onClick?: () => void }) {
     )
 }
  
+// 경로등록: /delivery/write
+// 경로수정: /delivery/write?id=3 (경로상세에서 의뢰가 들어오기 전에만 '수정하기'로 들어온다)
 function PathSetup() {
+    const editId = Number(useSearchParams()[0].get('id')) || null
+
     // 주소는 사용자가 검색해서 채우므로 상태로 관리
     const [startAddr, setStartAddr] = useState('')
     const [startDetail, setStartDetail] = useState('')
@@ -47,10 +53,50 @@ function PathSetup() {
     const navigate = useNavigate()
     const [date, setDate] = useState('')
     const [price, setPrice] = useState('')
-    const [startTime, setStartTime] = useState('08:00')
-    const [endTime, setEndTime] = useState('10:00')
+    // 예정시간: 처음엔 00:00(회색), 고르면 검정
+    const [startTime, setStartTime] = useState('00:00')
+    const [endTime, setEndTime] = useState('00:00')
+    const [timeSelected, setTimeSelected] = useState(false)
     const [addInfo, setAddInfo] = useState('')
     const [submitting, setSubmitting] = useState(false)
+
+    // 기존 게시글(수정할 글 / 최근 게시글)로 입력칸 채우기.
+    // 저장된 주소는 "주소 + 상세 주소"가 한 줄이라 주소 칸에 그대로 넣는다
+    const fill = (d: DeliveryDetailResponseDto, withDate: boolean) => {
+        setStartAddr(d.startAddress ?? '')
+        setStartDetail('')
+        setEndAddr(d.endAddress ?? '')
+        setEndDetail('')
+        if (withDate) setDate(formatDate(d.deliveryDate))
+        setPrice(d.hopePrice !== undefined ? d.hopePrice.toLocaleString('ko-KR') : '')
+        if (d.deliveryDate) {
+            setStartTime(formatTime(d.deliveryDate))
+            setEndTime(formatTime(d.estimatedDeliveryTime) || formatTime(d.deliveryDate))
+            setTimeSelected(true)
+        }
+        setAddInfo(d.addInfo ?? '')
+    }
+
+    // 수정 모드: 기존 글 불러오기
+    useEffect(() => {
+        if (!editId) return
+        new Delivery().detail1({ deliveryDetailRequestDto: { deliveryId: editId } })
+            .then(res => { if (res.data.data) fill(res.data.data, true) })
+            .catch(err => alert(errorMessage(err, '게시글을 불러오지 못했어요.')))
+    }, [editId])
+
+    // 최근 등록한 게시물 불러오기 (날짜는 지난 날짜일 수 있어서 새로 고르게 비워 둔다)
+    const loadRecent = async () => {
+        const hasInput = startAddr || endAddr || price || addInfo
+        if (hasInput && !confirm('지금 입력한 내용을 최근 게시물 내용으로 바꿀까요?')) return
+        try {
+            const res = await new Delivery().currentDetail()
+            if (!res.data.data?.deliveryId) return alert('최근에 등록한 게시물이 없어요.')
+            fill(res.data.data, false)
+        } catch (err) {
+            alert(errorMessage(err, '최근 게시물을 불러오지 못했어요.'))
+        }
+    }
 
     // 주소 + 상세 주소를 한 줄로 (API는 주소 칸이 하나뿐)
     const fullAddress = (addr: string, detail: string) => detail.trim() ? `${addr} ${detail.trim()}` : addr
@@ -59,26 +105,34 @@ function PathSetup() {
         const deliveryDate = parseDateInput(date)
         const hopePrice = parsePrice(price)
         if (!startAddr || !endAddr) return alert('출발지와 도착지를 선택해주세요.')
-        if (!deliveryDate) return alert('배송 가능날을 2026.09.22 또는 9월22일 형식으로 입력해주세요.')
+        if (!deliveryDate) return alert('배송 가능날을 선택해주세요.')
         if (hopePrice === undefined) return alert('희망금액을 입력해주세요.')
+        if (!timeSelected) return alert('예정시간을 선택해주세요.')
         if (endTime <= startTime) return alert('예정시간의 끝 시간이 시작 시간보다 늦어야 해요.')
 
+        const body = {
+            startAddress: fullAddress(startAddr, startDetail),
+            endAddress: fullAddress(endAddr, endDetail),
+            deliveryDate: toLocalDateTime(deliveryDate, startTime),
+            // 예정시간: 시작 ~ 끝 (estimatedDeliveryTime 하나에서 둘로 나뉨)
+            estimatedStartDeliveryTime: toLocalDateTime(deliveryDate, startTime),
+            estimatedEndDeliveryTime: toLocalDateTime(deliveryDate, endTime),
+            hopePrice,
+            addInfo,
+        }
         setSubmitting(true)
         try {
-            await new Delivery().create2({
-                startAddress: fullAddress(startAddr, startDetail),
-                endAddress: fullAddress(endAddr, endDetail),
-                deliveryDate: toLocalDateTime(deliveryDate, startTime),
-                // 예정시간: 시작 ~ 끝 (estimatedDeliveryTime 하나에서 둘로 나뉨)
-                estimatedStartDeliveryTime: toLocalDateTime(deliveryDate, startTime),
-                estimatedEndDeliveryTime: toLocalDateTime(deliveryDate, endTime),
-                hopePrice,
-                addInfo,
-            })
-            alert('이동 경로가 등록되었습니다.')
-            navigate('/my/post')
+            if (editId) {
+                await new Delivery().update1({ deliveryId: editId, ...body })
+                alert('이동 경로가 수정되었습니다.')
+                navigate(`/delivery/detail/${editId}`, { replace: true })
+            } else {
+                await new Delivery().create2(body)
+                alert('이동 경로가 등록되었습니다.')
+                navigate('/my/post')
+            }
         } catch (error) {
-            alert(errorMessage(error, '이동 경로 등록에 실패했어요.'))
+            alert(errorMessage(error, editId ? '이동 경로 수정에 실패했어요.' : '이동 경로 등록에 실패했어요.'))
         } finally {
             setSubmitting(false)
         }
@@ -93,9 +147,10 @@ function PathSetup() {
  
     return (
         <CustomDiv pullToRefresh={false}>
-            <CustomTopAppBar title="경로등록" />
+            <CustomTopAppBar title={editId ? "경로수정" : "경로등록"} />
  
-            <div className="recent-post">
+            {/* 최근 등록한 게시물 불러오기 (새 글 작성에서만) */}
+            {!editId && <div className="recent-post" onClick={loadRecent}>
                 <div className="recent-post-icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <path d="M3 12C3 13.78 3.52784 15.5201 4.51677 17.0001C5.50571 18.4802 6.91131 19.6337 8.55585 20.3149C10.2004 20.9961 12.01 21.1743 13.7558 20.8271C15.5016 20.4798 17.1053 19.6226 18.364 18.364C19.6226 17.1053 20.4798 15.5016 20.8271 13.7558C21.1743 12.01 20.9961 10.2004 20.3149 8.55585C19.6337 6.91131 18.4802 5.50571 17.0001 4.51677C15.5201 3.52784 13.78 3 12 3C9.48395 3.00947 7.06897 3.99122 5.26 5.74L3 8" stroke="#FD5D35" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -107,7 +162,7 @@ function PathSetup() {
                     <div className="recent-post-title">최근 등록한 게시물 불러오기</div>
                     <div className="recent-post-description">이전에 등록한 경로를 불러와 빠르게 작성해보세요.</div>
                 </div>
-            </div>
+            </div>}
  
             <div className="path-info">
                 <div className="path-info-title">경로정보</div>
@@ -168,16 +223,15 @@ function PathSetup() {
             <div className="delivery-section">
                 <div className="delivery-title">배송정보</div>
  
-                <TextField label="배송 가능날" height={48} borderColor="gray" backgroundColor="white" leftLocationIcon={false} placeholder="9월22일" timer={false} rightButton="none"
-                    value={date} onChange={(e) => setDate(e.target.value)} />
+                <DateInput label="배송 가능날" borderColor="gray" value={date} onChange={(e) => setDate(toDateText(e.target.value))} />
  
-                <TextField label="희망금액" height={48} borderColor="gray" backgroundColor="white" leftLocationIcon={false} placeholder="20,000원" timer={false} rightButton="none"
+                <TextField label="희망금액" height={48} borderColor="gray" backgroundColor="white" leftLocationIcon={false} placeholder="ex) 20,000원" timer={false} rightButton="none"
                     value={price} onChange={(e) => setPrice(e.target.value)} />
  
                 <div className="delivery-time">
                     <div className="delivery-time-title">예정시간</div>
-                    <TimeInput borderColor="gray" backgroundColor="white" start={startTime} end={endTime}
-                        onChange={(start, end) => { setStartTime(start); setEndTime(end) }} />
+                    <TimeInput borderColor="gray" backgroundColor="white" start={startTime} end={endTime} empty={!timeSelected}
+                        onChange={(start, end) => { setStartTime(start); setEndTime(end); setTimeSelected(true) }} />
                 </div>
  
                 <div className="delivery-extra">
@@ -187,7 +241,7 @@ function PathSetup() {
             </div>
  
             <div className="path-setup-button">
-                <CustomButton name={submitting ? "등록 중..." : "작성완료"} color="#FD5D35" fontColor="#FFFFFF" size="lg" onClick={submitting ? undefined : handleSubmit} />
+                <CustomButton name={submitting ? (editId ? "수정 중..." : "등록 중...") : (editId ? "수정완료" : "작성완료")} color="#FD5D35" fontColor="#FFFFFF" size="lg" onClick={submitting ? undefined : handleSubmit} />
             </div>
  
             {/* 주소 검색 오버레이 — searchTarget이 있을 때만 */}

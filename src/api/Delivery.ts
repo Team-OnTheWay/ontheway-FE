@@ -11,6 +11,7 @@
  */
 
 import type {
+  CurrentDetailData,
   Create2Data,
   Delete1Data,
   DeliveryDetailRequestDto,
@@ -139,6 +140,21 @@ export class Delivery<
     this.request<Delete1Data, any>({
       path: `/delivery/${id}`,
       method: "DELETE",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags 이동 경로 게시글
+   * @name CurrentDetail
+   * @summary 이동 경로 최근 게시글 조회
+   * @request GET:/delivery/current
+   * @response `200` `CurrentDetailData` OK
+   */
+  currentDetail = (params: RequestParams = {}) =>
+    this.request<CurrentDetailData, any>({
+      path: `/delivery/current`,
+      method: "GET",
       ...params,
     });
 }

@@ -34,11 +34,13 @@
     border-left: 2px solid #d7dae0;
 }
  
-/* 가운데 텍스트 */
+/* 가운데 텍스트: 날짜를 뺀 나머지 폭을 쓰고, 단어 단위로 줄바꿈 ("있어 / 요." 방지) */
 .progress-step__text {
-    width: 156px;
-    flex-shrink: 0;
+    flex: 1;
+    min-width: 0;
     padding-bottom: 16px;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
 }
  
 .progress-step__step-title {
@@ -74,10 +76,9 @@
  
 /* 오른쪽 날짜/태그 */
 .progress-step__meta {
-    flex: 1;
+    flex-shrink: 0;
     display: flex;
     justify-content: flex-end;
-    min-width: 0;
 }
  
 .progress-step__date {

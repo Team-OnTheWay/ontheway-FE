@@ -64,6 +64,7 @@ function CustomReportUser() {
                     rateing={0}
                     review={0}
                     chipElement={null}
+                    expandable={false}
                     profileElement={<CustomProfile width={40} height={20} strok="#FD5D35" strokWidth={2} diameter={40} backgroundColor="#FEF1ED" />}
                 />}
 

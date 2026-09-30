@@ -1,3 +1,5 @@
+import { useId } from 'react'
+
 interface Profile {
     width: number;
     height: number;
@@ -68,12 +70,13 @@ interface Box {
     width: number;
     height: number;
     strokeWidth: number;
+    stroke?: string;
 }
 
-export const Box = ({width, height, strokeWidth} : Box) => {
+export const Box = ({width, height, strokeWidth, stroke = '#33363D'} : Box) => {
     return (
         <svg width={width} height={height} viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 20.9979V10.9979M10 10.9979L1.29 5.99795M10 10.9979L18.71 5.99795M5.5 3.26795L14.5 8.41795M9 20.7279C9.30404 20.9035 9.64893 20.9959 10 20.9959C10.3511 20.9959 10.696 20.9035 11 20.7279L18 16.7279C18.3037 16.5526 18.556 16.3004 18.7315 15.9968C18.9071 15.6931 18.9996 15.3487 19 14.9979V6.99795C18.9996 6.64722 18.9071 6.30276 18.7315 5.99911C18.556 5.69546 18.3037 5.44331 18 5.26795L11 1.26795C10.696 1.09241 10.3511 1 10 1C9.64893 1 9.30404 1.09241 9 1.26795L2 5.26795C1.69626 5.44331 1.44398 5.69546 1.26846 5.99911C1.09294 6.30276 1.00036 6.64722 1 6.99795V14.9979C1.00036 15.3487 1.09294 15.6931 1.26846 15.9968C1.44398 16.3004 1.69626 16.5526 2 16.7279L9 20.7279Z" stroke="#33363D" stroke-width={strokeWidth} stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 20.9979V10.9979M10 10.9979L1.29 5.99795M10 10.9979L18.71 5.99795M5.5 3.26795L14.5 8.41795M9 20.7279C9.30404 20.9035 9.64893 20.9959 10 20.9959C10.3511 20.9959 10.696 20.9035 11 20.7279L18 16.7279C18.3037 16.5526 18.556 16.3004 18.7315 15.9968C18.9071 15.6931 18.9996 15.3487 19 14.9979V6.99795C18.9996 6.64722 18.9071 6.30276 18.7315 5.99911C18.556 5.69546 18.3037 5.44331 18 5.26795L11 1.26795C10.696 1.09241 10.3511 1 10 1C9.64893 1 9.30404 1.09241 9 1.26795L2 5.26795C1.69626 5.44331 1.44398 5.69546 1.26846 5.99911C1.09294 6.30276 1.00036 6.64722 1 6.99795V14.9979C1.00036 15.3487 1.09294 15.6931 1.26846 15.9968C1.44398 16.3004 1.69626 16.5526 2 16.7279L9 20.7279Z" stroke={stroke} stroke-width={strokeWidth} stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
     );
 };
@@ -165,10 +168,12 @@ interface Circle {
     strokeWidth?: number;
 }
  
-export const Circle = ({ width = 20, height = 20, stroke = '#4576F7', strokeWidth = 4 }: Circle) => {
+// 피그마 lucide/circle: 색이 채워진 원 안에 흰 원
+export const Circle = ({ width = 20, height = 20, stroke = '#4576F7', strokeWidth = 2 }: Circle) => {
     return (
         <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="8" stroke={stroke} strokeWidth={strokeWidth} />
+            <circle cx="12" cy="12" r="10" fill={stroke} stroke={stroke} strokeWidth={strokeWidth} />
+            <circle cx="12" cy="12" r="6" fill="#ffffff" stroke={stroke} strokeWidth={strokeWidth} />
         </svg>
     );
 };
@@ -401,6 +406,18 @@ export const WalletIcon = ({}: WalletIcon) => {
     );
 };
 
+// 물품정보 목록용 회색 아이콘 (피그마 lucide/file-pen-line)
+export const FilePenLineIcon = () => {
+    return(
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M11.97 11.3617C11.7719 11.5597 11.6269 11.8044 11.5483 12.0733L10.8508 14.465C10.8299 14.5367 10.8287 14.6127 10.8472 14.6851C10.8657 14.7574 10.9034 14.8235 10.9562 14.8763C11.009 14.9291 11.0751 14.9668 11.1474 14.9853C11.2198 15.0038 11.2958 15.0026 11.3675 14.9817L13.7592 14.2842C14.0281 14.2056 14.2728 14.0606 14.4708 13.8625L17.815 10.5217C18.147 10.1897 18.3335 9.73947 18.3335 9.27C18.3335 8.80053 18.147 8.3503 17.815 8.01833C17.483 7.68637 17.0328 7.49988 16.5633 7.49988C16.0939 7.49988 15.6436 7.68637 15.3117 8.01833L11.97 11.3617Z" stroke="#6A6A67" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M12.0725 6.54833C11.9488 6.47441 11.8464 6.36968 11.7753 6.24436C11.7041 6.11905 11.6667 5.97743 11.6667 5.83333V1.66667" stroke="#6A6A67" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M16.6667 16.3708V16.6667C16.6667 17.1087 16.4911 17.5326 16.1785 17.8452C15.8659 18.1577 15.442 18.3333 15 18.3333H5C4.55797 18.3333 4.13405 18.1577 3.82149 17.8452C3.50893 17.5326 3.33333 17.1087 3.33333 16.6667V3.33333C3.33333 2.89131 3.50893 2.46738 3.82149 2.15482C4.13405 1.84226 4.55797 1.66667 5 1.66667H11.6667C11.9305 1.66624 12.1917 1.718 12.4354 1.81897C12.6791 1.91995 12.9005 2.06813 13.0867 2.255L15.1833 4.35167" stroke="#6A6A67" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M6.66667 15H7.5" stroke="#6A6A67" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+    );
+};
+
 interface CheckIcon {
 }
 
@@ -593,15 +610,30 @@ export const CameraIcon = () => {
 
 interface StarIcon {
     filled: boolean;
+    half?: boolean;   // 왼쪽 절반만 채움 (0.5점)
 }
 
-export const StarIcon = ({ filled }: StarIcon) => {
+const STAR_PATH = "M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+
+export const StarIcon = ({ filled, half }: StarIcon) => {
+    const clipId = useId()
+    if (half) {
+        return (
+            <svg width="42" height="42" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <defs>
+                    <clipPath id={clipId}><rect x="0" y="0" width="12" height="24" /></clipPath>
+                </defs>
+                <path d={STAR_PATH} fill="#FD5D35" stroke="none" clipPath={`url(#${clipId})`} />
+                <path d={STAR_PATH} fill="none" stroke="#FD5D35" />
+            </svg>
+        )
+    }
     return (
         <svg width="42" height="42" viewBox="0 0 24 24"
             fill={filled ? '#FD5D35' : 'none'}
             stroke={filled ? '#FD5D35' : '#33363D'}
             strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
+            <path d={STAR_PATH} />
         </svg>
     )
 }

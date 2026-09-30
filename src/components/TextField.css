@@ -135,6 +135,11 @@
   line-height: 16px;
   color: #FD5D35;
 }
+
+/* 조건을 아직 충족하지 않은 도움말: 입력칸 placeholder와 같은 회색 */
+.text-field-help--inactive {
+  color: #9ca3af;
+}
 /* 입력 중(포커스)에는 주황 테두리 (피그마 focused 상태) */
 .text-field:focus-within {
   border-color: #fd5d35 !important;

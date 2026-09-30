@@ -24,7 +24,7 @@ const PAGE_SIZE = 20
 async function fetchHistory(tab: Tab, page: number): Promise<ListPage<HistoryList>> {
     const api = new History()
     const query = { historyListRequestDto: { page, size: PAGE_SIZE } }
-    const pageOf = (res: { data: { data?: { historyList?: HistoryList[] } } }) => toPage(res.data.data?.historyList, PAGE_SIZE)
+    const pageOf = (res: { data: { data?: { historyList?: HistoryList[] } } }) => toPage(res.data.data?.historyList)
     if (tab === 'matched') return pageOf(await api.deliveryList(query))
     if (tab === 'requested') return pageOf(await api.requestList(query))
     if (tab === 'canceled') return pageOf(await api.cancelList(query))
@@ -40,9 +40,8 @@ async function fetchHistory(tab: Tab, page: number): Promise<ListPage<HistoryLis
     }
 }
 
-// 후기는 배송이 끝난 건(완료, 취소·중단)에서만 쓸 수 있다
-const canReview = (item: HistoryList) =>
-    item.deliveryStatus === 'COMPLETED' || item.boardType === 'FAILED_AND_CANCELLED'
+// 후기는 배송이 완료된 건에서만 쓸 수 있다 (취소·중단 건은 제외)
+const canReview = (item: HistoryList) => item.deliveryStatus === 'COMPLETED'
 
 function UsageHistory(){
     const [tab, setTab] = useState<Tab>('all')

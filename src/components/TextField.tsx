@@ -24,6 +24,8 @@ type TextFieldProps = {
   rightButtonColor?: string
   rightButtonDisabled?: boolean
   helperText?: string
+  // 도움말 조건 충족 여부: false면 회색, true(또는 생략)면 주황
+  helperActive?: boolean
   defaultValue?: string
   disabled?: boolean
   value?: string
@@ -34,7 +36,7 @@ type TextFieldProps = {
 function HelperCheck() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-      stroke="#FD5D35" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+      stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
       <path d="M20 6 9 17l-5-5" />
     </svg>
   )
@@ -79,7 +81,7 @@ useEffect(() => {
         )}
       </div>
       {props.helperText && (
-        <p className="text-field-help"><HelperCheck />{props.helperText}</p>
+        <p className={`text-field-help${props.helperActive === false ? ' text-field-help--inactive' : ''}`}><HelperCheck />{props.helperText}</p>
       )}
     </div>
   )

@@ -12,7 +12,8 @@ import CustomCheckbox from '../components/CustomCheckbox'
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Product } from '../api/Product'
-import { errorMessage, formatDate, formatTime, parseDateInput, parsePrice, toLocalDateTime } from '../utils/apiFormat'
+import { errorMessage, formatDate, formatTime, parseDateInput, parsePrice, toDateText, toLocalDateTime } from '../utils/apiFormat'
+import DateInput from '../components/DateInput'
 import { geocode } from '../utils/geocode'
 import CustomDiv from '../components/CustomDiv'
 
@@ -89,8 +90,8 @@ function CreateRequest() {
         const deliveryFee = parsePrice(fee)
         if (!pickupAddr || !destAddr) return alert('물건수령지와 배송목적지를 선택해주세요.')
         if (!productName.trim()) return alert('물품명을 입력해주세요.')
-        if (!receiving) return alert('수령일을 2026.09.21 또는 9월21일 형식으로 입력해주세요.')
-        if (!arrival) return alert('가는날을 2026.09.22 또는 9월22일 형식으로 입력해주세요.')
+        if (!receiving) return alert('수령일을 선택해주세요.')
+        if (!arrival) return alert('가는날을 선택해주세요.')
         if (deliveryFee === undefined) return alert('배송비를 입력해주세요.')
         if (!agreed) return alert('고지사항을 확인하고 동의해주세요.')
 
@@ -207,8 +208,7 @@ function CreateRequest() {
                 </section>
 
                 <section className="request-section">
-                    <TextField label="수령일" height={48} borderColor="gray" backgroundColor="white" leftLocationIcon={false} placeholder="9월21일" timer={false} rightButton="none"
-                        value={receivingDate} onChange={(e) => setReceivingDate(e.target.value)}/>
+                    <DateInput label="수령일" borderColor="gray" value={receivingDate} onChange={(e) => setReceivingDate(toDateText(e.target.value))}/>
 
                     <div className="request-time">
                         <div className="request-label">수령시간</div>
@@ -219,8 +219,7 @@ function CreateRequest() {
 
                 <section className="request-section">
                     <div className="request-section-title">배송정보</div>
-                    <TextField label="가는날" height={48} borderColor="gray" backgroundColor="white" leftLocationIcon={false} placeholder="9월22일" timer={false} rightButton="none"
-                        value={arrivalDate} onChange={(e) => setArrivalDate(e.target.value)}/>
+                    <DateInput label="가는날" borderColor="gray" value={arrivalDate} onChange={(e) => setArrivalDate(toDateText(e.target.value))}/>
 
                     <div className="request-time">
                         <div className="request-label">배송도착시간</div>
@@ -228,7 +227,7 @@ function CreateRequest() {
                             onChange={(start, end) => { setArrivalStart(start); setArrivalEnd(end) }}/>
                     </div>
 
-                    <TextField label="배송비" height={48} borderColor="gray" backgroundColor="white" leftLocationIcon={false} placeholder="15,000원" timer={false} rightButton="none"
+                    <TextField label="배송비" height={48} borderColor="gray" backgroundColor="white" leftLocationIcon={false} placeholder="ex) 15,000원" timer={false} rightButton="none"
                         value={fee} onChange={(e) => setFee(e.target.value)}/>
                 </section>
 

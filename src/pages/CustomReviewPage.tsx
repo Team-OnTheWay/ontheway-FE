@@ -38,7 +38,7 @@ function CustomReviewPage() {
     const [summary, setSummary] = useState<RatingSummary | null>(null)
     const list = useInfiniteList(
         page => new Review().list({ dto: { page, size: PAGE_SIZE } })
-            .then(res => toPage((res.data.data as { reviewList?: ReviewItem[] } | undefined)?.reviewList, PAGE_SIZE)),
+            .then(res => toPage((res.data.data as { reviewList?: ReviewItem[] } | undefined)?.reviewList)),
         'received',
     )
     const { items: reviews, status } = list
