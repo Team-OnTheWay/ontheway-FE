@@ -21,7 +21,7 @@ function CustomRouteInfo({ startAddr, startDetail, endAddr, endDetail, date, tim
             <div className="route-info__route">
                 <div className="route-info__stop">
                     <div className="route-info__marker">
-                        <Circle width={24} height={24} stroke="#4576F7" />
+                        <Circle width={20} height={20} stroke="#4576F7" />
                         <span className="route-info__line"></span>
                     </div>
                     <div className="route-info__address">
@@ -32,7 +32,7 @@ function CustomRouteInfo({ startAddr, startDetail, endAddr, endDetail, date, tim
  
                 <div className="route-info__stop">
                     <div className="route-info__marker">
-                        <MapPin width={24} height={24} stroke="#FD5D35" />
+                        <MapPin width={20} height={20} stroke="#FD5D35" />
                     </div>
                     <div className="route-info__address">
                         <p className="route-info__addr-main">{endAddr}</p>

@@ -115,19 +115,20 @@
     background: white;
 }
 
+/* 홈 카드와 같은 20px 아이콘 (24px 칸 가운데) */
 .path-setup-icon svg {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
 }
 
-/* 출발지 아이콘 아래(2px 띄움)부터 도착지 아이콘 바로 위까지 이어지는 선 */
+/* 출발지 아이콘 아래 2px부터 도착지 아이콘 위 2px까지 이어지는 선 (아이콘 20px, 칸 24px) */
 .start-icon .path-line {
     position: absolute;
-    top: 26px;
+    top: 24px;
     left: 50%;
     transform: translateX(-50%);
     width: 2px;
-    height: 132px;
+    height: 136px;
     background: #D7DAE0;
     z-index: -1;
 }
@@ -218,10 +219,18 @@
     font-weight: 400;
 }
 
+/* 하단 고정 버튼 (CustomDiv footer): 피그마 버튼 아래 40px */
 .path-setup-button {
-    margin: 40px 16px;   /* 피그마: 버튼 아래 40px */
+    padding: 12px 16px 40px;
+    box-sizing: border-box;
     display: flex;
     justify-content: center;
+    background: #ffffff;
+}
+
+/* 고정 버튼 위로 마지막 입력칸(추가정보)이 붙지 않게 */
+.delivery-section {
+    padding-bottom: 24px;
 }
 
 /* ===== 주소 검색 (react-daum-postcode) — 검색창 자체 스타일은 postcode.css ===== */

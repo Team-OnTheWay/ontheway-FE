@@ -18,11 +18,14 @@ const RATING_LABELS = ['평가를 선택해주세요', '별로예요', '그저 �
 function CustomReviewWritePage() {
     const navigate = useNavigate()
     // 이용내역의 '후기 작성하기' -> /review/write?boardId=3
-    const boardId = Number(useSearchParams()[0].get('boardId')) || null
+    const [params] = useSearchParams()
+    const boardId = Number(params.get('boardId')) || null
+    // 경로상세의 전달자(게시자)가 쓰는 후기면 상대방은 의뢰자 (as=owner)
+    const asOwner = params.get('as') === 'owner'
     const [rating, setRating] = useState(0)
     const [content, setContent] = useState('')
     const [submitting, setSubmitting] = useState(false)
-    const [partner, setPartner] = useState<{ name: string; date: string; userId: number | null } | null>(null)
+    const [partner, setPartner] = useState<{ name: string; date: string; userId: number | null; image: string | null } | null>(null)
 
     // 상대방 정보 (이동 경로 상세에서 가져온다, 실패하면 카드를 숨긴다)
     useEffect(() => {
@@ -30,10 +33,14 @@ function CustomReviewWritePage() {
         new Delivery().detail1({ deliveryDetailRequestDto: { deliveryId: boardId } })
             .then(res => {
                 const d = res.data.data
-                if (d?.userName) setPartner({ name: d.userName, date: formatDate(d.deliveryDate), userId: d.userId ?? null })
+                // 의뢰자 정보에는 회원번호가 없어 평균·후기 수는 불러오지 못한다(0으로 표시)
+                const name = asOwner ? d?.requesterInfo?.userName : d?.userName
+                // 마이페이지에서 바꾼 프로필 사진 (없으면 기본 아이콘)
+                const image = (asOwner ? d?.requesterInfo?.userImage : d?.userImage) || null
+                if (name) setPartner({ name, date: formatDate(d?.deliveryDate), userId: asOwner ? null : d?.userId ?? null, image })
             })
             .catch(() => {})
-    }, [boardId])
+    }, [boardId, asOwner])
 
     const ratings = useRatings(partner?.userId ?? null)   // 상대방의 평균·후기
 
@@ -64,7 +71,9 @@ function CustomReviewWritePage() {
                     rateing={ratings.rating}
                     review={ratings.count}
                     chipElement={null}
-                    profileElement={<CustomProfile width={40} height={20} strok="#FD5D35" strokWidth={2} diameter={40} backgroundColor="#FEF1ED" />}
+                    profileElement={partner.image
+                        ? <img className="review-write__avatar" src={partner.image} alt="" />
+                        : <CustomProfile width={40} height={20} strok="#FD5D35" strokWidth={2} diameter={40} backgroundColor="#FEF1ED" />}
                 />}
  
                 {/* 별점 + 라벨 (0.5 단위: 별의 왼쪽 절반을 누르면 0.5, 오른쪽을 누르면 1) */}

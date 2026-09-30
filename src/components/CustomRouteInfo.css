@@ -29,6 +29,12 @@
     width: 24px;
     flex-shrink: 0;
 }
+
+/* 홈 카드와 같은 20px 아이콘을 24px 줄 높이 가운데에 (위아래 2px) */
+.route-info__marker > svg {
+    flex-shrink: 0;
+    margin: 2px 0;
+}
  
 
 .route-info__line {
@@ -65,19 +71,43 @@
     color: #6b7280;
 }
  
-/* 배송날 / 희망금액 */
+/* 배송날 / 희망금액
+   모바일(피그마 361px): 좌우 32px 여백, 두 묶음을 양 끝에 두고 가운데 구분선.
+   폰 폭에 따라 간격이 달라지지 않게 361px로 고정해 가운데 둔다 (카드가 더 좁은 폰에서만 줄어듦) */
 .route-info__meta {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-around;   /* QA: 배송가는날·희망금액 간격 (모바일·웹 공통) */
-    max-width: 361px;   /* 피그마: 웹(500px)에서도 모바일 폭 그대로 왼쪽 정렬 */
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 361px;
+    margin: 0 auto;
     padding: 16px 32px;
     box-sizing: border-box;
 }
- 
+
 .route-info__meta-item {
+    align-self: stretch;   /* 두 칸 높이를 맞춰 윗줄(라벨)을 나란히 */
     display: flex;
+    align-items: flex-start;
     gap: 8px;
+}
+
+/* 웹(피그마 468px): 좌우를 반씩 나누고, 각 칸 안에서 아이콘+글자를 가운데 정렬 */
+@media (min-width: 500px) {
+    .route-info__meta {
+        max-width: none;
+        padding: 16px 0;
+    }
+
+    .route-info__meta-item {
+        flex: 1;
+        min-width: 0;
+        justify-content: center;
+    }
+}
+
+.route-info__meta-item > svg {
+    flex-shrink: 0;
 }
  
 .route-info__meta-text {

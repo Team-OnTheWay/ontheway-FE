@@ -1,6 +1,5 @@
 import CustomLogo from '../components/CustomLogo'
 import TextField from '../components/TextField'
-import CustomCheckbox from '../components/CustomCheckbox'
 import CustomButton from '../components/CustomButton'
 import './CustomLoginPage.css'
 import { Link, useNavigate } from 'react-router-dom'
@@ -66,10 +65,6 @@ function CustomLoginPage() {
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                         rightButton="eye"
                     />
-                </div>
-    
-                <div className="login-page__auto">
-                    <CustomCheckbox label="자동로그인" size="sm" />
                 </div>
     
                 <div className="login-page__button">

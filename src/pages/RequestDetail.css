@@ -87,6 +87,7 @@
     width: 20px;
     height: 20px;
     flex-shrink: 0;
+    margin-top: 2px;   /* 20px 아이콘을 라벨 줄(24px) 가운데에 */
 }
 
 .request-detail__product-content{

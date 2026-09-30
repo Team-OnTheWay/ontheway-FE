@@ -57,6 +57,7 @@ export function useShareLocation(deliveryId: number, enabled: boolean) {
     const latest = useRef<GeolocationPosition | null>(null)
     const [state, setState] = useState<ShareState>('idle')
     const [sentAt, setSentAt] = useState<Date | null>(null)
+    const [position, setPosition] = useState<LatLng | null>(null)   // 내 지도에 바로 표시할 현재 위치
 
     // 위치 변화를 계속 받아 두고, 전송은 5초 간격으로
     useEffect(() => {
@@ -66,7 +67,10 @@ export function useShareLocation(deliveryId: number, enabled: boolean) {
             return
         }
         const id = navigator.geolocation.watchPosition(
-            pos => { latest.current = pos },
+            pos => {
+                latest.current = pos
+                setPosition({ lat: pos.coords.latitude, lng: pos.coords.longitude })
+            },
             err => setState(err.code === err.PERMISSION_DENIED ? 'denied' : 'error'),
             { enableHighAccuracy: true, maximumAge: INTERVAL, timeout: 20000 },
         )
@@ -81,5 +85,5 @@ export function useShareLocation(deliveryId: number, enabled: boolean) {
             .catch(() => setState('error'))
     }, enabled)
 
-    return { state: enabled ? state : 'idle', sentAt }
+    return { state: enabled ? state : 'idle', sentAt, position: enabled ? position : null }
 }

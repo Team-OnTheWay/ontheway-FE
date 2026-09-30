@@ -62,10 +62,14 @@
     transform: scale(0.8);
 }
  
+/* 피그마: 인증 버튼 57×40 (Body2 14px, 좌우 10px) */
 .label-button{
   display: flex;
   flex-shrink: 0;
-  padding: 10px;
+  box-sizing: border-box;
+  min-width: 57px;
+  height: 40px;
+  padding: 0 10px;
   justify-content: center;
   align-items: center;
   gap: 10px;
@@ -90,6 +94,8 @@
   all: unset;
   cursor: pointer;
   white-space: nowrap;
+  font-size: 14px;
+  line-height: 20px;
 }
  
 .label-button button:active{
@@ -120,7 +126,7 @@
 }
  
 .timer {
-  color: #D7DAE0;
+  color: #4576F7;   /* 피그마 Sub/700 */
   white-space: nowrap;
 }
  

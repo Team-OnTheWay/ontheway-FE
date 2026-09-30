@@ -74,6 +74,8 @@ function UsageHistory(){
                             startTime={formatTime(item.deliveryDate)}
                             price={formatNumber(item.deliveryFee)}
                             review={canReview(item)}
+                            // 매칭내역(DELIVERY)은 내가 올린 경로 = 내가 전달자 -> 후기 상대는 의뢰자
+                            reviewAsOwner={item.boardType === 'DELIVERY'}
                         />
                     ))}
                     <InfiniteListFooter list={list} />
