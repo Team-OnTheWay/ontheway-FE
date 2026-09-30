@@ -12,6 +12,11 @@
     transition: border-color 0.2s ease;
 }
 
+/* 펼친 상태는 모서리를 더 둥글게 (피그마 24) */
+.custom-accordion.is-open{
+    border-radius: 24px;
+}
+
 .custom-accordion.is-selected{
     border: 1px solid #FD5D35;
     background-color: #FDF7F5;

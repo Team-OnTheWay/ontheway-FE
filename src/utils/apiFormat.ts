@@ -82,6 +82,16 @@ export function parseDateInput(text: string): string | null {
     return `${y}-${pad(m)}-${pad(d)}`
 }
 
+// DateInput 입력값 -> 화면에 보일 "YYYY.MM.DD"
+// 달력에서 고르면 "2026-09-22", 직접 치면 숫자만 모아서 2026.09.22 형태로 맞춘다
+export function toDateText(raw: string) {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw.replace(/-/g, '.')
+    const digits = raw.replace(/\D/g, '').slice(0, 8)
+    if (digits.length <= 4) return digits
+    if (digits.length <= 6) return `${digits.slice(0, 4)}.${digits.slice(4)}`
+    return `${digits.slice(0, 4)}.${digits.slice(4, 6)}.${digits.slice(6)}`
+}
+
 // "2026-09-22" + "08:00" -> "2026-09-22T08:00:00" (서버 LocalDateTime 형식)
 export function toLocalDateTime(date: string, time: string) {
     return `${date}T${time}:00`

@@ -7,6 +7,7 @@ import { geocode, type LatLng } from '../utils/geocode'
 interface RouteMapProps {
     startAddr: string   // 출발지 주소 (도로명/지번)
     endAddr: string     // 도착지 주소
+    courier?: LatLng | null   // 배송 중 전달자 현재 위치 (있을 때만 표시)
 }
 
 // 마커 이미지: 출발지는 파란 원, 도착지는 주황 핀 (카드·입력칸 아이콘과 같은 모양)
@@ -23,7 +24,15 @@ const END_MARKER = {
     options: { offset: { x: 16, y: 30 } },
 }
 
-function RouteMap({ startAddr, endAddr }: RouteMapProps) {
+// 전달자 현재 위치: 파란 점 + 흰 테두리
+const COURIER_MARKER = {
+    src: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="#4576F7" fill-opacity="0.25"/><circle cx="14" cy="14" r="7" fill="#4576F7" stroke="#fff" stroke-width="3"/></svg>'),
+    size: { width: 28, height: 28 },
+    options: { offset: { x: 14, y: 14 } },
+}
+
+function RouteMap({ startAddr, endAddr, courier }: RouteMapProps) {
     const [points, setPoints] = useState<{ start: LatLng; end: LatLng } | null>(null)
     const [failed, setFailed] = useState(false)
     const [map, setMap] = useState<kakao.maps.Map>()
@@ -73,6 +82,7 @@ function RouteMap({ startAddr, endAddr }: RouteMapProps) {
                 />
                 <MapMarker position={points.start} image={START_MARKER} title="출발지" />
                 <MapMarker position={points.end} image={END_MARKER} title="도착지" />
+                {courier && <MapMarker position={courier} image={COURIER_MARKER} title="전달자 현재 위치" zIndex={3} />}
             </Map>
         </div>
     )

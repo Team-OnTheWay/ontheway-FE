@@ -2,7 +2,7 @@ import './CustomProgressStep.css'
 import CustomList from './CustomList'
 import { CircleCheck, Truck, CircleEmpty, CircleX } from './CustomIcon'
  
-// canceled: 배송취소/배송중단 (주황 X)
+// canceled: 배송취소/배송중단 (빨간 X)
 // halted: 진행 중에 중단된 단계 (회색 트럭)
 type StepStatus = "done" | "current" | "pending" | "canceled" | "halted"
  
@@ -10,7 +10,7 @@ export type Step = {
     title: string;
     description: string;
     status: StepStatus;
-    meta?: string;        // 완료: 날짜/시간, 현재: 상태 태그 텍스트
+    meta?: string;        // 완료·취소/중단: 날짜/시간, 현재: 상태 태그 텍스트
 }
  
 interface CustomProgressStepProps {
@@ -44,7 +44,7 @@ function CustomProgressStep({ steps }: CustomProgressStepProps) {
                         </div>
  
                         <div className="progress-step__meta">
-                            {step.status === "done" && step.meta && (
+                            {(step.status === "done" || step.status === "canceled") && step.meta && (
                                 <span className="progress-step__date">{step.meta}</span>
                             )}
                             {step.status === "current" && step.meta && (

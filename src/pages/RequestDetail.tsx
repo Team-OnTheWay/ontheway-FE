@@ -4,7 +4,7 @@ import CustomTopAppBar from '../components/CustomTopAppBar'
 import CustomProfile from '../components/CustomProfile'
 import CustomRouteInfo from '../components/CustomRouteInfo'
 import CustomButton from '../components/CustomButton'
-import { CheckIcon, ClockIcon, WalletIcon } from '../components/CustomIcon'
+import { CheckIcon, ClockIcon, FilePenLineIcon, PackageGrayIcon, WalletIcon } from '../components/CustomIcon'
 import { useNavigate, useParams } from 'react-router-dom'
 import CustomProfileCard from '../components/CustomProfileCard'
 import CustomDiv from '../components/CustomDiv'
@@ -38,8 +38,8 @@ function RequestDetail(){
     }
 
     const items = detail ? [
-        { icon: <ClockIcon/>, label: '물품명', value: detail.productName },
-        { icon: <ClockIcon/>, label: '추가정보', value: detail.productInfo },
+        { icon: <PackageGrayIcon/>, label: '물품명', value: detail.productName },
+        { icon: <FilePenLineIcon/>, label: '추가정보', value: detail.productInfo },
         { icon: <ClockIcon/>, label: '희망 수령 시간', value: formatDateTime(detail.receivingTime) },
         { icon: <WalletIcon/>, label: '결제 방식', value: paymentLabel(detail.paymentType) },
     ] : []

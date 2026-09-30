@@ -13,6 +13,7 @@
 import type {
   DeliveryRequestListData,
   RegisterData,
+  RejectData,
   RequestSaveRequestDto,
 } from "./data-contracts";
 import { ContentType, HttpClient } from "./http-client";
@@ -51,6 +52,21 @@ export class Request<
     this.request<DeliveryRequestListData, any>({
       path: `/request/list/${deliveryId}`,
       method: "GET",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags 물품 의뢰 요청
+   * @name Reject
+   * @summary 물품 의뢰 요청 거절하기
+   * @request PATCH:/request/{requestId}/reject
+   * @response `200` `RejectData` OK
+   */
+  reject = (requestId: number, params: RequestParams = {}) =>
+    this.request<RejectData, any>({
+      path: `/request/${requestId}/reject`,
+      method: "PATCH",
       ...params,
     });
 }

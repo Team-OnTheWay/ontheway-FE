@@ -64,7 +64,7 @@ function CustomReviewWritePage() {
                     profileElement={<CustomProfile width={40} height={20} strok="#FD5D35" strokWidth={2} diameter={40} backgroundColor="#FEF1ED" />}
                 />}
  
-                {/* 별점 + 라벨 (피그마대로 직접 구현, 클릭해서 선택) */}
+                {/* 별점 + 라벨 (0.5 단위: 별의 왼쪽 절반을 누르면 0.5, 오른쪽을 누르면 1) */}
                 <div className="review-write__rating">
                     <div className="review-write__stars">
                         {[1, 2, 3, 4, 5].map((i) => (
@@ -72,14 +72,18 @@ function CustomReviewWritePage() {
                                 key={i}
                                 type="button"
                                 className="review-write__star"
-                                onClick={() => setRating(i)}
+                                onClick={(e) => {
+                                    const box = e.currentTarget.getBoundingClientRect()
+                                    const leftHalf = e.clientX - box.left < box.width / 2
+                                    setRating(leftHalf ? i - 0.5 : i)
+                                }}
                                 aria-label={`${i}점`}
                             >
-                                <StarIcon filled={i <= rating} />
+                                <StarIcon filled={i <= rating} half={i - 0.5 === rating} />
                             </button>
                         ))}
                     </div>
-                    <p className="review-write__rating-label">{RATING_LABELS[rating]}</p>
+                    <p className="review-write__rating-label">{rating ? `${rating.toFixed(1)}점 · ${RATING_LABELS[Math.ceil(rating)]}` : RATING_LABELS[0]}</p>
                 </div>
  
                 {/* 후기 입력 */}

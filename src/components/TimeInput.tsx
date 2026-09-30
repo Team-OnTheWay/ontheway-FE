@@ -7,6 +7,8 @@ type TimeInputProps = {
   start?: string                                   // "08:00"
   end?: string                                     // "10:00"
   onChange?: (start: string, end: string) => void
+  // 아직 고르지 않은 상태: 글자를 회색으로 (고르면 검정)
+  empty?: boolean
 }
 
 const colors = {
@@ -31,7 +33,7 @@ function TimeInput(props: TimeInputProps) {
 
   const select = (value: string, onSelect: (value: string) => void) => (
     <div className='time-select-wrapper'>
-      <select style={style} value={value} onChange={(e) => onSelect(e.target.value)}>
+      <select style={{ ...style, color: props.empty ? '#9CA3AF' : undefined }} value={value} onChange={(e) => onSelect(e.target.value)}>
         {TIMES.map(time => <option key={time} value={time}>{time}</option>)}
       </select>
       <div className='time-dropdown-arrow'>

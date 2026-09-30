@@ -5,10 +5,12 @@ export interface ListPage<T> {
     hasNext: boolean
 }
 
-// 서버가 hasNext를 안 주는 목록은 꽉 찬 페이지가 왔으면 다음이 있다고 본다
-export const toPage = <T>(items: T[] | undefined, size: number, hasNext?: boolean): ListPage<T> => ({
+// 서버가 hasNext를 안 주는 목록은 빈 페이지가 올 때까지 다음이 있다고 본다.
+// (서버가 요청한 개수보다 적게 주는 경우가 있어서 "꽉 찬 페이지면 다음 있음"으로 판단하면
+//  홈처럼 9개에서 멈춘다. 대신 목록 끝에서 빈 페이지 요청이 한 번 더 나간다)
+export const toPage = <T>(items: T[] | undefined, hasNext?: boolean): ListPage<T> => ({
     items: items ?? [],
-    hasNext: hasNext ?? (items?.length ?? 0) >= size,
+    hasNext: hasNext ?? (items?.length ?? 0) > 0,
 })
 
 interface ListState<T> {

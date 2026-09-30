@@ -93,7 +93,7 @@ export class HttpClient<SecurityDataType = unknown> {
   }: ApiConfig<SecurityDataType> = {}) {
     this.instance = axios.create({
       ...axiosConfig,
-      baseURL: axiosConfig.baseURL || "https://swyp-ontheway.duckdns.org",
+      baseURL: axiosConfig.baseURL || import.meta.env.VITE_API_BASE_URL || "https://swyp-ontheway.duckdns.org",
       // 생성된 메서드는 쿼리를 { xxxRequestDto: { page, size } } 처럼 한 번 감싸서 넘긴다.
       // 서버(@ModelAttribute)는 page=0&size=10 처럼 평평한 쿼리를 받으므로 한 단계 풀어서 보낸다
       paramsSerializer: { serialize: flattenQuery },

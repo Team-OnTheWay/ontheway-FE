@@ -56,6 +56,13 @@
     cursor: pointer;
 }
  
+/* 피그마(472-459): 이메일 '인증받기·재전송' 버튼은 97px 회색 */
+.signup__side-btn--gray {
+    width: 97px;
+    background-color: #f2f2f2;
+    color: #14191f;
+}
+
 /* 이메일 인증 타이머 색 (디자인은 파랑) */
 .signup .timer {
     color: #4576f7;

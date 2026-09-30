@@ -828,10 +828,15 @@ export interface MyBoardDeliveryListRequestDto {
   /** 배송목적지 */
   endAddress?: string;
   /**
-   * 희망금액
+   * 최소 희망금액
    * @format int32
    */
-  hopePrice?: number;
+  minHopePrice?: number;
+  /**
+   * 최대 희망금액
+   * @format int32
+   */
+  maxHopePrice?: number;
   /**
    * 페이지 번호
    * @format int32
@@ -895,10 +900,15 @@ export interface DeliveryListRequestDto {
   /** 배송목적지 */
   endAddress?: string;
   /**
-   * 희망금액
+   * 최소 희망금액
    * @format int32
    */
-  hopePrice?: number;
+  minHopePrice?: number;
+  /**
+   * 최대 희망금액
+   * @format int32
+   */
+  maxHopePrice?: number;
   /**
    * 페이지 번호
    * @format int32
@@ -1045,3 +1055,121 @@ export type DeleteAccountData = ApiResponseObject;
 export type DeleteData = ApiResponseProductDeleteResponseDto;
 
 export type Delete1Data = ApiResponseDeliveryDeleteResponseDto;
+
+// ===== 신규 API (스웨거 기준으로 추가) =====
+export interface DeliveryCurrentDetailResponseDto {
+  /**
+   * 배송 ID
+   * @format int64
+   */
+  deliveryId?: number;
+  /** 현재 배송 상태 */
+  currentDeliveryStatus?:
+    | "MATCHING_WAITING"
+    | "PICKING_UP"
+    | "DELIVERY_WAITING"
+    | "DELIVERING"
+    | "COMPLETION_REQUESTED"
+    | "COMPLETED"
+    | "FAILED"
+    | "CANCELED"
+    | "REJECTED";
+  /** 출발지 주소 */
+  startAddress?: string;
+  /** 도착지 주소 */
+  endAddress?: string;
+  /**
+   * 배송 일시
+   * @format date-time
+   */
+  deliveryDate?: string;
+  /** 추가 정보 */
+  addInfo?: string;
+  /**
+   * 희망금액
+   * @format int32
+   */
+  hopePrice?: number;
+  /**
+   * 배송 예정 시간
+   * @format date-time
+   */
+  estimatedDeliveryTime?: string;
+  /**
+   * 생성 일시
+   * @format date-time
+   */
+  createdAt?: string;
+  /** 배송 상태 변경 이력 목록 */
+  deliveryStatusHistory?: DeliveryStatusHistory[];
+  /** 사용자 프로필 이미지 URL */
+  userImage?: string;
+  /** 사용자 이름 */
+  userName?: string;
+  /** 요청자 정보 */
+  requesterInfo?: RequesterInfo;
+  /** 배송 실패 정보 */
+  deliveryFail?: DeliveryFail;
+  /** 배송 취소 정보 */
+  deliveryCancel?: DeliveryCancel;
+  /** 배송완료확인요청 정보 */
+  deliverySuccessCheck?: DeliverySuccessCheck;
+}
+
+export interface ApiResponseDeliveryCurrentDetailResponseDto {
+  success?: boolean;
+  /** @format int32 */
+  status?: number;
+  message?: string;
+  data?: DeliveryCurrentDetailResponseDto;
+}
+
+export interface LocationRequestDto {
+  /**
+   * 배송 ID
+   * @format int64
+   */
+  deliveryId?: number;
+}
+
+export interface LocationUpdateRequestDto {
+  /**
+   * 배송 ID
+   * @format int64
+   */
+  deliveryId?: number;
+  /** 위도 */
+  latitude?: number;
+  /** 경도 */
+  longitude?: number;
+}
+
+export interface LocationResponseDto {
+  /** 위도 */
+  latitude?: number;
+  /** 경도 */
+  longitude?: number;
+  /**
+   * 위치 갱신 시각
+   * @format date-time
+   */
+  updatedAt?: string;
+}
+
+export interface ApiResponseLocationResponseDto {
+  success?: boolean;
+  /** @format int32 */
+  status?: number;
+  message?: string;
+  data?: LocationResponseDto;
+}
+
+export type CurrentDetailData = ApiResponseDeliveryCurrentDetailResponseDto;
+
+export type LocationData = ApiResponseLocationResponseDto;
+
+export type UpdateLocationData = ApiResponseLocationResponseDto;
+
+export type RejectData = ApiResponseObject;
+
+export type WrittenData = ApiResponseObject;

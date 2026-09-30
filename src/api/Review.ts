@@ -11,6 +11,7 @@
  */
 
 import type {
+  WrittenData,
   CreateData,
   ListData,
   ReviewListRequestDto,
@@ -56,6 +57,27 @@ export class Review<
   ) =>
     this.request<ListData, any>({
       path: `/review/me/list`,
+      method: "GET",
+      query: query,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags 후기
+   * @name Written
+   * @summary 내가 작성한 후기 목록 조회
+   * @request GET:/review/me/written
+   * @response `200` `WrittenData` OK
+   */
+  written = (
+    query: {
+      dto: ReviewListRequestDto;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<WrittenData, any>({
+      path: `/review/me/written`,
       method: "GET",
       query: query,
       ...params,

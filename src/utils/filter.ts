@@ -58,12 +58,13 @@ export function regionQuery(value: RegionValue | null) {
     return value.district ? `${sido} ${value.district}` : sido
 }
 
-// 필터 값 -> 목록 API 쿼리 (희망금액은 "이 금액 이하"로 거른다)
+// 필터 값 -> 목록 API 쿼리 (희망금액은 최소~최대 범위로 거른다)
 export function filterQuery(values: FilterValues) {
     return {
         startAddress: regionQuery(values.start),
         endAddress: regionQuery(values.end),
         rating: values.rating ?? undefined,
-        hopePrice: values.price?.max,
+        minHopePrice: values.price?.min,
+        maxHopePrice: values.price?.max,
     }
 }

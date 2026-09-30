@@ -23,7 +23,7 @@ function CustomHomePage() {
     const list = useInfiniteList(
         page => new Delivery()
             .list3({ deliveryListRequestDto: { ...filterQuery(filters), page, size: PAGE_SIZE } })
-            .then(res => toPage(res.data.data?.deliveryList, PAGE_SIZE)),
+            .then(res => toPage(res.data.data?.deliveryList)),
         JSON.stringify(filters),
     )
     const { items, status, error } = list

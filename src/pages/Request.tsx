@@ -21,7 +21,7 @@ function Request(){
     const deliveryId = Number(useSearchParams()[0].get('deliveryId')) || null
     const list = useInfiniteList(
         page => new Product().list1({ productListRequestDto: { page, size: PAGE_SIZE } })
-            .then(res => toPage(res.data.data?.productList, PAGE_SIZE, res.data.data?.hasNext)),
+            .then(res => toPage(res.data.data?.productList, res.data.data?.hasNext)),
         'mine',
     )
     const products = list.items

@@ -10,9 +10,10 @@ interface CustomProfileCard {
     chipElement?: ReactNode;
     profileElement: ReactNode;
     onClick?: () => void;
+    expandable?: boolean;   // false면 펼침 화살표를 숨긴다 (예: 유저 신고 화면)
 }
  
-function CustomProfileCard({ nickname, date, rateing, review, chipElement, profileElement, onClick }: CustomProfileCard) {
+function CustomProfileCard({ nickname, date, rateing, review, chipElement, profileElement, onClick, expandable = true }: CustomProfileCard) {
     const [isOpen, setIsOpen] = useState(false);
  
     const handleClickArrow = () => {
@@ -40,7 +41,7 @@ function CustomProfileCard({ nickname, date, rateing, review, chipElement, profi
                 </div>
  
                 {/* 오른쪽 열: 화살표(위) + 신고(아래) */}
-                <div className="content-right">
+                {expandable && <div className="content-right">
                     <button
                         className={`content-arrow ${isOpen ? 'rotated' : ''}`}
                         onClick={handleClickArrow}
@@ -50,7 +51,7 @@ function CustomProfileCard({ nickname, date, rateing, review, chipElement, profi
                     </button>
                     {/* 신고할 동작(onClick)을 넘겨줬을 때만 표시 (내 글 등에서는 숨김) */}
                     {isOpen && onClick && <span onClick={onClick} className="profile-report">신고</span>}
-                </div>
+                </div>}
             </div>
         </div>
     )

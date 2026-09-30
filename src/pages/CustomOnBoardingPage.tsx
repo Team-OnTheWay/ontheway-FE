@@ -51,7 +51,7 @@ function CustomOnBoardingPage() {
 
     const footer = (
         <div className="onboarding-page__footer">
-            <CustomButton name="시작하기" color="#fd5d35" fontColor="#ffffff" size="lg" onClick={() => navigate('/agree')} />
+            <CustomButton name="시작하기" color="#fd5d35" fontColor="#ffffff" size="lg" onClick={() => navigate('/signup')} />
             <div className="onboarding-page__login">
                 이미 계정이 있나요?
                 <Link to={'/login'}>로그인</Link>
