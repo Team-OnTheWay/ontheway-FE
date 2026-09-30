@@ -8,6 +8,7 @@ import CustomCheckbox from '../components/CustomCheckbox'
 import TextArea from '../components/TextArea'
 import CustomButton from '../components/CustomButton'
 import './CustomReportUserPage.css'
+import { useRatings } from '../hooks/useRatings'
 import CustomDiv from '../components/CustomDiv'
 import { Report } from '../api/Report'
 import { useReportCategories, type ReportCategory } from '../hooks/useReportCategories'
@@ -29,6 +30,7 @@ function CustomReportUser() {
     const navigate = useNavigate()
     const userId = Number(useSearchParams()[0].get('userId')) || null
     const target = (useLocation().state ?? {}) as { name?: string; date?: string }
+    const ratings = useRatings(userId)   // 신고 대상의 평균·후기
     const { selected, toggle } = useReportCategories()
     const [content, setContent] = useState('')
     const [submitting, setSubmitting] = useState(false)
@@ -61,8 +63,8 @@ function CustomReportUser() {
                 {target.name && <CustomProfileCard
                     nickname={target.name}
                     date={target.date ?? ''}
-                    rateing={0}
-                    review={0}
+                    rateing={ratings.rating}
+                    review={ratings.count}
                     chipElement={null}
                     expandable={false}
                     profileElement={<CustomProfile width={40} height={20} strok="#FD5D35" strokWidth={2} diameter={40} backgroundColor="#FEF1ED" />}

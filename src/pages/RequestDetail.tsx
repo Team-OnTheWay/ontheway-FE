@@ -8,6 +8,7 @@ import { CheckIcon, ClockIcon, FilePenLineIcon, PackageGrayIcon, WalletIcon } fr
 import { useNavigate, useParams } from 'react-router-dom'
 import CustomProfileCard from '../components/CustomProfileCard'
 import CustomDiv from '../components/CustomDiv'
+import { useRatings } from '../hooks/useRatings'
 import { Product } from '../api/Product'
 import type { ProductDetailResponseDto } from '../api/data-contracts'
 import { errorMessage, formatDate, formatDateTime, formatKoreanDate, formatNumber, formatTime, paymentLabel } from '../utils/apiFormat'
@@ -16,6 +17,8 @@ function RequestDetail(){
     const navigate = useNavigate()
     const productId = Number(useParams().id)
     const [detail, setDetail] = useState<ProductDetailResponseDto | null>(null)
+    // 프로필 카드(작성자) 평균·후기: 응답의 작성자 회원번호로 조회 (없으면 내 후기)
+    const ratings = useRatings(!detail ? null : detail.userId ?? 'me')
     const [error, setError] = useState('')
 
     // 물품 게시글 상세 (본인 글만 조회된다)
@@ -62,8 +65,8 @@ function RequestDetail(){
                     <CustomProfileCard
                         nickname={detail.userName ?? ''}
                         date={formatDate(detail.createdAt)}
-                        rateing={0}
-                        review={0}
+                        rateing={ratings.rating}
+                        review={ratings.count}
                         chipElement={null}
                         profileElement={<CustomProfile width={40} height={20} strok="#FD5D35" strokWidth={2} diameter={40} backgroundColor="#FEF1ED" />}
                     />

@@ -9,6 +9,7 @@ import CustomProfile from '../components/CustomProfile'
 import TextArea from '../components/TextArea'
 import CustomButton from '../components/CustomButton'
 import './CustomReviewWritePage.css'
+import { useRatings } from '../hooks/useRatings'
 import CustomDiv from '../components/CustomDiv'
 import { StarIcon } from '../components/CustomIcon'
  
@@ -21,7 +22,7 @@ function CustomReviewWritePage() {
     const [rating, setRating] = useState(0)
     const [content, setContent] = useState('')
     const [submitting, setSubmitting] = useState(false)
-    const [partner, setPartner] = useState<{ name: string; date: string } | null>(null)
+    const [partner, setPartner] = useState<{ name: string; date: string; userId: number | null } | null>(null)
 
     // 상대방 정보 (이동 경로 상세에서 가져온다, 실패하면 카드를 숨긴다)
     useEffect(() => {
@@ -29,10 +30,12 @@ function CustomReviewWritePage() {
         new Delivery().detail1({ deliveryDetailRequestDto: { deliveryId: boardId } })
             .then(res => {
                 const d = res.data.data
-                if (d?.userName) setPartner({ name: d.userName, date: formatDate(d.deliveryDate) })
+                if (d?.userName) setPartner({ name: d.userName, date: formatDate(d.deliveryDate), userId: d.userId ?? null })
             })
             .catch(() => {})
     }, [boardId])
+
+    const ratings = useRatings(partner?.userId ?? null)   // 상대방의 평균·후기
 
     const handleSubmit = async () => {
         if (!boardId) return alert('후기를 남길 배송 정보가 없어요. 이용내역에서 다시 시도해주세요.')
@@ -58,8 +61,8 @@ function CustomReviewWritePage() {
                 {partner && <CustomProfileCard
                     nickname={partner.name}
                     date={partner.date}
-                    rateing={0}
-                    review={0}
+                    rateing={ratings.rating}
+                    review={ratings.count}
                     chipElement={null}
                     profileElement={<CustomProfile width={40} height={20} strok="#FD5D35" strokWidth={2} diameter={40} backgroundColor="#FEF1ED" />}
                 />}

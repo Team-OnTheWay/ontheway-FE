@@ -189,6 +189,21 @@ export class User<
    * No description
    *
    * @tags 회원 관리
+   * @name OtherRatings
+   * @summary 상대 후기 조회
+   * @request GET:/user/ratings/{userNo}
+   * @response `200` `RatingsData` OK
+   */
+  otherRatings = (userNo: number, params: RequestParams = {}) =>
+    this.request<RatingsData, any>({
+      path: `/user/ratings/${userNo}`,
+      method: "GET",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags 회원 관리
    * @name DeleteAccount
    * @summary 회원 탈퇴
    * @request DELETE:/user/account

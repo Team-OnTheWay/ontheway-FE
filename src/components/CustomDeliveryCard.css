@@ -46,18 +46,19 @@
     color: #14191f;
 }
  
-.delivery-route-line {
-    display: flex;
-    flex-shrink: 0;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
+/* 출발지 줄 아래 20px 간격에 연결선을 그린다 (피그마: 출발 24 · 선 20 · 도착 24) */
+.delivery-route-row--start {
+    position: relative;
+    margin-bottom: 20px;
 }
- 
-.delivery-route-line span {
-    width: 0;
-    height: 100%;
+
+.delivery-route-line {
+    position: absolute;
+    top: 24px;       /* 첫 줄(24px) 아래 = 기존 연결선 시작 위치 */
+    bottom: -20px;   /* 도착지 줄 시작까지 */
+    left: 10px;      /* 20px 아이콘 가운데 */
     border-left: 1.5px solid #d7dae0;
+    transform: translateX(-50%);
 }
  
 .delivery-info {
