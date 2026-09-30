@@ -12,7 +12,7 @@ import CustomCheckbox from '../components/CustomCheckbox'
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Product } from '../api/Product'
-import { errorMessage, formatDate, formatTime, parseDateInput, parsePrice, toDateText, toLocalDateTime } from '../utils/apiFormat'
+import { errorMessage, formatDate, formatTime, parseDateInput, parsePrice, toDashDate, toDateText, toLocalDateTime } from '../utils/apiFormat'
 import DateInput from '../components/DateInput'
 import { geocode } from '../utils/geocode'
 import CustomDiv from '../components/CustomDiv'
@@ -74,9 +74,9 @@ function CreateRequest() {
                 setProductInfo(d.productInfo ?? '')
                 setFee(d.deliveryFee !== undefined ? String(d.deliveryFee) : '')
                 setPayment(d.paymentType === 'POSTPAID' ? 'post' : 'pre')
-                setReceivingDate(formatDate(d.receivingTime))
+                setReceivingDate(toDashDate(formatDate(d.receivingTime)))
                 if (d.receivingTime) setReceivingStart(formatTime(d.receivingTime))
-                setArrivalDate(formatDate(d.desiredDeliveryTime))
+                setArrivalDate(toDashDate(formatDate(d.desiredDeliveryTime)))
                 if (d.desiredDeliveryTime) setArrivalEnd(formatTime(d.desiredDeliveryTime))
             })
             .catch(err => alert(errorMessage(err, '게시글을 불러오지 못했어요.')))
@@ -208,7 +208,7 @@ function CreateRequest() {
                 </section>
 
                 <section className="request-section">
-                    <DateInput label="수령일" borderColor="gray" value={receivingDate} onChange={(e) => setReceivingDate(toDateText(e.target.value))}/>
+                    <DateInput label="수령일" borderColor="gray" value={receivingDate} onChange={(e) => setReceivingDate(toDashDate(toDateText(e.target.value)))}/>
 
                     <div className="request-time">
                         <div className="request-label">수령시간</div>
@@ -219,7 +219,7 @@ function CreateRequest() {
 
                 <section className="request-section">
                     <div className="request-section-title">배송정보</div>
-                    <DateInput label="가는날" borderColor="gray" value={arrivalDate} onChange={(e) => setArrivalDate(toDateText(e.target.value))}/>
+                    <DateInput label="가는날" borderColor="gray" value={arrivalDate} onChange={(e) => setArrivalDate(toDashDate(toDateText(e.target.value)))}/>
 
                     <div className="request-time">
                         <div className="request-label">배송도착시간</div>
