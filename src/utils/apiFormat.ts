@@ -92,6 +92,9 @@ export function toDateText(raw: string) {
     return `${digits.slice(0, 4)}.${digits.slice(4, 6)}.${digits.slice(6)}`
 }
 
+// 입력 칸에 "2026-09-30" 형식으로 보여줄 때 (의뢰 작성·수정, 경로등록·수정)
+export const toDashDate = (text: string) => text.replace(/\./g, '-')
+
 // "2026-09-22" + "08:00" -> "2026-09-22T08:00:00" (서버 LocalDateTime 형식)
 export function toLocalDateTime(date: string, time: string) {
     return `${date}T${time}:00`

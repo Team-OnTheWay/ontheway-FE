@@ -15,7 +15,7 @@ import DateInput from '../components/DateInput'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Delivery } from '../api/Delivery'
 import type { DeliveryDetailResponseDto } from '../api/data-contracts'
-import { errorMessage, formatDate, formatTime, parseDateInput, parsePrice, toDateText, toLocalDateTime } from '../utils/apiFormat'
+import { errorMessage, formatDate, formatTime, parseDateInput, parsePrice, toDashDate, toDateText, toLocalDateTime } from '../utils/apiFormat'
  
 function PathXButton({ onClick }: { onClick?: () => void }) {
     return (
@@ -67,7 +67,7 @@ function PathSetup() {
         setStartDetail('')
         setEndAddr(d.endAddress ?? '')
         setEndDetail('')
-        if (withDate) setDate(formatDate(d.deliveryDate))
+        if (withDate) setDate(toDashDate(formatDate(d.deliveryDate)))
         setPrice(d.hopePrice !== undefined ? d.hopePrice.toLocaleString('ko-KR') : '')
         if (d.deliveryDate) {
             setStartTime(formatTime(d.deliveryDate))
@@ -223,7 +223,7 @@ function PathSetup() {
             <div className="delivery-section">
                 <div className="delivery-title">배송정보</div>
  
-                <DateInput label="배송 가능날" borderColor="gray" value={date} onChange={(e) => setDate(toDateText(e.target.value))} />
+                <DateInput label="배송 가능날" borderColor="gray" value={date} onChange={(e) => setDate(toDashDate(toDateText(e.target.value)))} />
  
                 <TextField label="희망금액" height={48} borderColor="gray" backgroundColor="white" leftLocationIcon={false} placeholder="ex) 20,000원" timer={false} rightButton="none"
                     value={price} onChange={(e) => setPrice(e.target.value)} />
