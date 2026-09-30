@@ -146,7 +146,12 @@ function PathSetup() {
     }
  
     return (
-        <CustomDiv pullToRefresh={false}>
+        <CustomDiv pullToRefresh={false} footerElement={
+            // 다른 화면처럼 하단에 고정 (스크롤하지 않아도 바로 보이게)
+            <div className="path-setup-button">
+                <CustomButton name={submitting ? (editId ? "수정 중..." : "등록 중...") : (editId ? "수정완료" : "작성완료")} color="#FD5D35" fontColor="#FFFFFF" size="lg" onClick={submitting ? undefined : handleSubmit} />
+            </div>
+        }>
             <CustomTopAppBar title={editId ? "경로수정" : "경로등록"} />
  
             {/* 최근 등록한 게시물 불러오기 (새 글 작성에서만) */}
@@ -238,10 +243,6 @@ function PathSetup() {
                     <div className="delivery-extra-title">추가정보</div>
                     <TextArea borderColor="gray" value={addInfo} onChange={setAddInfo} placeholder="추가로 알릴 내용을 적어주세요." />
                 </div>
-            </div>
- 
-            <div className="path-setup-button">
-                <CustomButton name={submitting ? (editId ? "수정 중..." : "등록 중...") : (editId ? "수정완료" : "작성완료")} color="#FD5D35" fontColor="#FFFFFF" size="lg" onClick={submitting ? undefined : handleSubmit} />
             </div>
  
             {/* 주소 검색 오버레이 — searchTarget이 있을 때만 */}

@@ -13,9 +13,10 @@ interface CustomDeliveryCard {
     endTime?: string;
     price: string;
     review?: boolean;
+    reviewAsOwner?: boolean;   // 내가 전달자(게시자)인 건: 후기 상대가 의뢰자라 as=owner로 넘긴다
 }
 
-function CustomDeliveryCard({ id, count, startAddr, endAddr, date, startTime, endTime, price, review=false }: CustomDeliveryCard) {
+function CustomDeliveryCard({ id, count, startAddr, endAddr, date, startTime, endTime, price, review=false, reviewAsOwner=false }: CustomDeliveryCard) {
     const navigate = useNavigate();
 
     return (
@@ -53,7 +54,7 @@ function CustomDeliveryCard({ id, count, startAddr, endAddr, date, startTime, en
                     </div>
                 </div>
             </Link>
-            {review && <button onClick={() => navigate(`/review/write?boardId=${id}`)} className="delivery-review-button">후기 작성하기</button>}
+            {review && <button onClick={() => navigate(`/review/write?boardId=${id}${reviewAsOwner ? '&as=owner' : ''}`)} className="delivery-review-button">후기 작성하기</button>}
         </div>
     )
 }

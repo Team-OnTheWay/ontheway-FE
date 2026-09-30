@@ -58,8 +58,9 @@ const STEP_TEXT: Record<string, { done: [string, string]; current: [string, stri
     PICKING_UP:           { done: ['픽업완료', '물품을 전달받았어요.'],              current: ['픽업중', '물품을 전달받을 예정이에요.'] },
     DELIVERY_WAITING:     { done: ['배송 대기 중', '배송을 시작했어요.'],            current: ['배송 대기 중', '배송을 준비하고 있어요.'] },
     DELIVERING:           { done: ['배송 중', '물품 전달을 마쳤어요.'],              current: ['배송 중', '목적지로 이동 중이에요.'] },
-    COMPLETION_REQUESTED: { done: ['배송 완료 확인 요청', '배송 완료 확인을 받았어요.'], current: ['배송 완료 확인 요청', '배송 완료 확인을 기다리고 있어요.'] },
-    COMPLETED:            { done: ['배송완료', '배송이 완료되었어요.'],              current: ['배송완료', '배송이 완료되었어요.'] },
+    COMPLETION_REQUESTED: { done: ['배송 완료 확인 요청', '배송 완료가 확인되었어요.'], current: ['배송 완료 확인 요청', '배송 완료 확인을 기다리고 있어요.'] },
+    // 배송완료는 마지막 단계라 체크 대신 진행 중 모양(파란 트럭·파란 제목)으로 보여준다 (피그마: 경로상세조회 - 배송완료)
+    COMPLETED:            { done: ['배송완료', '전달이 완료되었어요'],               current: ['배송완료', '전달이 완료되었어요'] },
 }
 
 // 서버는 매칭 전(주문 없음)에도 currentDeliveryStatus 를 DELIVERY_WAITING 으로 준다.
@@ -130,7 +131,7 @@ function buildSteps(detail: DeliveryDetailResponseDto): Step[] {
 
     const reached = FLOW.indexOf(status)
     return FLOW.map((s, i) => {
-        if (i < reached || status === 'COMPLETED') return done(s)
+        if (i < reached) return done(s)
         if (i === reached) return { title: STEP_TEXT[s].current[0], description: STEP_TEXT[s].current[1], status: 'current' }
         return pending(s)
     })
@@ -159,7 +160,8 @@ function RequestBody({ r }: { r: RequestItem }) {
                 <p className="request-body__heading"><CardIcon />결제정보</p>
                 <div className="request-body__row"><span>결제시점</span><span>{paymentLabel(r.paymentType)}</span></div>
             </div>
-            <p className="request-body__agree"><CheckSmallIcon />위 허용금지 물품 기준과 포장 책임 범위를 확인하였으며 동의하였습니다.</p>
+            {/* 고정 문구: 피그마처럼 '범위를'에서 줄바꿈 (웹·모바일 동일) */}
+            <p className="request-body__agree"><CheckSmallIcon /><span>위 허용금지 물품 기준과 포장 책임 범위를<br />확인하였으며 동의하였습니다.</span></p>
         </div>
     )
 }
@@ -372,11 +374,15 @@ function CustomRouteDetailPage() {
         buttons.push({ name: '확인요청', primary: true, onClick: requestCompletion })
     } else if (status === 'COMPLETION_REQUESTED' && role === 'requester') {
         buttons.push({ name: '배송완료확인', primary: true, onClick: () => process({}, undefined, '배송이 완료되었습니다.') })
+    } else if (status === 'COMPLETED' && isParticipant) {
+        // 피그마(경로상세조회 - 배송완료): 전달자·의뢰자 모두 서로에게 후기를 남긴다 (이용내역의 '후기 작성하기'와 같은 경로).
+        // 전달자는 상대가 의뢰자라 as=owner로 알려 준다
+        buttons.push({ name: '후기작성', primary: true, onClick: () => navigate(`/review/write?boardId=${deliveryId}${isOwner ? '&as=owner' : ''}`) })
     }
 
     return (
         <CustomDiv backgroundColor='#f3f4f6' footerElement={buttons.length > 0 && (
-            <div className="route-detail__footer">
+            <div className={`route-detail__footer${buttons.length === 1 ? ' route-detail__footer--single' : ''}`}>
                 <div className="route-detail__footer-row">
                     {buttons.map(b => (
                         <div className="route-detail__footer-slot" key={b.name}>
@@ -466,7 +472,7 @@ function CustomRouteDetailPage() {
                 {/* 배송 중: 지도 */}
                 {status === 'DELIVERING' && isParticipant && detail.startAddress && detail.endAddress && (
                     <div className="route-detail__gps">
-                        <RouteMap startAddr={detail.startAddress} endAddr={detail.endAddress} courier={courier.location?.position} />
+                        <RouteMap startAddr={detail.startAddress} endAddr={detail.endAddress} courier={isOwner ? sharing.position : courier.location?.position} />
                         <p className="route-detail__gps-text">
                             {role === 'requester' && (courier.location
                                 ? `전달자 위치 · ${formatTime(courier.location.updatedAt) || '방금'} 기준`

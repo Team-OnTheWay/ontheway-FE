@@ -11,9 +11,10 @@ interface RouteMapProps {
 }
 
 // 마커 이미지: 출발지는 파란 원, 도착지는 주황 핀 (카드·입력칸 아이콘과 같은 모양)
+// 출발지는 CustomIcon의 Circle과 같은 도형 (두꺼운 파란 원 + 가운데 작은 흰 점)
 const START_MARKER = {
     src: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
-        '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#fff" stroke="#4576F7" stroke-width="4"/></svg>'),
+        '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#4576F7" stroke="#4576F7" stroke-width="2"/><circle cx="12" cy="12" r="6" fill="#fff" stroke="#4576F7" stroke-width="2"/></svg>'),
     size: { width: 28, height: 28 },
     options: { offset: { x: 14, y: 14 } },
 }

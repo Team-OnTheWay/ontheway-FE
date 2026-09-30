@@ -44,9 +44,6 @@ function CustomProgressStep({ steps }: CustomProgressStepProps) {
                         </div>
  
                         <div className="progress-step__meta">
-                            {(step.status === "done" || step.status === "canceled") && step.meta && (
-                                <span className="progress-step__date">{step.meta}</span>
-                            )}
                             {step.status === "current" && step.meta && (
                                 <span className="progress-step__tag">{step.meta}</span>
                             )}

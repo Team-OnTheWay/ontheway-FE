@@ -58,9 +58,9 @@
     color: #6b7280;
 }
  
-/* 완료 : 제목 진한색 */
+/* 완료 : 제목 회색 (피그마 Font/T700) */
 .progress-step__text--done .progress-step__step-title {
-    color: #14191f;
+    color: #4b5663;
 }
  
 /* 현재 : 제목 파란색 */
@@ -80,14 +80,7 @@
     display: flex;
     justify-content: flex-end;
 }
- 
-.progress-step__date {
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 20px;
-    color: #4b5663;
-    white-space: nowrap;
-}
+
  
 .progress-step__tag {
     display: inline-flex;
