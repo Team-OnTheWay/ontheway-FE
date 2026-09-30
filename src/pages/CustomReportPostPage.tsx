@@ -1,11 +1,10 @@
 import { useState } from 'react'
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import CustomTopAppBar from '../components/CustomTopAppBar'
 import CustomList from '../components/CustomList'
 import CustomCheckbox from '../components/CustomCheckbox'
 import TextArea from '../components/TextArea'
 import CustomButton from '../components/CustomButton'
-import CustomProductCard from '../components/CustomProductCard'
 import './CustomReportPostPage.css'
 import CustomDiv from '../components/CustomDiv'
 import { Report } from '../api/Report'
@@ -29,8 +28,6 @@ function CustomReportPostPage() {
     const [params] = useSearchParams()
     const boardId = Number(params.get('boardId')) || null
     const boardType = (params.get('boardType') as BoardType | null) ?? 'DELIVERY'
-    // 신고 대상 카드 내용은 게시글 화면에서 넘겨받는다 (없으면 카드 생략)
-    const post = (useLocation().state as { post?: { number: string; category: string; money: string } } | null)?.post
     const { selected, toggle } = useReportCategories()
     const [content, setContent] = useState('')
     const [submitting, setSubmitting] = useState(false)
@@ -59,8 +56,6 @@ function CustomReportPostPage() {
             <CustomTopAppBar variant="centered" title="게시글 신고" />
 
             <div className="report__body">
-                {post && <CustomProductCard number={post.number} category={post.category} money={post.money} />}
-
                 {/* 신고 사유 선택 */}
                 <div className="report__section">
                     <CustomList variant="list03" label="신고 사유를 선택해주세요." />

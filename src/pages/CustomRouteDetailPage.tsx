@@ -15,6 +15,7 @@ import CustomDiv from '../components/CustomDiv';
 import CustomProfileCard from '../components/CustomProfileCard';
 import RouteMap from "../components/RouteMap";
 import { useCourierLocation, useShareLocation } from '../hooks/useDeliveryLocation'
+import { useRatings } from '../hooks/useRatings'
 import { Delivery } from '../api/Delivery'
 import { Request as RequestApi } from '../api/Request'
 import { Order } from '../api/Order'
@@ -246,6 +247,9 @@ function CustomRouteDetailPage() {
     const courier = useCourierLocation(deliveryId, delivering && role === 'requester')
     const sharing = useShareLocation(deliveryId, delivering && role === 'owner')
 
+    // 프로필 카드(게시자) 평균·후기: 내 글이면 내 후기, 남의 글이면 게시자 후기
+    const ratings = useRatings(!detail ? null : role === 'owner' ? 'me' : detail.userId ?? null)
+
     // 배송 진행 처리 (수락 / 픽업 완료 / 취소 / 중단 / 완료 요청 / 완료 확인)
     const process = async (dto: Omit<ProcessRequestDto, 'deliveryId'>, image?: File, done = '처리되었습니다.') => {
         setBusy(true)
@@ -385,18 +389,14 @@ function CustomRouteDetailPage() {
             {isOwner
                 ? <CustomTopAppBar variant="centered" title={`${detail.userName ?? ''}님의 가는길`} />
                 : <CustomTopAppBar variant="meta" title={`${detail.userName ?? ''}님의 가는길`} meta="신고"
-                    onClick={() => navigate(`/board/report?boardId=${deliveryId}&boardType=DELIVERY`, { state: { post: {
-                        number: `게시글번호 ${deliveryId}`,
-                        category: `${detail.userName ?? ''}님의 가는길`,
-                        money: formatNumber(detail.hopePrice),
-                    } } })} />}
+                    onClick={() => navigate(`/board/report?boardId=${deliveryId}&boardType=DELIVERY`)} />}
 
             <div className="route-detail__body">
                 <CustomProfileCard
                     nickname={detail.userName ?? ''}
                     date={formatDate(detail.createdAt)}
-                    rateing={0}
-                    review={0}
+                    rateing={ratings.rating}
+                    review={ratings.count}
                     chipElement={null}
                     profileElement={detail.userImage
                         ? <img className="route-detail__avatar" src={detail.userImage} alt="" />

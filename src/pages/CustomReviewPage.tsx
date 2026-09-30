@@ -12,13 +12,23 @@ import { User } from '../api/User'
 import { useMyInfo } from '../hooks/useMyInfo'
 import { errorMessage, formatDate } from '../utils/apiFormat'
 
-// GET /review/me/list 응답 항목 (스웨거에 형태가 없어 서버 코드 기준)
+// GET /review/me/list 응답 항목 (받은 후기: 나에게 써 준 사람. 스웨거에 형태가 없어 서버 코드 기준)
 interface ReviewItem {
     reviewId: number
     reviewContent: string
     rating: number
     reviewerImage: string | null
     reviewerName: string
+    reviewDate: string
+}
+
+// GET /review/me/written 응답 항목 (보낸 후기: 내가 써 준 상대방)
+interface WrittenReviewItem {
+    reviewId: number
+    reviewContent: string
+    rating: number
+    targetImage: string | null
+    targetName: string
     reviewDate: string
 }
 
@@ -34,12 +44,18 @@ const fetchSummary = () => new User().ratings().then(res => (res.data.data as Ra
  
 function CustomReviewPage() {
     const { info } = useMyInfo()
-    const [tab, setTab] = useState(1)   // 조회 API가 있는 '받은후기'부터 보여준다
+    const [tab, setTab] = useState(1)   // 처음에는 '받은후기' 탭
+    const isWritten = tab === 0          // TABS = ['보낸후기', '받은후기']
     const [summary, setSummary] = useState<RatingSummary | null>(null)
-    const list = useInfiniteList(
-        page => new Review().list({ dto: { page, size: PAGE_SIZE } })
-            .then(res => toPage((res.data.data as { reviewList?: ReviewItem[] } | undefined)?.reviewList)),
-        'received',
+    // 보낸 후기는 상대방 정보(target*)를 받은 후기와 같은 모양으로 바꿔서 카드 하나로 그린다
+    const list = useInfiniteList<ReviewItem>(
+        page => isWritten
+            ? new Review().written({ dto: { page, size: PAGE_SIZE } })
+                .then(res => toPage(((res.data.data as { reviewList?: WrittenReviewItem[] } | undefined)?.reviewList ?? [])
+                    .map(({ targetName, targetImage, ...r }) => ({ ...r, reviewerName: targetName, reviewerImage: targetImage }))))
+            : new Review().list({ dto: { page, size: PAGE_SIZE } })
+                .then(res => toPage((res.data.data as { reviewList?: ReviewItem[] } | undefined)?.reviewList)),
+        isWritten ? 'written' : 'received',   // 탭이 바뀌면 목록을 새로 불러온다
     )
     const { items: reviews, status } = list
     const error = errorMessage(list.error, '후기를 불러오지 못했어요.')
@@ -59,15 +75,15 @@ function CustomReviewPage() {
             </div>
  
             <div className="review-page__list">
-                {tab === 0 && <p className="list-message">보낸 후기 조회는 아직 지원되지 않아요.</p>}
-
-                {tab === 1 && <>
+                <>
                     {status === 'loading' && <p className="list-message">불러오는 중이에요.</p>}
                     {status === 'error' && <p className="list-message">{error}</p>}
-                    {status === 'done' && summary && summary.reviewCount > 0 && (
+                    {!isWritten && status === 'done' && summary && summary.reviewCount > 0 && (
                         <p className="review-page__summary">평균 {summary.averageRating.toFixed(1)} · 후기 {summary.reviewCount}건</p>
                     )}
-                    {status === 'done' && reviews.length === 0 && <p className="list-message">아직 받은 후기가 없어요.</p>}
+                    {status === 'done' && reviews.length === 0 && (
+                        <p className="list-message">{isWritten ? '아직 작성한 후기가 없어요.' : '아직 받은 후기가 없어요.'}</p>
+                    )}
                     {status === 'done' && reviews.map(r => (
                         <CustomReviewCard
                             key={r.reviewId}
@@ -81,7 +97,7 @@ function CustomReviewPage() {
                         />
                     ))}
                     <InfiniteListFooter list={list} />
-                </>}
+                </>
             </div>
         </CustomDiv>
     )

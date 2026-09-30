@@ -24,12 +24,11 @@ function CustomDeliveryCard({ id, count, startAddr, endAddr, date, startTime, en
                 {count !== undefined && <CustomRequestCount count={count} />}
                 <div className="delivery-content">
                     <div className="delivery-route">
-                        <div className="delivery-route-row">
+                        <div className="delivery-route-row delivery-route-row--start">
                             <Circle width={20} height={20} stroke="#4576F7" />
                             <span className="delivery-address">{startAddr}</span>
-                        </div>
-                        <div className="delivery-route-line">
-                            <span></span>
+                            {/* 연결선: 출발 아이콘 아래 ~ 도착 아이콘 위. 주소가 두 줄이어도 끊기지 않게 줄 높이만큼 늘어난다 */}
+                            <span className="delivery-route-line"></span>
                         </div>
                         <div className="delivery-route-row">
                             <MapPin width={20} height={20} stroke="#FD5D35" />

@@ -13,15 +13,11 @@
 .report__body {
     display: flex;
     flex-direction: column;
-    padding: 24px 16px 16px;   /* 피그마: 상단바 아래 24px에서 카드 시작 */
+    padding: 24px 16px 16px;   /* 피그마: 상단바 아래 24px에서 제목 시작 */
     box-sizing: border-box;
 }
 
-/* 피그마: 카드 ~ 제목 30px, 제목 ~ 체크박스 16px, 체크박스 ~ 신고 사유 40px */
-.report__section {
-    margin-top: 30px;
-}
-
+/* 피그마: 제목 ~ 체크박스 16px, 체크박스 ~ 신고 사유 40px */
 .report__checks {
     margin-top: 16px;
 }
@@ -31,7 +27,6 @@
 }
  
 /* 고정폭 컴포넌트를 반응형(100%)으로 — 세로 스크롤바가 폭을 먹어도 가로로 안 넘침 */
-.report__body .custom-product,
 .report__body .text-area {
     width: 100%;
     box-sizing: border-box;
@@ -91,17 +86,4 @@
     box-sizing: border-box;
     background-color: #ffffff;
 }
-/* 피그마: 신고 대상 물품 카드는 테두리 없는 연회색 박스, 아이콘 칸은 흰색 */
-.report__body > .custom-product {
-    border: none;
-    background-color: #f3f6f9;
-}
 
-.report__body > .custom-product .product-box-section {
-    background-color: #ffffff;
-}
-
-/* 물품 카드가 없을 때 첫 섹션의 윗여백 제거 */
-.report__body > .report__section:first-child {
-    margin-top: 0;
-}

@@ -531,6 +531,11 @@ export interface ProductDetailResponseDto {
   userImage?: string;
   /** 사용자 이름 */
   userName?: string;
+  /**
+   * 작성자 회원번호
+   * @format int64
+   */
+  userId?: number;
   /** 물품 수령지(주소) */
   productDeliveryAddress?: string;
   /** 물품 수령지 위도. 수정 요청의 productDeliveryLatitude 와 같은 값 */
