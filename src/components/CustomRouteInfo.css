@@ -37,12 +37,12 @@
 }
  
 
+/* 홈 카드와 같은 연결선: 1.5px, 아이콘과의 빈틈은 위아래 2px (아이콘 여백 2px만, 선 자체 여백 없음) */
 .route-info__line {
     width: 0;
     flex: 1;
     min-height: 12px;
-    margin: 4px 0;
-    border-left: 2px solid #d7dae0;
+    border-left: 1.5px solid #d7dae0;
 }
  
 .route-info__address {

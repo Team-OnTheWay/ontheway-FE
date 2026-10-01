@@ -797,6 +797,11 @@ export interface RequesterInfo {
   userImage?: string;
   /** 사용자 이름 */
   userName?: string;
+  /**
+   * 사용자 번호
+   * @format int64
+   */
+  userId?: number;
   /** 물품 수령지(주소) */
   productDeliveryAddress?: string;
   /** 배송 목적지 */

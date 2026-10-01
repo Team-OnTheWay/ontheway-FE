@@ -29,14 +29,15 @@ function toPickerValue(text?: string) {
 function DateInput(props: DateInputProps) {
   const pickerRef = useRef<HTMLInputElement>(null)
 
-  // 달력 아이콘이나 칸을 누르면 브라우저 날짜 선택창을 연다
+  // 달력 아이콘 위에 겹친 실제 날짜 입력칸을 사용자가 "직접" 누르므로 모바일(iOS 사파리 등)에서도 선택창이 열린다.
+  // PC 크롬은 칸 자체를 눌러도 선택창이 안 열려서, 눌렀을 때 showPicker 로 한 번 더 연다 (지원 안 하면 무시)
   const openPicker = () => {
     const picker = pickerRef.current
     if (!picker || props.disabled) return
     try {
       picker.showPicker()
     } catch {
-      picker.click()   // showPicker 를 지원하지 않는 브라우저
+      // 기본 동작(직접 누름)으로 열리는 브라우저
     }
   }
 
@@ -44,19 +45,20 @@ function DateInput(props: DateInputProps) {
     <div className="date-input">
       {props.label && <p className="date-input__label">{props.label}</p>}
       <div className="date-input-box" style={{ borderColor: colors[props.borderColor] }}>
-        <input type="text" placeholder="YYYY.MM.DD" defaultValue={props.defaultValue} value={props.value} onChange={props.onChange} disabled={props.disabled} readOnly={props.disabled || (props.value !== undefined && !props.onChange)}/>
-        <button type="button" className="calendar-icon" onClick={openPicker} disabled={props.disabled} aria-label="달력에서 날짜 선택">
+        <input type="text" placeholder="YYYY-MM-DD" defaultValue={props.defaultValue} value={props.value} onChange={props.onChange} disabled={props.disabled} readOnly={props.disabled || (props.value !== undefined && !props.onChange)}/>
+        {/* 달력 아이콘(보이는 부분) + 그 위에 투명하게 겹친 실제 날짜 입력칸(누르는 부분).
+            고른 값(YYYY-MM-DD)은 위 글자 칸과 같은 onChange 로 전달 */}
+        <span className="calendar-icon" aria-hidden="true">
           <Calendar width={20} height={20} stroke="#6B7280" />
-        </button>
-        {/* 화면에 보이지 않는 날짜 선택창. 고른 값(YYYY-MM-DD)은 위 칸과 같은 onChange 로 전달 */}
+        </span>
         <input
           ref={pickerRef}
           type="date"
           className="date-input__picker"
-          tabIndex={-1}
-          aria-hidden="true"
+          aria-label="달력에서 날짜 선택"
           value={toPickerValue(props.value ?? props.defaultValue)}
           onChange={(e) => props.onChange?.(e)}
+          onClick={openPicker}
           disabled={props.disabled}
         />
       </div>

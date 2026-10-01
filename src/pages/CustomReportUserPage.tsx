@@ -25,11 +25,11 @@ const REASONS: { label: string; code: ReportCategory }[] = [
     { label: '안전을 위협하거나 불안감을 주는 행동을 했습니다.', code: 'SAFETY_THREAT' },
 ]
 
-// /user/report?userId=7  (신고 대상 이름·날짜는 navigate state { name, date } 로 받는다)
+// /user/report?userId=7  (신고 대상 이름·날짜·프로필 사진은 navigate state { name, date, image } 로 받는다)
 function CustomReportUser() {
     const navigate = useNavigate()
     const userId = Number(useSearchParams()[0].get('userId')) || null
-    const target = (useLocation().state ?? {}) as { name?: string; date?: string }
+    const target = (useLocation().state ?? {}) as { name?: string; date?: string; image?: string }
     const ratings = useRatings(userId)   // 신고 대상의 평균·후기
     const { selected, toggle } = useReportCategories()
     const [content, setContent] = useState('')
@@ -67,7 +67,10 @@ function CustomReportUser() {
                     review={ratings.count}
                     chipElement={null}
                     expandable={false}
-                    profileElement={<CustomProfile width={40} height={20} strok="#FD5D35" strokWidth={2} diameter={40} backgroundColor="#FEF1ED" />}
+                    // 신고 대상이 마이페이지에서 등록한 프로필 사진 (없으면 기본 아이콘)
+                    profileElement={target.image
+                        ? <img className="report-user__avatar" src={target.image} alt="" />
+                        : <CustomProfile width={40} height={20} strok="#FD5D35" strokWidth={2} diameter={40} backgroundColor="#FEF1ED" />}
                 />}
 
                 <div className="report-user__section">

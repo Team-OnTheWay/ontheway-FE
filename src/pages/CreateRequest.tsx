@@ -27,7 +27,7 @@ function RequestXButton({ onClick }: { onClick?: () => void }) {
                 onClick?.()
             }}
         >
-            <PathXButton/>
+            <PathXButton />
         </button>
     )
 }
@@ -142,9 +142,13 @@ function CreateRequest() {
     }
 
     return (
-        <CustomDiv pullToRefresh={false}>
-        
-            <CustomTopAppBar title="배송의뢰"/>
+        <CustomDiv pullToRefresh={false} footerElement={
+            // 경로등록·수정처럼 하단에 고정 (스크롤하지 않아도 바로 보이게)
+            <div className="create-request-button">
+                <CustomButton name={submitting ? '저장 중...' : editId ? '수정완료' : '작성완료'} color="#FD5D35" fontColor="#FFFFFF" size="lg" onClick={submitting ? undefined : handleSubmit} />
+            </div>
+        }>
+            <CustomTopAppBar title={editId ? "배송의뢰 수정" : "배송의뢰 작성"} />
 
             <div className="create-request-content">
                 <section className="request-section">
@@ -153,7 +157,7 @@ function CreateRequest() {
                     <div className="request-route">
                         <div className="request-route-item">
                             <div className="request-route-icon start-icon">
-                                <Circle width={16} height={16} stroke="#4576F7"/>
+                                <Circle width={16} height={16} stroke="#4576F7" />
                                 <div className="request-line"></div>
                             </div>
 
@@ -163,20 +167,20 @@ function CreateRequest() {
                                 {/* 칸을 누르면 주소 검색이 열림, X는 비우기 */}
                                 <div className="request-address" onClick={() => setSearchTarget('pickup')}>
                                     <span className={pickupAddr ? '' : 'placeholder'}>{pickupAddr || '물건수령지를 검색해주세요'}</span>
-                                    <RequestXButton onClick={() => setPickupAddr('')}/>
+                                    <RequestXButton onClick={() => setPickupAddr('')} />
                                 </div>
 
                                 {/* 상세 주소는 직접 입력 */}
                                 <div className="request-address">
-                                    <input value={pickupDetail} onChange={(e) => setPickupDetail(e.target.value)} placeholder="상세 주소 (예: 건물 앞)"/>
-                                    <RequestXButton onClick={() => setPickupDetail('')}/>
+                                    <input value={pickupDetail} onChange={(e) => setPickupDetail(e.target.value)} placeholder="상세 주소 (예: 건물 앞)" />
+                                    <RequestXButton onClick={() => setPickupDetail('')} />
                                 </div>
                             </div>
                         </div>
 
                         <div className="request-route-item">
                             <div className="request-route-icon">
-                                <MapPin width={16} height={16} stroke="#FD5D35"/>
+                                <MapPin width={16} height={16} stroke="#FD5D35" />
                             </div>
 
                             <div className="request-route-content">
@@ -184,12 +188,12 @@ function CreateRequest() {
 
                                 <div className="request-address" onClick={() => setSearchTarget('dest')}>
                                     <span className={destAddr ? '' : 'placeholder'}>{destAddr || '배송목적지를 검색해주세요'}</span>
-                                    <RequestXButton onClick={() => setDestAddr('')}/>
+                                    <RequestXButton onClick={() => setDestAddr('')} />
                                 </div>
 
                                 <div className="request-address">
-                                    <input value={destDetail} onChange={(e) => setDestDetail(e.target.value)} placeholder="상세 주소 (예: 건물 앞)"/>
-                                    <RequestXButton onClick={() => setDestDetail('')}/>
+                                    <input value={destDetail} onChange={(e) => setDestDetail(e.target.value)} placeholder="상세 주소 (예: 건물 앞)" />
+                                    <RequestXButton onClick={() => setDestDetail('')} />
                                 </div>
                             </div>
                         </div>
@@ -199,36 +203,36 @@ function CreateRequest() {
                 <section className="request-section">
                     <div className="request-section-title">물품정보</div>
                     <TextField label="물품명" height={48} borderColor="gray" backgroundColor="white" leftLocationIcon={false} placeholder="노트북 파우치" timer={false} rightButton="none"
-                        value={productName} onChange={(e) => setProductName(e.target.value)}/>
+                        value={productName} onChange={(e) => setProductName(e.target.value)} />
 
                     <div className="request-textarea">
                         <div className="request-label">추가정보</div>
-                        <TextArea borderColor="gray" value={productInfo} onChange={setProductInfo} placeholder="물품에 대해 알려주세요."/>
+                        <TextArea borderColor="gray" value={productInfo} onChange={setProductInfo} placeholder="물품에 대해 알려주세요." />
                     </div>
                 </section>
 
                 <section className="request-section">
-                    <DateInput label="수령일" borderColor="gray" value={receivingDate} onChange={(e) => setReceivingDate(toDashDate(toDateText(e.target.value)))}/>
+                    <DateInput label="수령일" borderColor="gray" value={receivingDate} onChange={(e) => setReceivingDate(toDashDate(toDateText(e.target.value)))} />
 
                     <div className="request-time">
                         <div className="request-label">수령시간</div>
                         <TimeInput borderColor="gray" backgroundColor="white" start={receivingStart} end={receivingEnd}
-                            onChange={(start, end) => { setReceivingStart(start); setReceivingEnd(end) }}/>
+                            onChange={(start, end) => { setReceivingStart(start); setReceivingEnd(end) }} />
                     </div>
                 </section>
 
                 <section className="request-section">
                     <div className="request-section-title">배송정보</div>
-                    <DateInput label="가는날" borderColor="gray" value={arrivalDate} onChange={(e) => setArrivalDate(toDashDate(toDateText(e.target.value)))}/>
+                    <DateInput label="가는날" borderColor="gray" value={arrivalDate} onChange={(e) => setArrivalDate(toDashDate(toDateText(e.target.value)))} />
 
                     <div className="request-time">
                         <div className="request-label">배송도착시간</div>
                         <TimeInput borderColor="gray" backgroundColor="white" start={arrivalStart} end={arrivalEnd}
-                            onChange={(start, end) => { setArrivalStart(start); setArrivalEnd(end) }}/>
+                            onChange={(start, end) => { setArrivalStart(start); setArrivalEnd(end) }} />
                     </div>
 
                     <TextField label="배송비" height={48} borderColor="gray" backgroundColor="white" leftLocationIcon={false} placeholder="ex) 15,000원" timer={false} rightButton="none"
-                        value={fee} onChange={(e) => setFee(e.target.value)}/>
+                        value={fee} onChange={(e) => setFee(e.target.value)} />
                 </section>
 
                 <section className="request-section payment-section">
@@ -246,13 +250,9 @@ function CreateRequest() {
                         <div className="info-line"><span>ㆍ</span><p>금지물품 : 위험물, 마약류, 현금, 귀중품, 의약품</p></div>
                         <div className="info-line"><span>ㆍ</span><p>포장책임 : 물품 포장 및 파손 방지 책임은 의뢰인에게 있습니다.</p></div>
                     </>
-                }/>
+                } />
 
-                <CustomCheckbox label="위 고지사항을 확인하고 동의합니다." size="sm" checked={agreed} onChange={setAgreed}/>
-
-                <div className="create-request-button">
-                    <CustomButton name={submitting ? '저장 중...' : editId ? '수정하기' : '작성완료'} color="#FD5D35" fontColor="#FFFFFF" size="lg" onClick={submitting ? undefined : handleSubmit}/>
-                </div>
+                <CustomCheckbox label="위 고지사항을 확인하고 동의합니다." size="sm" checked={agreed} onChange={setAgreed} />
             </div>
 
             {/* 주소 검색 오버레이 — searchTarget이 있을 때만 */}
@@ -261,9 +261,9 @@ function CreateRequest() {
                     <div className="postcode-panel" onClick={(e) => e.stopPropagation()}>
                         <div className="postcode-header">
                             <span>{searchTarget === 'pickup' ? '물건수령지' : '배송목적지'} 검색</span>
-                            <RequestXButton onClick={() => setSearchTarget(null)}/>
+                            <RequestXButton onClick={() => setSearchTarget(null)} />
                         </div>
-                        <DaumPostcode onComplete={handleComplete} style={{ flex: 1 }}/>
+                        <DaumPostcode onComplete={handleComplete} style={{ flex: 1 }} />
                     </div>
                 </div>
             )}

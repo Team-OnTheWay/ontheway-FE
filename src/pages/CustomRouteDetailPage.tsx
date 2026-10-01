@@ -41,7 +41,11 @@ interface RequestItem {
     desiredDeliveryTime: string
     paymentType: string
     createdAt: string
+    deliveryStatus?: DeliveryStatus   // 의뢰 상태: REJECTED / MATCHING_WAITING / 수락 후엔 주문 상태
 }
+
+// 수락돼서 주문이 된 요청인지 (거절·수락 대기 제외)
+const isAccepted = (r: RequestItem) => !!r.deliveryStatus && r.deliveryStatus !== 'MATCHING_WAITING' && r.deliveryStatus !== 'REJECTED'
 
 // 이 글에서의 내 역할. 게시자(전달자) / 매칭된 의뢰자 / 그 외
 type Role = 'owner' | 'requester' | 'viewer'
@@ -71,69 +75,14 @@ function effectiveStatus(detail: DeliveryDetailResponseDto): DeliveryStatus {
     return (detail.currentDeliveryStatus ?? 'MATCHING_WAITING') as DeliveryStatus
 }
 
-// 취소·중단이 어느 단계에서 일어났는지
-//  - 취소는 픽업중에만 가능
-//  - 중단은 배송 대기 중·배송 중에만 가능 (배송 완료 확인 요청 이후에는 중단이 없다).
-//    서버가 중단 시점을 주지 않아서, 배송 예정 시각(이때 서버가 배송 중으로 바꾼다)이 지났으면 배송 중으로 본다
-function stoppedStage(detail: DeliveryDetailResponseDto, status: DeliveryStatus): DeliveryStatus | null {
-    if (status === 'CANCELED') return 'PICKING_UP'
-    if (status !== 'FAILED') return null
-    const start = detail.deliveryDate ? new Date(detail.deliveryDate).getTime() : NaN
-    return !Number.isNaN(start) && Date.now() >= start ? 'DELIVERING' : 'DELIVERY_WAITING'
-}
-
-// 상태 이력 -> 상태별로 그 상태가 된 시각
-function statusTimes(detail: DeliveryDetailResponseDto): Partial<Record<DeliveryStatus, string>> {
-    const at: Partial<Record<DeliveryStatus, string>> = {}
-    for (const h of detail.deliveryStatusHistory ?? []) {
-        if (h.deliveryStatus && h.deliveryDate) at[h.deliveryStatus as DeliveryStatus] = h.deliveryDate
-    }
-    return at
-}
-
-// 현재 상태로 진행 단계 목록을 만든다. 중단·취소는 멈춘 단계 자리에 끼워 넣고 뒤 단계는 '진행 전'으로 둔다
+// 현재 상태로 진행 단계(기본 6단계)를 만든다: 지난 단계는 완료, 현재 단계는 진행 중, 뒤 단계는 진행 전.
+// 취소·중단된 건은 진행 단계를 보여주지 않고 아래 안내 카드로 알린다 (피그마: 경로상세조회 - 배송취소/배송중단)
 function buildSteps(detail: DeliveryDetailResponseDto): Step[] {
-    const status = effectiveStatus(detail)
-    const at = statusTimes(detail)
-    // 단계가 끝난 시각 = 다음 단계가 시작된 시각 (배송완료는 완료된 시각).
-    // 매칭완료는 다음 단계 기록이 없으면 첫 이력 시각(매칭 시각)으로
-    const doneAt = (s: DeliveryStatus) => {
-        if (s === 'COMPLETED') return at.COMPLETED
-        const next = at[FLOW[FLOW.indexOf(s) + 1]]
-        return next ?? (s === 'MATCHING_WAITING' ? detail.deliveryStatusHistory?.[0]?.deliveryDate : undefined)
-    }
-    const done = (s: DeliveryStatus): Step => ({
-        title: STEP_TEXT[s].done[0], description: STEP_TEXT[s].done[1], status: 'done',
-        meta: formatDateTime(doneAt(s)) || undefined,
-    })
-    const pending = (s: DeliveryStatus): Step => ({ title: STEP_TEXT[s].current[0], description: '아직 진행 전이에요.', status: 'pending' })
-
-    const stage = stoppedStage(detail, status)
-    if (stage) {
-        const stageIndex = FLOW.indexOf(stage)
-        const stopMeta = formatDateTime(status === 'CANCELED' ? at.CANCELED : at.FAILED) || undefined
-        const stop: Step = status === 'CANCELED'
-            ? { title: '배송취소', description: '배송이 취소되었어요.', status: 'canceled', meta: stopMeta }
-            : { title: '배송중단', description: '배송이 완료되지 못했어요.', status: 'canceled', meta: stopMeta }
-        // 취소: 매칭완료 -> 배송취소 -> 픽업중(진행 전)…
-        // 중단: … -> 멈춘 단계(회색 트럭) -> 배송중단 -> 다음 단계(진행 전)…
-        const halted: Step[] = status === 'CANCELED' ? [] : [{
-            title: STEP_TEXT[stage].current[0], description: STEP_TEXT[stage].current[1], status: 'halted',
-        }]
-        const nextFrom = status === 'CANCELED' ? stageIndex : stageIndex + 1
-        return [
-            ...FLOW.slice(0, stageIndex).map(done),
-            ...halted,
-            stop,
-            ...FLOW.slice(nextFrom).map(pending),
-        ]
-    }
-
-    const reached = FLOW.indexOf(status)
-    return FLOW.map((s, i) => {
-        if (i < reached) return done(s)
+    const reached = FLOW.indexOf(effectiveStatus(detail))
+    return FLOW.map((s, i): Step => {
+        if (i < reached) return { title: STEP_TEXT[s].done[0], description: STEP_TEXT[s].done[1], status: 'done' }
         if (i === reached) return { title: STEP_TEXT[s].current[0], description: STEP_TEXT[s].current[1], status: 'current' }
-        return pending(s)
+        return { title: STEP_TEXT[s].current[0], description: '아직 진행 전이에요.', status: 'pending' }
     })
 }
 
@@ -191,19 +140,32 @@ async function fetchRoute(deliveryId: number) {
         .then(res => ({ detail: res.data.data ?? null, error: '' }))
         .catch(err => ({ detail: null, error: errorMessage(err, '게시글을 불러오지 못했어요.') }))
 
-    // 역할 판단: 의뢰 요청 목록은 게시자만 볼 수 있다(아니면 403).
-    // 게시자가 아니면 내 이용내역(의뢰·취소/중단)에 이 글이 있을 때 매칭된 의뢰자로 본다
-    let role: Role
+    // 역할 판단: 의뢰 요청 목록은 게시자는 전체, 의뢰자는 이 글에 넣은 "내 요청"만 받는다 (그 외 403).
+    // 둘 다 성공하므로 "내 게시글 목록"에 이 글이 있는지로 게시자를 가른다.
+    // 의뢰자는 내 요청이 수락된 경우에만 매칭된 의뢰자로 본다 (대기·거절이면 일반 사용자)
+    let role: Role = 'viewer'
     let requests: RequestItem[] = []
     try {
         const res = await new RequestApi().deliveryRequestList(deliveryId)
-        requests = (res.data.data as { requestDeliveryList?: RequestItem[] } | undefined)?.requestDeliveryList ?? []
-        role = 'owner'
+        const list = (res.data.data as { requestDeliveryList?: RequestItem[] } | undefined)?.requestDeliveryList ?? []
+        // 의뢰자는 내 요청이 없으면 403이라, 빈 목록이면 게시자
+        const mine = list.length === 0 || await new Delivery().myList({ myBoardDeliveryListRequestDto: { page: 0, size: 100 } })
+            .then(r => (r.data.data?.deliveryList ?? []).some(d => d.deliveryId === deliveryId))
+            .catch(() => false)
+        if (mine) {
+            role = 'owner'
+            requests = list
+        } else {
+            const accepted = list.find(isAccepted)
+            role = accepted ? 'requester' : 'viewer'
+            requests = accepted ? [accepted] : []
+        }
     } catch {
+        // 예전 서버(게시자만 목록 조회 가능)와 호환: 내 이용내역(의뢰·취소/중단)에 이 글이 있으면 매칭된 의뢰자
         const page = { historyListRequestDto: { page: 0, size: 50 } }
         const lists = await Promise.allSettled([new History().requestList(page), new History().cancelList(page)])
-        const mine = lists.some(r => r.status === 'fulfilled' && (r.value.data.data?.historyList ?? []).some(h => h.deliveryId === deliveryId))
-        role = mine ? 'requester' : 'viewer'
+        const inHistory = lists.some(r => r.status === 'fulfilled' && (r.value.data.data?.historyList ?? []).some(h => h.deliveryId === deliveryId))
+        role = inHistory ? 'requester' : 'viewer'
     }
     return { ...(await detailPromise), role, requests }
 }
@@ -343,7 +305,9 @@ function CustomRouteDetailPage() {
     const stopped = status === 'FAILED' || status === 'CANCELED'
     const stopReasonText = status === 'FAILED' ? detail.deliveryFail?.failReason : detail.deliveryCancel?.cancelReason
     const photo = detail.deliverySuccessCheck?.deliverySuccessCheckImage
-    const matchedCard = matched ? matchedRequest(detail) : null
+    // 매칭 후: 의뢰 요청 목록의 수락된 요청(물품명 있음)으로 그린다. 게시자·의뢰자 모두 받는다.
+    // 목록이 없으면(예전 서버 등) 상세 응답의 requesterInfo 로 그린다 (물품명 없음)
+    const matchedCard = matched ? (requests.find(isAccepted) ?? (isOwner && requests[0])) || matchedRequest(detail) : null
     // 픽업중 ~ 배송중: 사진 자리, 확인요청 ~ 완료: 등록된 사진
     const photoPhase = status === 'PICKING_UP' || status === 'DELIVERY_WAITING' || status === 'DELIVERING'
     const photoDone = status === 'COMPLETION_REQUESTED' || status === 'COMPLETED'
@@ -382,7 +346,7 @@ function CustomRouteDetailPage() {
 
     return (
         <CustomDiv backgroundColor='#f3f4f6' footerElement={buttons.length > 0 && (
-            <div className={`route-detail__footer${buttons.length === 1 ? ' route-detail__footer--single' : ''}`}>
+            <div className="route-detail__footer">
                 <div className="route-detail__footer-row">
                     {buttons.map(b => (
                         <div className="route-detail__footer-slot" key={b.name}>
@@ -410,7 +374,7 @@ function CustomRouteDetailPage() {
                     // 게시글 신고처럼 신고 대상(게시자 회원번호)을 주소에 붙여 넘긴다. 내 글에서는 신고를 숨긴다
                     onClick={isOwner ? undefined : () => {
                         if (!detail.userId) return alert('신고할 회원 정보가 없어요. 잠시 후 다시 시도해주세요.')
-                        navigate(`/user/report?userId=${detail.userId}`, { state: { name: detail.userName, date: formatDate(detail.createdAt) } })
+                        navigate(`/user/report?userId=${detail.userId}`, { state: { name: detail.userName, date: formatDate(detail.createdAt), image: detail.userImage } })
                     }}
                 />
 
@@ -429,14 +393,15 @@ function CustomRouteDetailPage() {
                     </div>
                 )}
 
-                <CustomProgressStep steps={buildSteps(detail)} />
+                {/* 진행 단계: 취소·중단된 건은 숨기고 대신 아래 안내 카드만 보여준다 */}
+                {!stopped && <CustomProgressStep steps={buildSteps(detail)} />}
 
-                {/* 취소/중단 사유 */}
+                {/* 취소/중단 안내 (빨간 확성기 + 빨간 제목 + 사유) */}
                 {stopped && (
                     <div className="route-detail__notice">
-                        <MegaphoneIcon />
-                        <div>
-                            <p className="route-detail__notice-time">{STATUS_LABEL[status]}</p>
+                        <span className="route-detail__notice-icon"><MegaphoneIcon stroke="#FFFFFF" /></span>
+                        <div className="route-detail__notice-text">
+                            <p className="route-detail__notice-title">{STATUS_LABEL[status]}</p>
                             <p className="route-detail__notice-msg">{stopReasonText || '사유가 등록되지 않았어요.'}</p>
                         </div>
                     </div>
@@ -462,7 +427,7 @@ function CustomRouteDetailPage() {
                 {matchedCard && isParticipant && (
                     <div className="route-detail__requests">
                         <CustomList variant="list03" label="배송 의뢰요청" />
-                        <CustomAccordion clientName={matchedCard.requesterName} itemName={formatDate(matchedCard.createdAt)}
+                        <CustomAccordion clientName={matchedCard.requesterNickname || matchedCard.requesterName} itemName={formatDate(matchedCard.createdAt)}
                             price={formatNumber(matchedCard.deliveryFee)} defaultOpen>
                             <RequestBody r={matchedCard} />
                         </CustomAccordion>

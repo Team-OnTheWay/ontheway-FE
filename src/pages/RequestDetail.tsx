@@ -68,7 +68,10 @@ function RequestDetail(){
                         rateing={ratings.rating}
                         review={ratings.count}
                         chipElement={null}
-                        profileElement={<CustomProfile width={40} height={20} strok="#FD5D35" strokWidth={2} diameter={40} backgroundColor="#FEF1ED" />}
+                        // 작성자가 마이페이지에서 등록한 프로필 사진 (없으면 기본 아이콘)
+                        profileElement={detail.userImage
+                            ? <img className="request-detail__avatar" src={detail.userImage} alt="" />
+                            : <CustomProfile width={40} height={20} strok="#FD5D35" strokWidth={2} diameter={40} backgroundColor="#FEF1ED" />}
                     />
 
                     <CustomRouteInfo
