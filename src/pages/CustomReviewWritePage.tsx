@@ -33,11 +33,10 @@ function CustomReviewWritePage() {
         new Delivery().detail1({ deliveryDetailRequestDto: { deliveryId: boardId } })
             .then(res => {
                 const d = res.data.data
-                // 의뢰자 정보에는 회원번호가 없어 평균·후기 수는 불러오지 못한다(0으로 표시)
                 const name = asOwner ? d?.requesterInfo?.userName : d?.userName
                 // 마이페이지에서 바꾼 프로필 사진 (없으면 기본 아이콘)
                 const image = (asOwner ? d?.requesterInfo?.userImage : d?.userImage) || null
-                if (name) setPartner({ name, date: formatDate(d?.deliveryDate), userId: asOwner ? null : d?.userId ?? null, image })
+                if (name) setPartner({ name, date: formatDate(d?.deliveryDate), userId: (asOwner ? d?.requesterInfo?.userId : d?.userId) ?? null, image })
             })
             .catch(() => {})
     }, [boardId, asOwner])

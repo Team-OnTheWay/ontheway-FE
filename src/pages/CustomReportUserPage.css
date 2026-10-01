@@ -104,3 +104,12 @@
 .report-user__body > .report-user__section:first-child {
     margin-top: 0;
 }
+
+/* 신고 대상 프로필 사진 (경로 상세의 프로필 카드와 같은 40px 원) */
+.report-user__avatar {
+    display: block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}

@@ -7,7 +7,7 @@ import './CustomProfilePage.css'
 import CustomDiv from '../components/CustomDiv'
 import { useNavigate } from 'react-router-dom'
 import { useMyInfo } from '../hooks/useMyInfo'
-import { formatDate } from '../utils/apiFormat'
+import { formatDate, toDashDate } from '../utils/apiFormat'
  
 // 내 프로필 조회 (수정은 '수정하기' 화면에서)
 function CustomProfilePage() {
@@ -29,7 +29,7 @@ function CustomProfilePage() {
                     leftLocationIcon={false} placeholder="아이디" timer={false} rightButton="none"
                     value={info?.userId ?? ''} disabled />
  
-                <DateInput label="생년월일" borderColor="gray" value={formatDate(info?.birthday)} disabled />
+                <DateInput label="생년월일" borderColor="gray" value={toDashDate(formatDate(info?.birthday))} disabled />
  
                 <TextField label="이메일" height={56} borderColor="gray" backgroundColor="white"
                     leftLocationIcon={false} placeholder="이메일" timer={false} rightButton="none"

@@ -61,23 +61,35 @@
   position: relative;
 }
 
-.calendar-icon {
-  cursor: pointer;
-}
-
-.calendar-icon:disabled {
-  cursor: default;
-}
-
-/* 브라우저 날짜 선택창의 기준점 (보이지 않게, 달력 아이콘 아래에 둔다) */
+/* 실제 날짜 입력칸: 달력 아이콘 위에 투명하게 겹쳐서 사용자가 직접 누르게 한다
+   (숨겨 두고 코드로 열면 iOS 사파리 등 모바일에서 선택창이 열리지 않는다) */
 .date-input__picker {
   position: absolute;
-  right: 16px;
-  bottom: 0;
-  width: 1px;
-  height: 1px;
+  top: 50%;
+  right: 6px;          /* 아이콘(오른쪽 16px, 20px)을 가운데로 40px 터치 영역 */
+  width: 40px;
+  height: 40px;
+  transform: translateY(-50%);
+  margin: 0;
   padding: 0;
   border: 0;
   opacity: 0;
-  pointer-events: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.date-input__picker:disabled {
+  cursor: default;
+}
+
+/* 크롬·안드로이드: 칸 전체를 달력 버튼(indicator)으로 덮어 어디를 눌러도 선택창이 열리게 */
+.date-input__picker::-webkit-calendar-picker-indicator {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
 }

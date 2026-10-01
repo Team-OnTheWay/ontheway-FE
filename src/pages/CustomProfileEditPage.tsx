@@ -12,7 +12,7 @@ import { CameraIcon } from '../components/CustomIcon'
 import { User } from '../api/User'
 import { Email } from '../api/Email'
 import { useMyInfo } from '../hooks/useMyInfo'
-import { errorMessage, formatDate, parseDateInput } from '../utils/apiFormat'
+import { errorMessage, formatDate, parseDateInput, toDashDate, toDateText } from '../utils/apiFormat'
 
 function CustomProfileEditPage() {
     const navigate = useNavigate()
@@ -35,7 +35,7 @@ function CustomProfileEditPage() {
     const [filledFrom, setFilledFrom] = useState<MyInfo | null>(null)
     if (info && info !== filledFrom) {
         setFilledFrom(info)
-        setBirthday(formatDate(info.birthday))
+        setBirthday(toDashDate(formatDate(info.birthday)))
         setEmail(info.email)
         setNickName(info.nickName)
     }
@@ -83,7 +83,7 @@ function CustomProfileEditPage() {
             dto.nickName = nickName.trim()
         }
         const parsedBirthday = parseDateInput(birthday)
-        if (birthday.trim() && !parsedBirthday) return alert('생년월일을 YYYY.MM.DD 형식으로 입력해주세요.')
+        if (birthday.trim() && !parsedBirthday) return alert('생년월일을 YYYY-MM-DD 형식으로 입력해주세요.')
         if (parsedBirthday && parsedBirthday !== info.birthday) dto.newBirthday = parsedBirthday
         if (emailChanged) {
             if (!emailVerified) return alert('변경할 이메일 인증을 먼저 완료해주세요.')
@@ -130,7 +130,7 @@ function CustomProfileEditPage() {
                     leftLocationIcon={false} placeholder="아이디" timer={false} rightButton="none"
                     value={info?.userId ?? ''} disabled />
 
-                <DateInput label="생년월일" borderColor="gray" value={birthday} onChange={(e) => setBirthday(e.target.value.replace(/-/g, '.'))} />
+                <DateInput label="생년월일" borderColor="gray" value={birthday} onChange={(e) => setBirthday(toDashDate(toDateText(e.target.value)))} />
 
                 {/* 이메일 + 인증받기 (이메일을 바꿀 때만) */}
                 <div className="profile__row">

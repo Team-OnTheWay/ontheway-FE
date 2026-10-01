@@ -56,24 +56,35 @@
 }
  
 /* ===== 취소/중단 알림 박스 ===== */
+/* 취소·중단 안내 카드 (피그마: 빨간 확성기 원 36px + 빨간 제목 + 사유) */
 .route-detail__notice {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
-    padding: 16px;
+    padding: 12px;
     border-radius: 16px;
     background-color: #ffffff;
 }
-.route-detail__notice-time { margin: 0; font-size: 16px; font-weight: 600; line-height: 24px; color: #14191f; }
-.route-detail__notice-msg  { margin: 2px 0 0; font-size: 12px; font-weight: 400; line-height: 16px; color: #4b5663; }
-/* 확성기 아이콘은 연주황 원 안에 (피그마) */
-.route-detail__notice > svg {
+.route-detail__notice-icon {
     flex-shrink: 0;
-    box-sizing: content-box;
-    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background-color: #fef1ed;
+    background-color: #de3412;
 }
+.route-detail__notice-icon svg { width: 20px; height: 20px; }
+.route-detail__notice-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.route-detail__notice-title { margin: 0; font-size: 16px; font-weight: 600; line-height: 24px; color: #de3412; }
+.route-detail__notice-msg   { margin: 0; font-size: 14px; font-weight: 400; line-height: 20px; color: #14191f; }
  
 /* ===== 배송 의뢰요청 ===== */
 .route-detail__requests {
@@ -178,12 +189,7 @@
     gap: 8px;
     padding: 16px;
     box-sizing: border-box;
-    background-color: #ffffff;   /* 피그마: 버튼 2개면 흰 배경으로 감싼다 */
-}
-/* 피그마: 버튼 1개면 감싸는 배경 없이 화면 배경(회색)과 같게.
-   footer는 본문 밖이라 transparent면 바깥 배경이 비쳐서 본문 색을 직접 준다 */
-.route-detail__footer--single {
-    background-color: #f3f4f6;
+    background-color: #ffffff;   /* 버튼 개수와 관계없이 흰 배경으로 감싼다 */
 }
 .route-detail__footer-row {
     display: flex;
