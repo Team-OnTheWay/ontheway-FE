@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import './CustomProfileCard.css'
 import { Arrow } from './CustomIcon';
- 
+
 interface CustomProfileCard {
     nickname: string;
     date: string;
@@ -12,34 +12,34 @@ interface CustomProfileCard {
     onClick?: () => void;
     expandable?: boolean;   // false면 펼침 화살표를 숨긴다 (예: 유저 신고 화면)
 }
- 
+
 function CustomProfileCard({ nickname, date, rateing, review, chipElement, profileElement, onClick, expandable = true }: CustomProfileCard) {
     const [isOpen, setIsOpen] = useState(false);
- 
+
     const handleClickArrow = () => {
         setIsOpen(prev => !prev);
     };
- 
+
     return (
         <div className="custom-profile-card">
             {/* 칩은 넘겨줬을 때만 표시 */}
             {chipElement && <div className="custom-profile-card-title">{chipElement}</div>}
- 
+
             <div className="custom-profile-card-content">
                 <div className="content-profile">{profileElement}</div>
- 
+
                 <div className="profile-info">
                     <div className="nickname">{nickname}</div>
                     <div className="date">{date}</div>
                     {/* 화살표 누르면 평균·후기가 바로 밑에 한 줄로 */}
                     {isOpen && (
                         <div className="profile-details">
-                            <span className="rating">평균 {rateing}</span>
+                            <span className="rating">평균 {Number(rateing).toFixed(1)}</span>
                             <span className="review">후기 {review}건</span>
                         </div>
                     )}
                 </div>
- 
+
                 {/* 오른쪽 열: 화살표(위) + 신고(아래) */}
                 {expandable && <div className="content-right">
                     <button
@@ -56,5 +56,5 @@ function CustomProfileCard({ nickname, date, rateing, review, chipElement, profi
         </div>
     )
 }
- 
+
 export default CustomProfileCard
