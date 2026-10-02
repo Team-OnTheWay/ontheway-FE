@@ -25,6 +25,7 @@ import {
     errorMessage, formatDate, formatDateTime, formatKoreanDate, formatNumber, formatTime, paymentLabel,
     STATUS_LABEL, type DeliveryStatus,
 } from '../utils/apiFormat'
+import { prepareImage } from '../utils/prepareImage'
 
 // GET /request/list/{deliveryId} 응답 항목 (스웨거에 형태가 없어 서버 코드 기준)
 interface RequestItem {
@@ -485,10 +486,19 @@ function CustomRouteDetailPage() {
 
                 {/* 배송 완료 사진 선택창 (사진 자리나 확인요청 버튼으로 연다) */}
                 <input id={PROOF_INPUT_ID} type="file" accept="image/jpeg,image/png,image/webp" hidden
-                    onChange={(e) => {
+                    onChange={async (e) => {
                         const file = e.target.files?.[0]
                         e.target.value = ''
-                        if (file) setProof(file)
+                        if (!file) return
+                        // 아이폰 HEIC -> JPG 변환 + 1MB 아래로 줄이기 (서버 형식·용량 제한)
+                        setBusy(true)
+                        try {
+                            setProof(await prepareImage(file))
+                        } catch (err) {
+                            alert(err instanceof Error ? err.message : '사진을 불러오지 못했어요.')
+                        } finally {
+                            setBusy(false)
+                        }
                     }} />
             </div>
         </CustomDiv>

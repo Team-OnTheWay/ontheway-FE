@@ -13,6 +13,7 @@ import { User } from '../api/User'
 import { Email } from '../api/Email'
 import { useMyInfo } from '../hooks/useMyInfo'
 import { errorMessage, formatDate, parseDateInput, toDashDate, toDateText } from '../utils/apiFormat'
+import { prepareImage } from '../utils/prepareImage'
 
 function CustomProfileEditPage() {
     const navigate = useNavigate()
@@ -122,7 +123,17 @@ function CustomProfileEditPage() {
                         <CameraIcon />
                     </button>
                     <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" hidden
-                        onChange={(e) => setImage(e.target.files?.[0] ?? null)} />
+                        onChange={async (e) => {
+                            const file = e.target.files?.[0]
+                            e.target.value = ''
+                            if (!file) return
+                            // 아이폰 HEIC -> JPG 변환 + 1MB 아래로 줄이기 (서버 형식·용량 제한)
+                            try {
+                                setImage(await prepareImage(file))
+                            } catch (err) {
+                                alert(err instanceof Error ? err.message : '사진을 불러오지 못했어요.')
+                            }
+                        }} />
                 </div>
 
                 {/* 아이디 (수정 불가) */}
